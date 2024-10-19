@@ -1,4 +1,5 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
+<!-- V3.4.7 -->
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -52,7 +53,7 @@
             gap: 30px; /* 增加按钮之间的间距 */
             position: relative; /* 使子按钮相对于容器定位 */
         }
-        #programButton, #mcButton {
+        #programButton, #mcButton, #gameButton {
             padding: 10px 20px;
             font-size: 18px; /* 增加按钮字体大小 */
             color: white; /* 按钮文字颜色 */
@@ -64,7 +65,7 @@
             transition: transform 0.3s ease, background-color 0.3s ease; /* 添加平滑过渡效果 */
             transform: perspective(1000px); /* 添加 3D 效果 */
         }
-        #programButton:hover, #mcButton:hover {
+        #programButton:hover, #mcButton:hover, #gameButton:hover {
             transform: translateY(-5px) rotateX(5deg); /* 悬停时上移并旋转 */
         }
         #mcButton {
@@ -73,7 +74,7 @@
         .sub-buttons {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 10px; /* 子按钮之间的间距 */
             overflow: hidden;
             max-height: 0; /* 初始状态为隐藏 */
             transition: max-height 0.5s ease-out;
@@ -144,7 +145,7 @@
 <body>
     <div class="container" id="background">
         <h1>OOOO的网站</h1>
-        <div class="button-container">
+        <div class="button-container" style="gap: -150px;">
             <button id="programButton">程序下载</button>
             <div class="sub-buttons">
                 <a href="./python/MC.zip" class="button" target="_blank">MC</a>
@@ -154,11 +155,20 @@
                 <a href="./python/3D迷宫.zip" class="button" target="_blank">3D迷宫</a>
             </div>
         </div>
-        <div class="button-container">
+        <div class="button-container" style="gap: 150px;">
             <button id="mcButton">MC下载</button>
             <div class="sub-buttons">
                 <a href="./games/PC/HMCL-3.5.9.exe" class="button" target="_blank">EXE</a>
                 <a href="./games/PE/Minecraft_PE_0.14.3.1_v7a.apk" class="button" target="_blank">APK</a>
+            </div>
+        </div>
+        <div class="button-container" style="margin-top: 20px;"> <!-- 向下移动网页游戏按钮 -->
+            <button id="gameButton">网页游戏</button>
+            <div class="sub-buttons">
+                <a href="./web_games/game_1.html" class="button" target="_blank">贪吃蛇</a>
+                <a href="./web_games/game_2.html" class="button" target="_blank">吃豆人</a>
+                <a href="./web_games/game_3.html" class="button" target="_blank">俄罗斯方块</a>
+                <a href="./web_games/game_4.html" class="button" target="_blank">推箱子</a>
             </div>
         </div>
     </div>
@@ -199,10 +209,13 @@
         function resetButtons() {
             const programButton = document.getElementById('programButton');
             const mcButton = document.getElementById('mcButton');
+            const gameButton = document.getElementById('gameButton');
             programButton.style.left = '0px'; // 恢复到初始位置
             mcButton.style.left = '0px'; // 恢复到初始位置
+            gameButton.style.left = '0px'; // 恢复到初始位置
             programButton.style.backgroundColor = 'rgba(76, 175, 80, 0.8)'; // 恢复背景颜色
             mcButton.style.backgroundColor = 'rgba(76, 175, 80, 0.8)'; // 恢复背景颜色
+            gameButton.style.backgroundColor = 'rgba(76, 175, 80, 0.8)'; // 恢复背景颜色
         }
 
         document.getElementById('programButton').addEventListener('mouseenter', function() {
@@ -232,6 +245,7 @@
             // 移动主按钮
             programButton.style.left = '-50px'; // 向左移动50px
             mcButton.style.left = '-50px'; // 同时移动MC下载按钮
+            gameButton.style.left = '-50px'; // 同时移动网页游戏按钮
         });
 
         document.getElementById('mcButton').addEventListener('mouseenter', function() {
@@ -261,11 +275,42 @@
             // 移动主按钮
             mcButton.style.left = '-50px'; // 向左移动50px
             programButton.style.left = '-50px'; // 同时移动程序下载按钮
+            gameButton.style.left = '-50px'; // 同时移动网页游戏按钮
+        });
+
+        document.getElementById('gameButton').addEventListener('mouseenter', function() {
+            const gameButton = document.getElementById('gameButton');
+            const gameSubButtons = gameButton.nextElementSibling; // 获取对应的子按钮
+
+            // 检查子按钮是否已展开
+            if (gameSubButtons.classList.contains('expand')) {
+                return; // 如果已展开，什么也不做
+            }
+
+            closeSubButtons(); // 收起其他子按钮
+            resetButtons(); // 重置所有按钮状态
+
+            // 展开对应的子按钮
+            gameSubButtons.classList.add('expand'); // 展开状态
+            const buttons = gameSubButtons.querySelectorAll('.button');
+            buttons.forEach((button, index) => {
+                setTimeout(() => {
+                    button.classList.add('show'); // 显示子按钮
+                }, index * 100);
+            });
+
+            // 设置主按钮背景颜色为蓝色
+            gameButton.style.backgroundColor = 'blue'; // 设置背景颜色为蓝色
+
+            // 移动主按钮
+            gameButton.style.left = '-50px'; // 向左移动50px
+            programButton.style.left = '-50px'; // 同时移动程序下载按钮
+            mcButton.style.left = '-50px'; // 同时移动MC下载按钮
         });
 
         // 点击背景时收起子按钮并将主按钮移至初始位置
         document.getElementById('background').addEventListener('click', function(event) {
-            if (event.target.id !== 'programButton' && event.target.id !== 'mcButton') {
+            if (event.target.id !== 'programButton' && event.target.id !== 'mcButton' && event.target.id !== 'gameButton') {
                 closeSubButtons(); // 收起所有子按钮
                 resetButtons(); // 将主按钮移至初始位置
             }
