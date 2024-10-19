@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OOOO的网站</title>
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: black; /* 设置背景为黑色 */
+            overflow: hidden; /* 隐藏滚动条 */
+            color: green; /* 设置默认文字颜色为绿色 */
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            padding: 20px;
+            box-sizing: border-box;
+            position: relative; /* 使容器相对定位 */
+            z-index: 1; /* 确保内容在流星雨之上 */
+        }
+        h1 {
+            position: fixed; /* 使标题固定在屏幕上方 */
+            top: 20px; /* 距离顶部20px */
+            left: 50%; /* 初始位置在屏幕中央 */
+            transform: translateX(-50%) translateZ(0); /* 通过负的translate实现真正的居中 */
+            width: auto; /* 宽度自动 */
+            max-width: 90%; /* 最大宽度为90% */
+            text-align: center; /* 文本居中 */
+            color: white; /* 设置标题颜色为白色 */
+            font-size: 3em; /* 增加标题字体大小 */
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            animation: titleFloat 2s ease-out forwards;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 15px 30px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            z-index: 2; /* 确保标题在流星雨之上 */
+            transition: transform 0.3s ease; /* 添加平滑过渡效果 */
+        }
+        h1:hover {
+            transform: translateX(-50%) translateY(-5px) translateZ(0); /* 悬停时上移 */
+        }
+        .button-container {
+            display: flex;
+            flex-direction: row; /* 使按钮水平排列 */
+            gap: 30px; /* 增加按钮之间的间距 */
+            position: relative; /* 使子按钮相对于容器定位 */
+        }
+        #programButton, #mcButton {
+            padding: 10px 20px;
+            font-size: 18px; /* 增加按钮字体大小 */
+            color: white; /* 按钮文字颜色 */
+            background-color: rgba(76, 175, 80, 0.8);
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            position: relative; /* 使按钮相对定位 */
+            transition: transform 0.3s ease, background-color 0.3s ease; /* 添加平滑过渡效果 */
+            transform: perspective(1000px); /* 添加 3D 效果 */
+        }
+        #programButton:hover, #mcButton:hover {
+            transform: translateY(-5px) rotateX(5deg); /* 悬停时上移并旋转 */
+        }
+        #mcButton {
+            margin-top: 20px; /* 向下移动MC下载按钮 */
+        }
+        .sub-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            overflow: hidden;
+            max-height: 0; /* 初始状态为隐藏 */
+            transition: max-height 0.5s ease-out;
+            width: 200px; /* 设置子按钮的宽度 */
+            position: absolute; /* 使子按钮绝对定位 */
+            left: 100%; /* 将子按钮的左边距设置为主按钮的右边 */
+            top: 0; /* 将子按钮的顶部位置与主按钮对齐 */
+            opacity: 0; /* 初始透明度为0 */
+            transition: opacity 0.3s ease-out; /* 透明度过渡 */
+        }
+        .expand {
+            max-height: 300px; /* 展开时的最大高度 */
+            opacity: 1; /* 展开时透明度为1 */
+        }
+        .button {
+            opacity: 0;
+            transform: translateY(-20px) translateZ(0);
+            transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+            padding: 10px 20px; /* 与主按钮相同的内边距 */
+            font-size: 16px; /* 与主按钮相同的字体大小 */
+            color: white; /* 子按钮文字颜色 */
+            background-color: rgba(76, 175, 80, 0.8); /* 与主按钮相同的背景色 */
+            border: none;
+            border-radius: 5px; /* 与主按钮相同的圆角 */
+            cursor: pointer;
+            text-decoration: none; /* 去除下划线 */
+            transform: perspective(1000px); /* 添加 3D 效果 */
+        }
+        .button.show {
+            opacity: 1;
+            transform: translateY(0) translateZ(0);
+        }
+
+        /* 流星雨效果 */
+        .meteor {
+            position: absolute;
+            width: 4px; /* 增加流星宽度 */
+            height: 20px; /* 增加流星高度 */
+            background: green; /* 流星颜色为绿色 */
+            opacity: 0.8;
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(-100vh) translateX(0);
+            }
+            100% {
+                transform: translateY(100vh) translateX(100px);
+            }
+        }
+
+        /* 残影效果 */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5); /* 半透明黑色背景 */
+            filter: blur(10px); /* 模糊效果 */
+            pointer-events: none; /* 使其不干扰鼠标事件 */
+            z-index: 0; /* 确保在其他内容下方 */
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="background">
+        <h1>OOOO的网站</h1>
+        <div class="button-container">
+            <button id="programButton">程序下载</button>
+            <div class="sub-buttons">
+                <a href="https://huluobuo.118pan.com/b1226470" class="button" target="_blank">MC</a>
+                <a href="https://huluobuo.118pan.com/b1226471" class="button" target="_blank">MC-ERROR</a>
+                <a href="https://huluobuo.118pan.com/b1226472" class="button" target="_blank">MC程序辅助资源</a>
+                <a href="https://huluobuo.118pan.com/b1226469" class="button" target="_blank">AI</a>
+                <a href="https://huluobuo.118pan.com/b1226468" class="button" target="_blank">3D迷宫</a>
+            </div>
+        </div>
+        <div class="button-container">
+            <button id="mcButton">MC下载</button>
+            <div class="sub-buttons">
+                <a href="https://huluobuo.118pan.com/b1226615" class="button" target="_blank">PC-Java</a>
+                <a href="https://huluobuo.118pan.com/b1226616" class="button" target="_blank">APK</a>
+                <a href="https://huluobuo.118pan.com/b1226875" class="button" target="_blank">HTML</a>
+            </div>
+        </div>
+    </div>
+    <script>
+        // 创建流星雨效果
+        function createMeteor() {
+            const meteor = document.createElement('div');
+            meteor.className = 'meteor';
+            document.body.appendChild(meteor);
+
+            // 随机位置和动画持续时间
+            const xPosition = Math.random() * window.innerWidth;
+            const duration = Math.random() * 2 + 1; // 1到3秒之间
+
+            meteor.style.left = `${xPosition}px`;
+            meteor.style.animationDuration = `${duration}s`;
+
+            // 移除流星
+            meteor.addEventListener('animationend', () => {
+                meteor.remove();
+            });
+        }
+
+        // 每隔一段时间创建流星
+        setInterval(createMeteor, 200); // 每200毫秒创建一个流星
+
+        function closeSubButtons() {
+            const subButtons = document.querySelectorAll('.sub-buttons');
+            subButtons.forEach(subButton => {
+                subButton.classList.remove('expand'); // 移除展开状态
+                const buttons = subButton.querySelectorAll('.button');
+                buttons.forEach(button => {
+                    button.classList.remove('show'); // 隐藏子按钮
+                });
+            });
+        }
+
+        function resetButtons() {
+            const programButton = document.getElementById('programButton');
+            const mcButton = document.getElementById('mcButton');
+            programButton.style.left = '0px'; // 恢复到初始位置
+            mcButton.style.left = '0px'; // 恢复到初始位置
+            programButton.style.backgroundColor = 'rgba(76, 175, 80, 0.8)'; // 恢复背景颜色
+            mcButton.style.backgroundColor = 'rgba(76, 175, 80, 0.8)'; // 恢复背景颜色
+        }
+
+        document.getElementById('programButton').addEventListener('mouseenter', function() {
+            const programButton = document.getElementById('programButton');
+            const subButtons = programButton.nextElementSibling; // 获取对应的子按钮
+
+            // 检查子按钮是否已展开
+            if (subButtons.classList.contains('expand')) {
+                return; // 如果已展开，什么也不做
+            }
+
+            closeSubButtons(); // 收起其他子按钮
+            resetButtons(); // 重置所有按钮状态
+
+            // 展开对应的子按钮
+            subButtons.classList.add('expand'); // 展开状态
+            const buttons = subButtons.querySelectorAll('.button');
+            buttons.forEach((button, index) => {
+                setTimeout(() => {
+                    button.classList.add('show'); // 显示子按钮
+                }, index * 100);
+            });
+
+            // 设置主按钮背景颜色为蓝色
+            programButton.style.backgroundColor = 'blue'; // 设置背景颜色为蓝色
+
+            // 移动主按钮
+            programButton.style.left = '-50px'; // 向左移动50px
+            mcButton.style.left = '-50px'; // 同时移动MC下载按钮
+        });
+
+        document.getElementById('mcButton').addEventListener('mouseenter', function() {
+            const mcButton = document.getElementById('mcButton');
+            const mcSubButtons = mcButton.nextElementSibling; // 获取对应的子按钮
+
+            // 检查子按钮是否已展开
+            if (mcSubButtons.classList.contains('expand')) {
+                return; // 如果已展开，什么也不做
+            }
+
+            closeSubButtons(); // 收起其他子按钮
+            resetButtons(); // 重置所有按钮状态
+
+            // 展开对应的子按钮
+            mcSubButtons.classList.add('expand'); // 展开状态
+            const buttons = mcSubButtons.querySelectorAll('.button');
+            buttons.forEach((button, index) => {
+                setTimeout(() => {
+                    button.classList.add('show'); // 显示子按钮
+                }, index * 100);
+            });
+
+            // 设置主按钮背景颜色为蓝色
+            mcButton.style.backgroundColor = 'blue'; // 设置背景颜色为蓝色
+
+            // 移动主按钮
+            mcButton.style.left = '-50px'; // 向左移动50px
+            programButton.style.left = '-50px'; // 同时移动程序下载按钮
+        });
+
+        // 点击背景时收起子按钮并将主按钮移至初始位置
+        document.getElementById('background').addEventListener('click', function(event) {
+            if (event.target.id !== 'programButton' && event.target.id !== 'mcButton') {
+                closeSubButtons(); // 收起所有子按钮
+                resetButtons(); // 将主按钮移至初始位置
+            }
+        });
+    </script>
+</body>
+</html>
