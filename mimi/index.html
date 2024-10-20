@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>设置背景</title>
+    <style>
+        body {
+            background-image: url('https://pic2.zhimg.com/80/v2-0decbcccffcd319fb86d7680c63b95c3_720w.webp');
+            background-size: cover; /* 使背景图像覆盖整个页面 */
+            background-position: center; /* 背景图像居中 */
+            height: 100vh; /* 设置高度为视口高度 */
+            margin: 0; /* 去掉默认的边距 */
+            display: flex; /* 使用Flexbox布局 */
+            justify-content: center; /* 水平居中 */
+            align-items: center; /* 垂直居中 */
+            flex-direction: column; /* 纵向排列子元素 */
+            position: relative; /* 使文本定位相对 */
+        }
+        h1 {
+            margin-bottom: 20px; /* 向上移动标题 */
+            transform: translateY(-50px); /* 向上移动50px */
+        }
+        button {
+            margin-top: 20px; /* 按钮上边距 */
+            padding: 10px 20px; /* 按钮内边距 */
+            font-size: 16px; /* 按钮字体大小 */
+            cursor: pointer; /* 鼠标悬停时显示手形光标 */
+            border-radius: 10px; /* 圆润按钮边缘 */
+            opacity: 0.75; /* 设置按钮不透明度 */
+            background: linear-gradient(45deg, #ff4d4d, #ff9999, #4dff4d, #9999ff, #ff4dff); /* 多彩渐变背景 */
+            border: none; /* 去掉边框 */
+            color: white; /* 字体颜色 */
+            transition: background-color 0.5s, transform 0.3s; /* 颜色变化和缩放的过渡效果 */
+        }
+        button:hover {
+            animation: colorChange 4s infinite; /* 鼠标悬停时改变颜色 */
+            transform: scale(1.05); /* 鼠标悬停时放大按钮 */
+        }
+        @keyframes colorChange {
+            0% { background: linear-gradient(45deg, #ff4d4d, #ff9999); }
+            10% { background: linear-gradient(45deg, #ff9999, #4dff4d); }
+            20% { background: linear-gradient(45deg, #4dff4d, #9999ff); }
+            30% { background: linear-gradient(45deg, #9999ff, #ff4dff); }
+            40% { background: linear-gradient(45deg, #ff4dff, #ff4d4d); }
+            50% { background: linear-gradient(45deg, #ff4d4d, #ff9999); }
+            60% { background: linear-gradient(45deg, #ff9999, #4dff4d); }
+            70% { background: linear-gradient(45deg, #4dff4d, #9999ff); }
+            80% { background: linear-gradient(45deg, #9999ff, #ff4dff); }
+            90% { background: linear-gradient(45deg, #ff4dff, #ff4d4d); }
+            100% { background: linear-gradient(45deg, #ff4d4d, #ff9999); }
+        }
+        .heart {
+            display: none; /* 初始隐藏爱心 */
+            font-size: 100px; /* 字体大小 */
+            color: red; /* 字体颜色 */
+            animation: showHeart 2s forwards; /* 显示爱心的动画 */
+        }
+        @keyframes showHeart {
+            0% { opacity: 0; transform: scale(0); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <h1>欢迎！   Welcome!</h1>
+    <button id="myButton">---qwq点击我qwq---</button> <!-- 新增的按钮 -->
+    <div class="heart" id="heart">qwq❤qwq</div> <!-- 显示的爱心文本 -->
+    
+    <script>
+        const button = document.getElementById('myButton');
+        const heart = document.getElementById('heart');
+
+        button.addEventListener('click', () => {
+            // 隐藏所有部件
+            document.body.querySelectorAll('h1, button').forEach(el => el.style.display = 'none');
+            // 显示爱心
+            heart.style.display = 'block';
+        });
+    </script>
+</body>
+</html>
