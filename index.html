@@ -53,7 +53,7 @@
             gap: 30px; /* 增加按钮之间的间距 */
             position: relative; /* 使子按钮相对于容器定位 */
         }
-        #programButton, #mcButton, #gameButton {
+        #programButton, #moreButton, #gameButton {
             padding: 10px 20px;
             font-size: 18px; /* 增加按钮字体大小 */
             color: white; /* 按钮文字颜色 */
@@ -65,10 +65,10 @@
             transition: transform 0.3s ease, background-color 0.3s ease; /* 添加平滑过渡效果 */
             transform: perspective(1000px); /* 添加 3D 效果 */
         }
-        #programButton:hover, #mcButton:hover, #gameButton:hover {
+        #programButton:hover, #moreButton:hover, #gameButton:hover {
             transform: translateY(-5px) rotateX(5deg); /* 悬停时上移并旋转 */
         }
-        #mcButton {
+        #moreButton {
             margin-top: 20px; /* 向下移动MC下载按钮 */
         }
         .sub-buttons {
@@ -140,12 +140,25 @@
             pointer-events: none; /* 使其不干扰鼠标事件 */
             z-index: 0; /* 确保在其他内容下方 */
         }
+
+        .button-container.program-button-container {
+            gap: -150px; /* Move the inline style here */
+        }
+
+        .button-container.mc-button-container {
+            gap: 150px; /* Move the inline style here */
+        }
+
+        .button-container.game-button-container {
+            gap: -150px; /* Move the inline style here */
+            margin-top: 20px; /* 向下移动网页游戏按钮 */
+        }
     </style>
 </head>
 <body>
     <div class="container" id="background">
         <h1>OOOO的网站</h1>
-        <div class="button-container" style="gap: -150px;">
+        <div class="button-container program-button-container"> <!-- Removed inline style -->
             <button id="programButton">程序下载</button>
             <div class="sub-buttons">
                 <a href="./python/MC.zip" class="button" target="_blank">MC</a>
@@ -156,14 +169,14 @@
                 <a href="./web/跑酷.zip" class="button" target="_blank">跑酷</a>
             </div>
         </div>
-        <div class="button-container" style="gap: 150px;">
-            <button id="mcButton">MC下载</button>
+        <div class="button-container mc-button-container"> <!-- Moved inline style here -->
+            <button id="moreButton">更多下载</button>
             <div class="sub-buttons">
-                <a href="./games/PC/HMCL-3.5.9.exe" class="button" target="_blank">EXE</a>
-                <a href="./games/PE/Minecraft_PE_0.14.3.1_v7a.apk" class="button" target="_blank">APK</a>
+                <a href="./games/PC/HMCL-3.5.9.exe" class="button" target="_blank">MC - Java - EXE</a>
+                <a href="./games/PE/Minecraft_PE_0.14.3.1_v7a.apk" class="button" target="_blank">MC - APK</a>
             </div>
         </div>
-        <div class="button-container" style="margin-top: 20px;"> <!-- 向下移动网页游戏按钮 -->
+        <div class="button-container game-button-container"> <!-- Removed inline style -->
             <button id="gameButton">网页游戏</button>
             <div class="sub-buttons">
                 <a href="./web_games/game_1.html" class="button" target="_blank">贪吃蛇</a>
@@ -209,13 +222,13 @@
 
         function resetButtons() {
             const programButton = document.getElementById('programButton');
-            const mcButton = document.getElementById('mcButton');
+            const moreButton = document.getElementById('moreButton');
             const gameButton = document.getElementById('gameButton');
             programButton.style.left = '0px'; // 恢复到初始位置
-            mcButton.style.left = '0px'; // 恢复到初始位置
+            moreButton.style.left = '0px'; // 恢复到初始位置
             gameButton.style.left = '0px'; // 恢复到初始位置
             programButton.style.backgroundColor = 'rgba(76, 175, 80, 0.8)'; // 恢复背景颜色
-            mcButton.style.backgroundColor = 'rgba(76, 175, 80, 0.8)'; // 恢复背景颜色
+            moreButton.style.backgroundColor = 'rgba(76, 175, 80, 0.8)'; // 恢复背景颜色
             gameButton.style.backgroundColor = 'rgba(76, 175, 80, 0.8)'; // 恢复背景颜色
         }
 
@@ -245,17 +258,17 @@
 
             // 移动主按钮
             programButton.style.left = '-50px'; // 向左移动50px
-            mcButton.style.left = '-50px'; // 同时移动MC下载按钮
+            moreButton.style.left = '-50px'; // 同时移动MC下载按钮
             gameButton.style.left = '-50px'; // 同时移动网页游戏按钮
         });
 
-        document.getElementById('mcButton').addEventListener('mouseenter', function() {
-            const mcButton = document.getElementById('mcButton');
-            const mcSubButtons = mcButton.nextElementSibling; // 获取对应的子按钮
+        document.getElementById('moreButton').addEventListener('mouseenter', function() {
+            const moreButton = document.getElementById('moreButton');
+            const mcSubButtons = moreButton.nextElementSibling; // 获取对应的子按钮
 
             // 检查子按钮是否已展开
             if (mcSubButtons.classList.contains('expand')) {
-                return; // 如果已展开，什么也不做
+                return; // 如果已展，什么也不做
             }
 
             closeSubButtons(); // 收起其他子按钮
@@ -271,10 +284,10 @@
             });
 
             // 设置主按钮背景颜色为蓝色
-            mcButton.style.backgroundColor = 'blue'; // 设置背景颜色为蓝色
+            moreButton.style.backgroundColor = 'blue'; // 设置背景颜色为蓝色
 
             // 移动主按钮
-            mcButton.style.left = '-50px'; // 向左移动50px
+            moreButton.style.left = '-50px'; // 向左移动50px
             programButton.style.left = '-50px'; // 同时移动程序下载按钮
             gameButton.style.left = '-50px'; // 同时移动网页游戏按钮
         });
@@ -306,12 +319,12 @@
             // 移动主按钮
             gameButton.style.left = '-50px'; // 向左移动50px
             programButton.style.left = '-50px'; // 同时移动程序下载按钮
-            mcButton.style.left = '-50px'; // 同时移动MC下载按钮
+            moreButton.style.left = '-50px'; // 同时移动MC下载按钮
         });
 
         // 点击背景时收起子按钮并将主按钮移至初始位置
         document.getElementById('background').addEventListener('click', function(event) {
-            if (event.target.id !== 'programButton' && event.target.id !== 'mcButton' && event.target.id !== 'gameButton') {
+            if (event.target.id !== 'programButton' && event.target.id !== 'moreButton' && event.target.id !== 'gameButton') {
                 closeSubButtons(); // 收起所有子按钮
                 resetButtons(); // 将主按钮移至初始位置
             }
