@@ -1,208 +1,79 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <!-- V3.5.3 -->
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="这是一个提供程序下载和网页游戏的平台。">
+    <meta name="keywords" content="下载, 游戏, 程序, 流星雨">
     <title>OOOO的网站</title>
-    <style>
-        body, html {
-            height: 100%;
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background-color: black; /* 设置背景为黑色 */
-            overflow: hidden; /* 隐藏滚动条 */
-            color: green; /* 设置默认文字颜色为绿色 */
-        }
-        .container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100%;
-            padding: 20px;
-            box-sizing: border-box;
-            position: relative; /* 使容器相对定位 */
-            z-index: 1; /* 确保内容在流星雨之上 */
-        }
-        h1 {
-            position: fixed; /* 使标题固定在屏幕上方 */
-            top: 20px; /* 距离顶部20px */
-            left: 50%; /* 初始位置在屏幕中央 */
-            transform: translateX(-50%) translateZ(0); /* 通过负的translate实现真正的居中 */
-            width: auto; /* 宽度自动 */
-            max-width: 90%; /* 最大宽度为90% */
-            text-align: center; /* 文本居中 */
-            color: white; /* 设置标题颜色为白色 */
-            font-size: 3em; /* 增加标题字体大小 */
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-            animation: titleFloat 2s ease-out forwards;
-            background-color: rgba(0, 0, 0, 0.7);
-            padding: 15px 30px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            z-index: 2; /* 确保标题在流星雨之上 */
-            transition: transform 0.3s ease; /* 添加平滑过渡效果 */
-        }
-        h1:hover {
-            transform: translateX(-50%) translateY(-5px) translateZ(0); /* 悬停时上移 */
-        }
-        .button-container {
-            display: flex;
-            flex-direction: row; /* 使按钮水平排列 */
-            gap: 30px; /* 增加按钮之间的间距 */
-            position: relative; /* 使子按钮相对于容器定位 */
-        }
-        #programButton, #moreButton, #gameButton {
-            padding: 10px 20px;
-            font-size: 18px; /* 增加按钮字体大小 */
-            color: white; /* 按钮文字颜色 */
-            background-color: rgba(76, 175, 80, 0.8);
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            position: relative; /* 使按钮相对定位 */
-            transition: transform 0.3s ease, background-color 0.3s ease; /* 添加平滑过渡效果 */
-            transform: perspective(1000px); /* 添加 3D 效果 */
-        }
-        #programButton:hover, #moreButton:hover, #gameButton:hover {
-            transform: translateY(-5px) rotateX(5deg); /* 悬停时上移并旋转 */
-        }
-        #moreButton {
-            margin-top: 20px; /* 向下移动MC下载按钮 */
-        }
-        .sub-buttons {
-            display: flex;
-            flex-direction: column;
-            gap: 10px; /* 子按钮之间的间距 */
-            overflow: hidden;
-            max-height: 0; /* 初始状态为隐藏 */
-            transition: max-height 0.5s ease-out;
-            width: 200px; /* 设置子按钮的宽度 */
-            position: absolute; /* 使子按钮绝对定位 */
-            left: 100%; /* 将子按钮的左边距设置为主按钮的右边 */
-            top: 0; /* 将子按钮的顶部位置与主按钮对齐 */
-            opacity: 0; /* 初始透明度为0 */
-            transition: opacity 0.3s ease-out; /* 透明度过渡 */
-        }
-        .expand {
-            max-height: 300px; /* 展开时的最大高度 */
-            opacity: 1; /* 展开时透明度为1 */
-        }
-        .button {
-            opacity: 0;
-            transform: translateY(-20px) translateZ(0);
-            transition: opacity 0.3s ease-out, transform 0.3s ease-out;
-            padding: 10px 20px; /* 与主按钮相同的内边距 */
-            font-size: 16px; /* 与主按钮相同的字体大小 */
-            color: white; /* 子按钮文字颜色 */
-            background-color: rgba(76, 175, 80, 0.8); /* 与主按钮相同的背景色 */
-            border: none;
-            border-radius: 5px; /* 与主按钮相同的圆角 */
-            cursor: pointer;
-            text-decoration: none; /* 去除下划线 */
-            transform: perspective(1000px); /* 添加 3D 效果 */
-        }
-        .button.show {
-            opacity: 1;
-            transform: translateY(0) translateZ(0);
-        }
-
-        /* 流星雨效果 */
-        .meteor {
-            position: absolute;
-            width: 4px; /* 增加流星宽度 */
-            height: 20px; /* 增加流星高度 */
-            background: green; /* 流星颜色为绿色 */
-            opacity: 0.8;
-            animation: fall linear infinite;
-        }
-
-        @keyframes fall {
-            0% {
-                transform: translateY(-100vh) translateX(0);
-            }
-            100% {
-                transform: translateY(100vh) translateX(100px);
-            }
-        }
-
-        /* 残影效果 */
-        body::after {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5); /* 半透明黑色背景 */
-            filter: blur(10px); /* 模糊效果 */
-            pointer-events: none; /* 使其不干扰鼠标事件 */
-            z-index: 0; /* 确保在其他内容下方 */
-        }
-
-        .button-container.program-button-container {
-            gap: -150px; /* Move the inline style here */
-        }
-
-        .button-container.mc-button-container {
-            gap: 150px; /* Move the inline style here */
-        }
-
-        .button-container.game-button-container {
-            gap: -150px; /* Move the inline style here */
-            margin-top: 20px; /* 向下移动网页游戏按钮 */
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css"> <!-- 链接到外部CSS文件 -->
 </head>
 <body>
-    <div class="container" id="background">
+    <div class="container" id="background" role="main"> <!-- 添加ARIA角色 -->
         <h1>OOOO的网站</h1>
-        <div class="button-container program-button-container"> <!-- Removed inline style -->
-            <button id="programButton">程序下载</button>
-            <div class="sub-buttons">
-                <a href="./python/MC.zip" class="button" target="_blank">MC</a>
-                <a href="./python/MC-ERROR.zip" class="button" target="_blank">MC-ERROR</a>
-                <a href="./python/MC程序辅助资源.zip" class="button" target="_blank">MC程序辅助资源</a>
-                <a href="./python/AI.zip" class="button" target="_blank">AI</a>
-                <a href="./python/3D迷宫.zip" class="button" target="_blank">3D迷宫</a>
-                <a href="./web/跑酷.zip" class="button" target="_blank">跑酷</a>
+        <div class="button-container program-button-container" role="group" aria-label="程序下载"> <!-- 添加ARIA标签 -->
+            <button id="programButton" aria-haspopup="true" aria-expanded="false" aria-label="程序下载按钮">程序下载</button>
+            <div class="sub-buttons" role="group" aria-label="程序下载子按钮">
+                <a href="./python/MC.zip" class="button" target="_blank" aria-label="下载MC" onclick="showLoading('./python/MC.zip')">MC</a>
+                <a href="./python/MC-ERROR.zip" class="button" target="_blank" aria-label="下载MC-ERROR" onclick="showLoading('./python/MC-ERROR.zip')">MC-ERROR</a>
+                <a href="./python/MC程序辅助资源.zip" class="button" target="_blank" aria-label="下载MC程序辅助资源" onclick="showLoading('./python/MC程序辅助资源.zip')">MC程序辅助资源</a>
+                <a href="./python/AI.zip" class="button" target="_blank" aria-label="下载AI" onclick="showLoading('./python/AI.zip')">AI</a>
+                <a href="./python/3D迷宫.zip" class="button" target="_blank" aria-label="下载3D迷宫" onclick="showLoading('./python/3D迷宫.zip')">3D迷宫</a>
+                <a href="./web/跑酷.zip" class="button" target="_blank" aria-label="下载跑酷" onclick="showLoading('./web/跑酷.zip')">跑酷</a>
             </div>
         </div>
-        <div class="button-container mc-button-container"> <!-- Moved inline style here -->
-            <button id="moreButton">更多下载</button>
-            <div class="sub-buttons">
-                <a href="./games/PC/HMCL-3.5.9.exe" class="button" target="_blank">MC - Java - EXE</a>
-                <a href="./games/PE/Minecraft_PE_0.14.3.1_v7a.apk" class="button" target="_blank">MC - APK</a>
+        <div class="button-container mc-button-container" role="group" aria-label="更多下载">
+            <button id="moreButton" aria-haspopup="true" aria-expanded="false">更多下载</button>
+            <div class="sub-buttons" role="group" aria-label="更多下载子按钮">
+                <a href="./games/PC/MC-Java-EXE.zip" class="button" target="_blank" aria-label="下载MC - Java - EXE" onclick="showLoading('./games/PC/MC-Java-EXE.zip')">MC - Java - EXE - zip</a>
+                <a href="./games/PE/Minecraft_PE_0.14.3.1_v7a.apk" class="button" target="_blank" aria-label="下载MC - APK" onclick="showLoading('./games/PE/Minecraft_PE_0.14.3.1_v7a.apk')">MC - APK</a>
+                <a href="./games/all/running-html.zip" class="button" target="_blank" aria-label="下载running - html" onclick="showLoading('./games/all/running-html.zip')">running - html - zip</a>
             </div>
         </div>
-        <div class="button-container game-button-container"> <!-- Removed inline style -->
-            <button id="gameButton">网页游戏</button>
-            <div class="sub-buttons">
-                <a href="./web_games/game_1.html" class="button" target="_blank">贪吃蛇</a>
-                <a href="./web_games/game_2.html" class="button" target="_blank">吃豆人</a>
-                <a href="./web_games/game_3.html" class="button" target="_blank">俄罗斯方块</a>
-                <a href="./web_games/game_4.html" class="button" target="_blank">推箱子</a>
+        <div class="button-container game-button-container" role="group" aria-label="网页游戏">
+            <button id="gameButton" aria-haspopup="true" aria-expanded="false">网页游戏</button>
+            <div class="sub-buttons" role="group" aria-label="网页游戏子按钮">
+                <a href="./web_games/game_1.html" class="button" target="_blank" aria-label="玩贪吃蛇">贪吃蛇</a>
+                <a href="./web_games/game_2.html" class="button" target="_blank" aria-label="玩吃豆人">吃豆人</a>
+                <a href="./web_games/game_3.html" class="button" target="_blank" aria-label="玩俄罗斯方块">俄罗斯方块</a>
+                <a href="./web_games/game_4.html" class="button" target="_blank" aria-label="玩推箱子">推箱子</a>
             </div>
+        </div>
+        <div class="progress-container">
+            <div class="progress-bar" id="progressBar"></div>
         </div>
     </div>
     <script>
         // 创建流星雨效果
+        const meteors = []; // 存储流星对象
+        const maxMeteors = 75; // 最大流星数量
+
         function createMeteor() {
+            if (meteors.length >= maxMeteors) return; // 如果流星数量达到最大值，则停止创建
+
             const meteor = document.createElement('div');
             meteor.className = 'meteor';
             document.body.appendChild(meteor);
+            meteors.push(meteor); // 将流星添加到数组中
 
-            // 随机位置和动画持续时间
+            // 随机位置、颜色和动画持续时间
             const xPosition = Math.random() * window.innerWidth;
             const duration = Math.random() * 2 + 1; // 1到3秒之间
+            const size = Math.random() * 4 + 2; // 随机大小
 
             meteor.style.left = `${xPosition}px`;
+            meteor.style.width = `${size}px`; // 设置流星宽度
             meteor.style.animationDuration = `${duration}s`;
+            meteor.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`; // 随机颜色
 
             // 移除流星
             meteor.addEventListener('animationend', () => {
                 meteor.remove();
+                const index = meteors.indexOf(meteor);
+                if (index > -1) {
+                    meteors.splice(index, 1); // 从数组中移除流星
+                }
             });
         }
 
@@ -257,9 +128,9 @@
             programButton.style.backgroundColor = 'blue'; // 设置背景颜色为蓝色
 
             // 移动主按钮
-            programButton.style.left = '-50px'; // 向左移动50px
-            moreButton.style.left = '-50px'; // 同时移动MC下载按钮
-            gameButton.style.left = '-50px'; // 同时移动网页游戏按钮
+            moreButton.style.left = '-75px'; // 向左移动50px
+            programButton.style.left = '-75px'; // 同时移动程序下载按钮
+            gameButton.style.left = '-75px'; // 同时移动网页游戏按钮
         });
 
         document.getElementById('moreButton').addEventListener('mouseenter', function() {
@@ -287,9 +158,9 @@
             moreButton.style.backgroundColor = 'blue'; // 设置背景颜色为蓝色
 
             // 移动主按钮
-            moreButton.style.left = '-50px'; // 向左移动50px
-            programButton.style.left = '-50px'; // 同时移动程序下载按钮
-            gameButton.style.left = '-50px'; // 同时移动网页游戏按钮
+            moreButton.style.left = '-75px'; // 向左移动50px
+            programButton.style.left = '-75px'; // 同时移动程序下载按钮
+            gameButton.style.left = '-75px'; // 同时移动网页游戏按钮
         });
 
         document.getElementById('gameButton').addEventListener('mouseenter', function() {
@@ -317,9 +188,9 @@
             gameButton.style.backgroundColor = 'blue'; // 设置背景颜色为蓝色
 
             // 移动主按钮
-            gameButton.style.left = '-50px'; // 向左移动50px
-            programButton.style.left = '-50px'; // 同时移动程序下载按钮
-            moreButton.style.left = '-50px'; // 同时移动MC下载按钮
+            moreButton.style.left = '-75px'; // 向左移动50px
+            programButton.style.left = '-75px'; // 同时移动程序下载按钮
+            gameButton.style.left = '-75px'; // 同时移动网页游戏按钮
         });
 
         // 点击背景时收起子按钮并将主按钮移至初始位置
@@ -329,6 +200,90 @@
                 resetButtons(); // 将主按钮移至初始位置
             }
         });
+
+        function downloadFile(url) {
+            const progressContainer = document.querySelector('.progress-container');
+            const progressBar = document.getElementById('progressBar');
+
+            // 显示进度条
+            progressContainer.style.display = 'block';
+
+            fetch(url)
+                .then(response => {
+                    const contentLength = response.headers.get('Content-Length');
+                    const total = parseInt(contentLength, 10);
+                    let loaded = 0;
+
+                    // 创建一个可读流
+                    const reader = response.body.getReader();
+                    const stream = new ReadableStream({
+                        start(controller) {
+                            function push() {
+                                reader.read().then(({ done, value }) => {
+                                    if (done) {
+                                        controller.close();
+                                        return;
+                                    }
+                                    loaded += value.length;
+                                    // 更新进度条
+                                    const percent = (loaded / total) * 100;
+                                    progressBar.style.width = `${percent}%`;
+                                    push();
+                                });
+                            }
+                            push();
+                        }
+                    });
+
+                    // 处理下载完成
+                    return new Response(stream);
+                })
+                .then(response => response.blob())
+                .then(blob => {
+                    // 创建下载链接
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'downloaded_file'; // 设置下载文件名
+                    document.body.appendChild(a);
+                    a.click();
+                    a.remove();
+                    window.URL.revokeObjectURL(url);
+                })
+                .catch(error => console.error('下载失败:', error))
+                .finally(() => {
+                    // 隐藏进度条
+                    progressContainer.style.display = 'none';
+                    progressBar.style.width = '0%'; // 重置进度条
+                });
+        }
+
+        function showLoading(url) {
+            // 隐藏所有按钮
+            const buttons = document.querySelectorAll('.button-container button, .button-container a');
+            buttons.forEach(button => {
+                button.style.display = 'none'; // 隐藏按钮
+            });
+
+            const loadingIndicator = document.createElement('div');
+            loadingIndicator.className = 'loading-indicator';
+            loadingIndicator.innerText = '正在下载...';
+            document.body.appendChild(loadingIndicator);
+
+            // 放大“正在下载”指示器
+            loadingIndicator.style.transform = 'translate(-50%, -50%) scale(1.5)'; // 放大指示器
+
+            // 开始下载文件
+            downloadFile(url);
+
+            setTimeout(() => {
+                loadingIndicator.remove();
+                // 显示所有按钮
+                buttons.forEach(button => {
+                    button.style.display = ''; // 恢复按钮显示
+                });
+            }, 2000); // 2秒后移除
+        }
     </script>
 </body>
 </html>
