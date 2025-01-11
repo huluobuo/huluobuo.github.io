@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pac-Man Game</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        canvas {
+            border: 1px solid black;
+            max-width: 100%;
+            max-height: 80vh;
+        }
+        #gameInfo {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="gameCanvas"></canvas>
+    <div id="gameInfo">
+        <div>Score: <span id="score">0</span></div>
+        <button id="startButton">Start Game</button>
+    </div>
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // 吃豆人
+        let pacman = {
+            x: 200,
+            y: 200,
+            radius: 15,
+            mouth: 0,
+            speed: 3,
+            dx: 0,
+            dy: 0
+        };
+
+        // 迷宫设计
+        const WALL = 1;
+        const PATH = 0;
+        const CELL_SIZE = 40;
+        const maze = [
+            [1,1,1,1,1,1,1,1,1,1],
+            [1,0,0,0,0,0,0,0,0,1],
+            [1,0,1,1,0,0,1,1,0,1],
+            [1,0,1,0,0,0,0,1,0,1],
+            [1,0,0,0,1,1,0,0,0,1],
+            [1,0,1,0,0,0,0,1,0,1],
+            [1,0,1,1,0,0,1,1,0,1],
+            [1,0,0,0,0,0,0,0,0,1],
+            [1,1,1,1,1,1,1,1,1,1]
+        ];
+
+        // 调整画布大小
+        canvas.width = maze[0].length * CELL_SIZE;
+        canvas.height = maze.length * CELL_SIZE;
+
+        // 添加豆子和能量豆
+        let dots = [];
+        let powerPellets = [];
+        let score = 0;
+        let gameRunning = false;
+
+        // 初始化豆子和能量豆
+        function initDots() {
+            dots = [];
+            powerPellets = [];
+            for (let y = 0; y < maze.length; y++) {
+                for (let x = 0; x < maze[y].length; x++) {
+                    if (maze[y][x] === PATH) {
+                        if (Math.random() < 0.7) { // 70%概率生成普通豆子
+                            dots.push({
+                                x: x * CELL_SIZE + CELL_SIZE / 2,
+                                y: y * CELL_SIZE + CELL_SIZE / 2
+                            });
+                        } else if (Math.random() < 0.1) { // 10%概率生成能量豆
+                            powerPellets.push({
+                                x: x * CELL_SIZE + CELL_SIZE / 2,
+                                y: y * CELL_SIZE + CELL_SIZE / 2
+                            });
+                        }
+                    }
+                }
+            }
+        }
+
+        // 绘制豆子和能量豆
+        function drawDots() {
+            ctx.fillStyle = 'yellow';  // 将豆子颜色改为黄色
+            dots.forEach(dot => {
+                ctx.beginPath();
+                ctx.arc(dot.x, dot.y, 2, 0, Math.PI * 2); 
+                ctx.fill();
+            });
+
+            ctx.fillStyle = 'blue';
+            powerPellets.forEach(pellet => {
+                ctx.beginPath();
+                ctx.arc(pellet.x, pellet.y, 5, 0, Math.PI * 2);
+                ctx.fill();
+            });
+        }
+
+        // 检测碰撞并更新分数
+        function checkCollisions() {
+            dots = dots.filter(dot => {
+                if (Math.hypot(dot.x - pacman.x, dot.y - pacman.y) < pacman.radius) {
+                    score += 10;
+                    return false;
+                }
+                return true;
+            });
+
+            powerPellets = powerPellets.filter(pellet => {
+                if (Math.hypot(pellet.x - pacman.x, pellet.y - pacman.y) < pacman.radius) {
+                    score += 50;
+                    // 这里可以添加吃到能量豆的特殊效果
+                    return false;
+                }
+                return true;
+            });
+
+            document.getElementById('score').textContent = score;
+        }
+
+        // 绘制迷宫
+        function drawMaze() {
+            for (let y = 0; y < maze.length; y++) {
+                for (let x = 0; x < maze[y].length; x++) {
+                    if (maze[y][x] === WALL) {
+                        ctx.fillStyle = 'black';  // 将墙壁颜色改为黑色
+                        ctx.fillRect(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+                    }
+                }
+            }
+        }
+
+        // 检查碰撞
+        function checkWallCollision(x, y) {
+            const cellX = Math.floor(x / CELL_SIZE);
+            const cellY = Math.floor(y / CELL_SIZE);
+            return maze[cellY][cellX] === WALL;
+        }
+
+        // 键盘控制
+        document.addEventListener('keydown', (e) => {
+            switch(e.key) {
+                case 'ArrowLeft':
+                    pacman.dx = -pacman.speed;
+                    pacman.dy = 0;
+                    break;
+                case 'ArrowRight':
+                    pacman.dx = pacman.speed;
+                    pacman.dy = 0;
+                    break;
+                case 'ArrowUp':
+                    pacman.dx = 0;
+                    pacman.dy = -pacman.speed;
+                    break;
+                case 'ArrowDown':
+                    pacman.dx = 0;
+                    pacman.dy = pacman.speed;
+                    break;
+            }
+        });
+
+        // 更新吃豆人位置
+        function updatePacmanPosition() {
+            const newX = pacman.x + pacman.dx;
+            const newY = pacman.y + pacman.dy;
+
+            if (!checkWallCollision(newX, newY)) {
+                pacman.x = newX;
+                pacman.y = newY;
+            }
+
+            // 确保吃豆人不会离开画布
+            pacman.x = Math.max(pacman.radius, Math.min(canvas.width - pacman.radius, pacman.x));
+            pacman.y = Math.max(pacman.radius, Math.min(canvas.height - pacman.radius, pacman.y));
+        }
+
+        // 重置游戏
+        function resetGame() {
+            pacman.x = 200;
+            pacman.y = 200;
+            pacman.dx = 0;
+            pacman.dy = 0;
+            score = 0;
+            document.getElementById('score').textContent = score;
+            initDots();
+        }
+
+        // 开始游戏
+        function startGame() {
+            if (!gameRunning) {
+                resetGame();
+                gameRunning = true;
+                document.getElementById('startButton').style.display = 'none';  // 隐藏开始按钮
+                gameLoop();
+            }
+        }
+
+        // 结束游戏
+        function endGame() {
+            gameRunning = false;
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = 'white';
+            ctx.font = '30px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('游戏结束', canvas.width / 2, canvas.height / 2);
+            ctx.fillText('最终分数: ' + score, canvas.width / 2, canvas.height / 2 + 40);
+        }
+
+        // 更新游戏循环
+        function gameLoop() {
+            if (!gameRunning) return;
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            drawMaze();
+            drawDots();
+
+            updatePacmanPosition();
+
+            // 绘制吃豆人
+            ctx.beginPath();
+            ctx.arc(pacman.x, pacman.y, pacman.radius, pacman.mouth * Math.PI, (2 - pacman.mouth) * Math.PI);
+            ctx.lineTo(pacman.x, pacman.y);
+            ctx.fillStyle = 'yellow';
+            ctx.fill();
+
+            pacman.mouth = 0.15 - pacman.mouth;
+
+            checkCollisions();
+
+            // 检查游戏是否结束
+            if (dots.length === 0 && powerPellets.length === 0) {
+                endGame();
+            } else {
+                requestAnimationFrame(gameLoop);
+            }
+        }
+
+        // 添加开始按钮事件监听器
+        document.getElementById('startButton').addEventListener('click', startGame);
+
+        // 初始化游戏
+        resetGame();
+    </script>
+</body>
+</html>
