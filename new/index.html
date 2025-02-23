@@ -1,0 +1,391 @@
+<!DOCTYPE html>  <!--全是BUG，但是能用就行哈QwQ~~~-->
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>个人网站</title>
+<script src="https://cdn.tailwindcss.com">
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet">
+<style>
+:where([class^="ri-"])::before { content: "\f3c2"; }
+.scroll-container {
+scroll-snap-type: y mandatory;
+overflow-y: scroll;
+height: 100vh;
+}
+.scroll-section {
+scroll-snap-align: start;
+height: 100vh;
+}
+::-webkit-scrollbar {
+display: none;
+}
+.theme-transition {
+transition: background-color 0.3s ease, color 0.3s ease;
+}
+.container-animation {
+opacity: 0;
+transform: translateY(20px);
+transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.container-animation.active {
+opacity: 1;
+transform: translateY(0);
+}
+[data-theme="dark"] {
+background-color: #1a1a1a;
+color: #ffffff;
+}
+[data-theme="dark"] .text-white {
+color: #f3f4f6;
+}
+[data-theme="dark"] .text-white\/90 {
+color: rgba(243, 244, 246, 0.9);
+}
+[data-theme="dark"] .bg-white\/20 {
+background-color: rgba(31, 41, 55, 0.2);
+}
+[data-theme="dark"] .hover\:bg-white\/30:hover {
+background-color: rgba(31, 41, 55, 0.3);
+}
+[data-theme="dark"] .bg-white\/70 {
+background-color: rgba(38, 38, 38, 0.7);
+}
+[data-theme="dark"] .text-gray-800 {
+color: #ffffff;
+}
+[data-theme="dark"] .text-gray-600 {
+color: #d1d5db;
+}
+[data-theme="dark"] .from-blue-50 {
+--tw-gradient-from: #1e293b;
+}
+[data-theme="dark"] .to-purple-50 {
+--tw-gradient-to: #2d1b4d;
+}
+[data-theme="dark"] .from-green-50 {
+--tw-gradient-from: #1b2e1b;
+}
+[data-theme="dark"] .to-blue-50 {
+--tw-gradient-to: #1e293b;
+}
+[data-theme="dark"] .from-purple-50 {
+--tw-gradient-from: #2d1b4d;
+}
+[data-theme="dark"] .to-pink-50 {
+--tw-gradient-to: #3d1b3d;
+}
+[data-theme="dark"] .bg-blue-100 {
+background-color: rgba(30, 58, 138, 0.3);
+}
+[data-theme="dark"] .text-blue-800 {
+color: #93c5fd;
+}
+[data-theme="dark"] .bg-green-100 {
+background-color: rgba(6, 78, 59, 0.3);
+}
+[data-theme="dark"] .text-green-800 {
+color: #6ee7b7;
+}
+[data-theme="dark"] .bg-purple-100 {
+background-color: rgba(76, 29, 149, 0.3);
+}
+[data-theme="dark"] .text-purple-800 {
+color: #c4b5fd;
+}
+[data-theme="dark"] .bg-yellow-100 {
+background-color: rgba(120, 53, 15, 0.3);
+}
+[data-theme="dark"] .text-yellow-800 {
+color: #fcd34d;
+}
+[data-theme="dark"] .bg-red-100 {
+background-color: rgba(127, 29, 29, 0.3);
+}
+[data-theme="dark"] .text-red-800 {
+color: #fca5a5;
+}
+[data-theme="dark"] .bg-indigo-100 {
+background-color: rgba(49, 46, 129, 0.3);
+}
+[data-theme="dark"] .text-indigo-800 {
+color: #a5b4fc;
+}
+[data-theme="dark"] .bg-pink-100 {
+background-color: rgba(131, 24, 67, 0.3);
+}
+[data-theme="dark"] .text-pink-800 {
+color: #f9a8d4;
+}
+[data-theme="dark"] .bg-orange-100 {
+background-color: rgba(124, 45, 18, 0.3);
+}
+[data-theme="dark"] .text-orange-800 {
+color: #fdba74;
+}
+[data-theme="dark"] .bg-teal-100 {
+background-color: rgba(17, 94, 89, 0.3);
+}
+[data-theme="dark"] .text-teal-800 {
+color: #5eead4;
+}
+[data-theme="dark"] .border-gray-200 {
+border-color: #374151;
+}
+[data-theme="dark"] .text-gray-700 {
+color: #e5e7eb;
+}
+[data-theme="dark"] .bg-gray-200 {
+background-color: #374151;
+}
+</style>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        primary: "#4F46E5",
+        secondary: "#10B981",
+      },
+      borderRadius: {
+        none: "0px",
+        sm: "4px",
+        DEFAULT: "8px",
+        md: "12px",
+        lg: "16px",
+        xl: "20px",
+        "2xl": "24px",
+        "3xl": "32px",
+        full: "9999px",
+        button: "8px",
+      },
+    },
+  },
+};
+</script>
+</head>
+<body class="theme-transition bg-white" data-theme="dark">
+<button id="themeToggle" class="fixed top-4 right-4 z-50 p-3 rounded-full bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors w-10 h-10 flex items-center justify-center">
+<i class="ri-sun-line text-xl dark:hidden"></i>
+<i class="ri-moon-line text-xl hidden dark:block"></i>
+</button>
+<div class="scroll-container">
+<section class="scroll-section flex items-center justify-center container-animation" style="background-image: url('https://public.readdy.ai/ai/img_res/feb0884d7c2ae9e50417ec5f6daab83f.jpg'); background-size: cover;">
+<div class="text-center bg-black/30 backdrop-blur-sm p-12 rounded-2xl">
+<h1 class="text-6xl font-bold mb-6 text-white dark:text-gray-100">胡WH（为了保护我的个人隐私）</h1>
+<p class="text-xl text-white/90 dark:text-gray-200 mb-8">Python程序员/ 文章创作者 / 习近平新时代中国特色社会主义思想学习者 / 智力不高的初中生</p>
+<div class="flex justify-center space-x-4">
+<a href="https://github.com/huluobuo" class="!rounded-button bg-white/20 dark:bg-gray-800/50 hover:bg-white/30 dark:hover:bg-gray-700/50 backdrop-blur-sm px-6 py-3 text-white dark:text-gray-100 transition-all">
+<i class="ri-github-line mr-2"></i>GitHub
+</a>
+<a href="https://blog.csdn.net/2404_89044122?spm=1000.2115.3001.5343" class="!rounded-button bg-white/20 dark:bg-gray-800/50 hover:bg-white/30 dark:hover:bg-gray-700/50 backdrop-blur-sm px-6 py-3 text-white dark:text-gray-100 transition-all">
+<i class="ri-book-line mr-2"></i>CSDN
+</a>
+</div>
+</div>
+</section>
+<section class="scroll-section flex items-center justify-center p-20 container-animation bg-gradient-to-br from-blue-50 to-purple-50">
+<div class="max-w-4xl">
+<h2 class="text-4xl font-bold mb-8 text-gray-800">关于我</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<div class="space-y-6">
+<p class="text-gray-600 leading-relaxed">
+    我是一名初中生，热爱编程和设计。我擅长使用 Python、C 和 HTML 等编程语言，以及 Pycharm、Vscode 和 Ollama 等工具。我有着比较丰富的项目经验。我热爱学习新技术，并乐于分享我的知识和经验。
+</p>
+<p class="text-gray-600 leading-relaxed">
+    我还擅长硬件操作，对系统操作和维护也有一定的了解。我熟悉 Linux 和 Windows 系统，能够使用命令行和图形界面进行操作。我也有一定的硬件知识，能够组装和维护电脑。
+</p>
+</div>
+<div class="space-y-4">
+<div class="flex items-center">
+<div class="w-32 text-gray-600">Python</div>
+<div class="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
+<div class="h-full bg-primary" style="width: 95%"></div>
+</div>
+</div>
+<div class="flex items-center">
+<div class="w-32 text-gray-600">C</div>
+<div class="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
+<div class="h-full bg-primary" style="width: 90%"></div>
+</div>
+</div>
+<div class="flex items-center">
+<div class="w-32 text-gray-600">Html</div>
+<div class="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
+<div class="h-full bg-primary" style="width: 85%"></div>
+</div>
+</div>
+<div class="flex items-center">
+<div class="w-32 text-gray-600">Css</div>
+<div class="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
+<div class="h-full bg-primary" style="width: 80%"></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="scroll-section flex items-center justify-center p-20 container-animation bg-gradient-to-br from-green-50 to-blue-50">
+<div class="max-w-6xl w-full">
+<h2 class="text-4xl font-bold mb-12 text-gray-800">项目经历</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+<div class="bg-white/70 backdrop-blur-sm p-6 rounded-xl shadow-sm hover:shadow-lg transition-all">
+<h3 class="text-xl font-semibold mb-4 text-gray-800">Small AI</h3>
+<p class="text-gray-600 mb-4">开发了一个分类AI，可以分辨简单的物品。</p>
+<div class="flex flex-wrap gap-2">
+<span class="px-3 py-1 bg-teal-100 text-teal-800 rounded-full text-sm">Python</span>
+<span class="px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-sm">Json</span>
+</div>
+</div>
+<div class="bg-white/70 backdrop-blur-sm p-6 rounded-xl shadow-sm hover:shadow-lg transition-all">
+<h3 class="text-xl font-semibold mb-4 text-gray-800">huluobuo.github.io</h3>
+<p class="text-gray-600 mb-4">制作了一个简单的静态网站。</p>
+<div class="flex flex-wrap gap-2">
+<span class="px-3 py-1 bg-red-100 text-red-800 rounded-full text-sm">Html</span>
+<span class="px-3 py-1 bg-indigo-100 text-indigo-800 rounded-full text-sm">Css</span>
+</div>
+</div>
+<div class="bg-white/70 backdrop-blur-sm p-6 rounded-xl shadow-sm hover:shadow-lg transition-all">
+<h3 class="text-xl font-semibold mb-4 text-gray-800">My OS</h3>
+<p class="text-gray-600 mb-4">一个简易的系统模拟器，可以实现比较常用的文件操作功能。</p>
+<div class="flex flex-wrap gap-2">
+<span class="px-3 py-1 bg-teal-100 text-teal-800 rounded-full text-sm">Python</span>
+<span class="px-3 py-1 bg-pink-100 text-pink-800 rounded-full text-sm">C</span>
+<span class="px-3 py-1 bg-orange-100 text-orange-800 rounded-full text-sm">Json</span>
+
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="scroll-section flex items-center justify-center p-20 container-animation bg-gradient-to-br from-purple-50 to-pink-50">
+<div class="max-w-4xl w-full">
+<h2 class="text-4xl font-bold mb-12 text-gray-800">联系我</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<div class="space-y-6">
+<p class="text-gray-600 leading-relaxed">
+如果您对我的工作感兴趣，或者想要讨论潜在的合作机会，欢迎随时与我联系。我很乐意与您分享我的经验和想法。
+</p>
+<div class="space-y-4">
+<div class="flex items-center space-x-4">
+<i class="ri-mail-line text-2xl text-gray-600"></i>
+<a href="mailto:HelloHuHi@outlook.com" class="text-gray-600 hover:text-primary">HelloHuHi@outlook.com</a>
+</div>
+<div class="flex items-center space-x-4">
+<i class="ri-phone-line text-2xl text-gray-600"></i>
+<a href=".tel:+86123456789" class="text-gray-600 hover:text-primary">+86 none（暂无）</a>
+</div>
+<div class="flex items-center space-x-4">
+<i class="ri-map-pin-line text-2xl text-gray-600"></i>
+<span class="text-gray-600">中国-山东-潍坊</span>
+</div>
+</div>
+</div>
+<div class="bg-white/70 backdrop-blur-sm p-8 rounded-xl shadow-sm">
+<form class="space-y-6">
+<div>
+<label class="block text-gray-700 mb-2" for="name">姓名</label>
+<input type="text" id="name" class="w-full px-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:border-primary" required>
+</div>
+<div>
+<label class="block text-gray-700 mb-2" for="email">邮箱</label>
+<input type="email" id="email" class="w-full px-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:border-primary" required>
+</div>
+<div>
+<label class="block text-gray-700 mb-2" for="message">留言</label>
+<textarea id="message" rows="4" class="w-full px-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:border-primary" required></textarea>
+</div>
+<button type="submit" class="w-full !rounded-button bg-primary hover:bg-primary/90 text-white py-2 px-6 transition-colors">
+发送消息
+</button>
+</form>
+</div>
+</div>
+</div>
+</section>
+</div>
+</div>
+<script>
+const themeToggle = document.getElementById("themeToggle");
+const body = document.body;
+themeToggle.addEventListener("click", () => {
+  const currentTheme = body.getAttribute("data-theme");
+  const newTheme = currentTheme === "light" ? "dark" : "light";
+  body.setAttribute("data-theme", newTheme);
+});
+let lastScrollTime = 0;
+const scrollDelay = 1000;
+const observerOptions = {
+  root: null,
+  rootMargin: "0px",
+  threshold: 0.1,
+};
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach((entry) => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add("active");
+    }
+  });
+}, observerOptions);
+document.querySelectorAll(".container-animation").forEach((container) => {
+  observer.observe(container);
+});
+document.querySelector(".scroll-container").addEventListener(
+  "wheel",
+  (e) => {
+    e.preventDefault();
+    const currentTime = new Date().getTime();
+    if (currentTime - lastScrollTime > scrollDelay) {
+      const container = e.currentTarget;
+      const currentScroll = container.scrollTop;
+      const direction = e.deltaY > 0 ? 1 : -1;
+      const height = window.innerHeight;
+      container.scrollTo({
+        top: currentScroll + height * direction,
+        behavior: "smooth",
+      });
+      lastScrollTime = currentTime;
+    }
+  },
+  { passive: false },
+);
+document.querySelector("form").addEventListener("submit", (e) => {
+  e.preventDefault();
+  const formData = new FormData(e.target);
+  const data = Object.fromEntries(formData);
+  const notification = document.createElement("div");
+  notification.className =
+    "fixed bottom-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg transform translate-y-0 opacity-100 transition-all duration-500";
+  notification.textContent = "消息已发送！我们不会回复您。";
+  document.body.appendChild(notification);
+  setTimeout(() => {
+    notification.style.transform = "translateY(100%)";
+    notification.style.opacity = "0";
+    setTimeout(() => notification.remove(), 500);
+  }, 3000);
+  e.target.reset();
+});
+</script>
+let lastScrollTime = 0;
+const scrollDelay = 1000;
+document.querySelector('.scroll-container').addEventListener('wheel', (e) => {
+e.preventDefault();
+const currentTime = new Date().getTime();
+if (currentTime - lastScrollTime > scrollDelay) {
+const container = e.currentTarget;
+const currentScroll = container.scrollTop;
+const direction = e.deltaY > 0 ? 1 : -1;
+const height = window.innerHeight;
+container.scrollTo({
+top: currentScroll + (height * direction),
+behavior: 'smooth'
+});
+lastScrollTime = currentTime;
+}
+}, { passive: false });
+</script>
+</body>
+</html>
