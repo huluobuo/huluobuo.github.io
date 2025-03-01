@@ -4,22 +4,94 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>音乐播放器</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            transition: background-color 0.3s, color 0.3s;
+            position: relative; /* 使按钮定位相对于 body */
+        }
+        h1 {
+            text-align: center;
+        }
+        #theme-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 10px;
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-size: 16px;
+            transition: color 0.3s;
+        }
+        #music-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        #music-list li {
+            background: #fff;
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+            display: flex;
+            justify-content: center; /* 居中对齐 */
+            align-items: center;
+            transition: background-color 0.3s;
+        }
+        audio {
+            width: 100%;
+            margin-top: 20px;
+        }
+        .download-link {
+            text-decoration: none;
+            color: #007BFF;
+            margin-left: 10px; /* 添加间距 */
+        }
+        .download-link:hover {
+            text-decoration: underline;
+        }
+        /* 深色主题 */
+        body.dark {
+            background-color: #333;
+            color: #fff;
+        }
+        body.dark #music-list li {
+            background: #444;
+        }
+        body.dark .download-link {
+            color: #66B2FF;
+        }
+    </style>
 </head>
 <body>
     <h1>音乐播放器</h1>
+    <button id="theme-toggle">🌙 切换主题</button>
     <ul id="music-list"></ul>
     <audio id="audio-player" controls></audio>
 
     <script>
+        // 主题切换功能
+        const themeToggle = document.getElementById('theme-toggle');
+        themeToggle.onclick = () => {
+            document.body.classList.toggle('dark');
+            const isDarkMode = document.body.classList.contains('dark');
+            themeToggle.textContent = isDarkMode ? '☀️ 切换到浅色主题' : '🌙 切换到深色主题';
+        };
+
         fetch('./musiclist.json')
             .then(response => response.json())
             .then(data => {
                 const musicList = document.getElementById('music-list');
                 const audioPlayer = document.getElementById('audio-player');
 
-                data.forEach((music, index) => {
+                data.forEach((music) => {
                     const listItem = document.createElement('li');
-                    listItem.textContent = `${music.name} (${music.time_big}分钟)`;
+                    listItem.innerHTML = `
+                        <span>${music.name} (${music.time_big}分钟)</span>
+                        <a class="download-link" href="${music.path}" download>下载</a>
+                    `;
                     listItem.onclick = () => {
                         audioPlayer.src = music.path;
                         console.log(`正在播放: ${music.path}`);
