@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>音乐播放器</title>
+</head>
+<body>
+    <h1>音乐播放器</h1>
+    <ul id="music-list"></ul>
+    <audio id="audio-player" controls></audio>
+
+    <script>
+        fetch('./musiclist.json')
+            .then(response => response.json())
+            .then(data => {
+                const musicList = document.getElementById('music-list');
+                const audioPlayer = document.getElementById('audio-player');
+
+                data.forEach((music, index) => {
+                    const listItem = document.createElement('li');
+                    listItem.textContent = `${music.name} (${music.time_big}分钟)`;
+                    listItem.onclick = () => {
+                        audioPlayer.src = music.path;
+                        audioPlayer.play();
+                    };
+                    musicList.appendChild(listItem);
+                });
+            })
+            .catch(error => console.error('加载音乐列表时出错:', error));
+    </script>
+</body>
+</html>
