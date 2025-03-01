@@ -22,7 +22,10 @@
                     listItem.textContent = `${music.name} (${music.time_big}分钟)`;
                     listItem.onclick = () => {
                         audioPlayer.src = music.path;
-                        audioPlayer.play();
+                        console.log(`正在播放: ${music.path}`);
+                        audioPlayer.play().catch(error => {
+                            console.error('播放音频时出错:', error);
+                        });
                     };
                     musicList.appendChild(listItem);
                 });
