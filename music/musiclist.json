@@ -13,5 +13,20 @@
         "name": "心如止水",
         "time_big": 3.05,
         "path": "./003.mp3"
+    },
+    {
+        "name": "Say When",
+        "time_big": 3.03,
+        "path": "./004.mp3"
+    },
+    {
+        "name": "Stitches_ShawnMendes",
+        "time_big": 3.26,
+        "path": "./005.mp3"
+    },
+    {
+        "name": "Syndicate_Hbe",
+        "time_big": 1.54,
+        "path": "./006.mp3"
     }
 ] 

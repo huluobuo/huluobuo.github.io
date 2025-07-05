@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文件下载</title>
+    <link rel="stylesheet" href="../styles.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-light text-dark antialiased">
+    <header class="header bg-dark text-white">
+        <div class="header-content max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
+            <a href="https://huluobuo.github.io"><h1 class="text-xl md:text-2xl font-bold">huluobuo.github.io</h1></a>
+            <a href="https://github.com/huluobuo" class="transition-all duration-300 hover:opacity-80">
+                <img src="../img/github_logo.png" alt="GitHub" class="w-8 h-8 rounded-full">
+            </a>
+        </div>
+    </header>
+
+    <main class="content max-w-6xl mx-auto px-4 py-8">
+        <section class="files-section bg-white rounded-xl shadow-lg p-6 md:p-8 transform transition-all duration-500 opacity-0" id="files-section">
+            <h2 class="text-2xl md:text-3xl font-bold mb-6 text-primary transition-all duration-500 opacity-0">文件下载</h2>
+            <div class="links-container grid grid-cols-1 md:grid-cols-2 gap-4 transition-all duration-500 opacity-0" id="files-container">
+                <!-- 文件列表将通过JavaScript动态生成 -->
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // 页面加载完成后触发内容动画
+        window.addEventListener('load', function() {
+            triggerContentAnimation();
+            loadFileList();
+        });
+
+        // 触发内容区域动画
+        function triggerContentAnimation() {
+            const filesSection = document.getElementById('files-section');
+            filesSection.classList.remove('opacity-0');
+            filesSection.classList.add('opacity-100');
+
+            // 触发文字元素动画
+            document.querySelectorAll('.files-section h2, #files-container').forEach(el => {
+                el.classList.remove('opacity-0');
+                el.classList.add('opacity-100');
+            });
+        }
+
+        // 加载文件列表
+        function loadFileList() {
+            fetch('filelist.json')
+                .then(response => response.json())
+                .then(data => {
+                    const filesContainer = document.getElementById('files-container');
+                    data.forEach(file => {
+                        const fileLink = document.createElement('a');
+                        fileLink.href = file.path;
+                        fileLink.className = 'link-box bg-white p-6 rounded-xl shadow-md transition-all duration-300 hover:shadow-lg hover:-translate-y-1';
+                        fileLink.innerHTML = `
+                            <h3 class="text-xl font-semibold mb-2">${file.name}</h3>
+                            <p class="text-gray-600">${file.description} (${file.size})</p>
+                        `;
+                        filesContainer.appendChild(fileLink);
+                    });
+                })
+                .catch(error => console.error('加载文件列表时出错:', error));
+        }
+    </script>
+</body>
+</html>

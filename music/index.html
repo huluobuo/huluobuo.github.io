@@ -4,69 +4,50 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>音乐播放器</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            padding-bottom: 80px; /* 为播放器留出空间 */
-            transition: background-color 0.3s, color 0.3s;
-            position: relative; /* 使按钮定位相对于 body */
-            background-color: #333; /* 默认背景色 */
-            color: #fff; /* 默认文本颜色 */
-        }
-        h1 {
-            text-align: center;
-        }
-        #music-container {
-            margin-top: 20px; /* 容器顶部间距 */
-            width: calc(100% - 40px); /* 宽度稍微宽一点，缩小40px */
-            max-width: 700px; /* 最大宽度 */
-            margin-left: auto; /* 居中 */
-            margin-right: auto; /* 居中 */
-        }
-        #music-list {
-            list-style-type: none;
-            padding: 0;
-        }
-        #music-list li {
-            background: #444; /* 深色主题背景 */
-            margin: 10px 0;
-            padding: 10px;
-            border-radius: 5px;
-            display: flex;
-            justify-content: center; /* 居中对齐 */
-            align-items: center;
-            transition: background-color 0.3s, transform 0.3s; /* 添加变换效果 */
-        }
-        #music-list li:hover {
-            background: #555; /* 悬停时背景颜色 */
-            transform: scale(1.05); /* 悬停时放大 */
-        }
-        audio {
-            width: calc(100% - 40px); /* 与音乐列表相同的宽度 */
-            position: fixed; /* 固定位置 */
-            bottom: 20px; /* 距离底部20px */
-            left: 20px; /* 左侧留出20px以保持居中 */
-            margin: 0; /* 去掉默认的margin */
-        }
-        .download-link {
-            text-decoration: none;
-            color: #66B2FF; /* 深色主题下的下载链接颜色 */
-            margin-left: 10px; /* 添加间距 */
-        }
-        .download-link:hover {
-            text-decoration: underline;
-        }
-    </style>
+    <link rel="stylesheet" href="../styles.css">
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body> <!-- 移除主题切换功能 -->
-    <h1>音乐播放器</h1>
-    <div id="music-container"> <!-- 音乐列表容器 -->
-        <ul id="music-list"></ul>
-    </div>
-    <audio id="audio-player" controls></audio>
+<body class="bg-light text-dark antialiased flex flex-col min-h-screen">
+    <header class="header bg-dark text-white">
+        <div class="header-content max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
+            <a href="https://huluobuo.github.io"><h1 class="text-xl md:text-2xl font-bold">huluobuo.github.io</h1></a>
+            <a href="https://github.com/huluobuo" class="transition-all duration-300 hover:opacity-80">
+                <img src="../img/github_logo.png" alt="GitHub" class="w-8 h-8 rounded-full">
+            </a>
+        </div>
+    </header>
 
+    <main class="content max-w-6xl mx-auto px-4 py-8 flex-grow">
+        <section class="music-section bg-white rounded-xl shadow-lg p-6 md:p-8 transform transition-all duration-500 opacity-0" id="music-section">
+            <h2 class="text-2xl md:text-3xl font-bold mb-6 text-primary transition-all duration-500 opacity-0">音乐播放器</h2>
+    <div class="links-container grid grid-cols-1 md:grid-cols-2 gap-4 transition-all duration-500 opacity-0" id="music-container">
+        <div id="music-list" class="w-full grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+    </div>
+        </section>
+    </main>
+    <div class="audio-container p-4 bg-white rounded-xl shadow-lg mt-auto mb-6">
+    <audio id="audio-player" controls class="w-full"></audio>
+</div>
+
+    <script>
+        // 页面加载完成后触发内容动画
+        window.addEventListener('load', function() {
+            triggerContentAnimation();
+        });
+
+        // 触发内容区域动画
+        function triggerContentAnimation() {
+            const musicSection = document.getElementById('music-section');
+            musicSection.classList.remove('opacity-0');
+            musicSection.classList.add('opacity-100');
+
+            // 触发文字元素动画
+            document.querySelectorAll('.music-section h2, #music-container').forEach(el => {
+                el.classList.remove('opacity-0');
+                el.classList.add('opacity-100');
+            });
+        }
+    </script>
     <script>
         fetch('./musiclist.json')
             .then(response => response.json())
@@ -75,9 +56,11 @@
                 const audioPlayer = document.getElementById('audio-player');
 
                 data.forEach((music) => {
-                    const listItem = document.createElement('li');
+                    const listItem = document.createElement('div');
+                    listItem.className = 'link-box';
                     listItem.innerHTML = `
-                        <span>${music.name} - ${music.time_big}分钟</span>
+                        <h3>${music.name}</h3>
+                        <p>${music.time_big}分钟</p>
                     `;
                     listItem.onclick = () => {
                         audioPlayer.src = music.path;
