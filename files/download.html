@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文件下载</title>
+    <link rel="stylesheet" href="../styles.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-light text-dark antialiased">
+    <header class="header bg-dark text-white">
+        <div class="header-content max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
+            <a href="https://huluobuo.github.io"><h1 class="text-xl md:text-2xl font-bold">huluobuo.github.io</h1></a>
+            <a href="https://github.com/huluobuo" class="transition-all duration-300 hover:opacity-80">
+                <img src="../img/github_logo.png" alt="GitHub" class="w-8 h-8 rounded-full">
+            </a>
+        </div>
+    </header>
+
+    <main class="content max-w-6xl mx-auto px-4 py-8">
+        <section class="download-section bg-white rounded-xl shadow-lg p-6 md:p-8">
+            <h2 class="text-2xl md:text-3xl font-bold mb-6 text-primary">正在准备下载...</h2>
+            <p id="countdown" class="text-lg mb-6">3 秒后开始下载</p>
+            <p class="text-lg mb-2 hidden" id="direct-download-tip">没有下载？直接下载：</p>
+            <a id="download-button" class="link-box bg-white p-6 rounded-xl shadow-md transition-all duration-300 hover:shadow-lg hover:-translate-y-1 hidden" href="#">下载</a>
+            <p id="thank-you" class="text-lg mt-6 hidden">感谢您的下载！</p>
+        </section>
+    </main>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const fileLink = urlParams.get('file');
+
+        if (fileLink) {
+            const downloadButton = document.getElementById('download-button');
+            downloadButton.href = fileLink;
+            
+            let countdown = 3;
+            const countdownElement = document.getElementById('countdown');
+            
+            const timer = setInterval(() => {
+                countdown--;
+                countdownElement.textContent = `${countdown} 秒后开始下载`;
+                
+                if (countdown <= 0) {
+                    clearInterval(timer);
+                    window.location.href = fileLink;
+                    document.getElementById('thank-you').classList.remove('hidden');
+                    document.getElementById('download-button').classList.remove('hidden');
+                    document.getElementById('direct-download-tip').classList.remove('hidden');
+                    countdownElement.textContent = '';
+                }
+            }, 1000);
+        }
+    </script>
+</body>
+</html>

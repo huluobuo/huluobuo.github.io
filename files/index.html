@@ -54,7 +54,7 @@
                     const filesContainer = document.getElementById('files-container');
                     data.forEach(file => {
                         const fileLink = document.createElement('a');
-                        fileLink.href = file.path;
+                        fileLink.href = `download.html?file=${encodeURIComponent(file.path)}`;
                         fileLink.className = 'link-box bg-white p-6 rounded-xl shadow-md transition-all duration-300 hover:shadow-lg hover:-translate-y-1';
                         fileLink.innerHTML = `
                             <h3 class="text-xl font-semibold mb-2">${file.name}</h3>
