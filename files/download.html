@@ -3,55 +3,223 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>文件下载</title>
+    <title>文件下载 - huluobuo.github.io</title>
     <link rel="stylesheet" href="../styles.css">
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <meta name="description" content="文件下载页面">
 </head>
-<body class="bg-light text-dark antialiased">
-    <header class="header bg-dark text-white">
-        <div class="header-content max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
-            <a href="https://huluobuo.github.io"><h1 class="text-xl md:text-2xl font-bold">huluobuo.github.io</h1></a>
-            <a href="https://github.com/huluobuo" class="transition-all duration-300 hover:opacity-80">
-                <img src="../img/github_logo.png" alt="GitHub" class="w-8 h-8 rounded-full">
+<body>
+    <header class="header">
+        <div class="header-content">
+            <a href="/">
+                <h1>huluobuo.github.io</h1>
+            </a>
+            <a href="https://github.com/huluobuo" target="_blank" rel="noopener noreferrer" class="tooltip" data-tooltip="访问我的GitHub">
+                <img src="../img/github_logo.png" alt="GitHub" width="32" height="32">
             </a>
         </div>
     </header>
 
-    <main class="content max-w-6xl mx-auto px-4 py-8">
-        <section class="download-section bg-white rounded-xl shadow-lg p-6 md:p-8">
-            <h2 class="text-2xl md:text-3xl font-bold mb-6 text-primary">正在准备下载...</h2>
-            <p id="countdown" class="text-lg mb-6">3 秒后开始下载</p>
-            <p class="text-lg mb-2 hidden" id="direct-download-tip">没有下载？直接下载：</p>
-            <a id="download-button" class="link-box bg-white p-6 rounded-xl shadow-md transition-all duration-300 hover:shadow-lg hover:-translate-y-1 hidden" href="#">下载</a>
-            <p id="thank-you" class="text-lg mt-6 hidden">感谢您的下载！</p>
+    <main class="content">
+        <section class="download-section" style="background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px); border-radius: var(--border-radius); padding: 3rem; text-align: center; box-shadow: var(--shadow-xl);">
+            <div class="download-icon" style="margin-bottom: 2rem;">
+                <i class="ri-download-cloud-line" style="font-size: 4rem; color: var(--primary-color);"></i>
+            </div>
+            
+            <h2 style="margin-bottom: 1.5rem; color: var(--gray-800);">准备下载文件</h2>
+            
+            <div class="countdown-container" style="margin-bottom: 2rem;">
+                <div class="countdown-circle" style="width: 80px; height: 80px; border: 4px solid var(--gray-200); border-top: 4px solid var(--primary-color); border-radius: 50%; margin: 0 auto 1rem; animation: spin 1s linear infinite;"></div>
+                <p id="countdown" style="font-size: 1.25rem; font-weight: 600; color: var(--gray-700);">3 秒后开始下载</p>
+            </div>
+
+            <div class="download-info" style="background: var(--gray-100); padding: 1.5rem; border-radius: var(--border-radius); margin-bottom: 2rem;">
+                <h3 style="margin-bottom: 1rem; color: var(--gray-800);">下载说明</h3>
+                <ul style="text-align: left; color: var(--gray-600); line-height: 1.8;">
+                    <li>文件将在倒计时结束后自动开始下载</li>
+                    <li>如果下载没有开始，请点击下方的直接下载按钮</li>
+                    <li>请确保您的浏览器允许下载文件</li>
+                    <li>下载完成后请及时查杀病毒</li>
+                </ul>
+            </div>
+
+            <div id="download-controls" class="hidden" style="margin-top: 2rem;">
+                <p id="direct-download-tip" style="margin-bottom: 1rem; color: var(--gray-600);">下载没有开始？</p>
+                <a id="download-button" href="#" class="button" style="display: inline-flex; align-items: center; gap: 0.5rem;">
+                    <i class="ri-download-line"></i>
+                    直接下载
+                </a>
+            </div>
+
+            <div id="success-message" class="message success hidden" style="margin-top: 2rem;">
+                <i class="ri-check-line" style="margin-right: 0.5rem;"></i>
+                下载已开始！感谢您的使用。
+            </div>
+
+            <div class="back-link" style="margin-top: 2rem;">
+                <a href="./" style="color: var(--primary-color); text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem; transition: var(--transition);">
+                    <i class="ri-arrow-left-line"></i>
+                    返回文件列表
+                </a>
+            </div>
         </section>
     </main>
 
     <script>
-        const urlParams = new URLSearchParams(window.location.search);
-        const fileLink = urlParams.get('file');
+        class DownloadManager {
+            constructor() {
+                this.countdown = 3;
+                this.fileLink = null;
+                this.init();
+            }
 
-        if (fileLink) {
-            const downloadButton = document.getElementById('download-button');
-            downloadButton.href = fileLink;
-            
-            let countdown = 3;
-            const countdownElement = document.getElementById('countdown');
-            
-            const timer = setInterval(() => {
-                countdown--;
-                countdownElement.textContent = `${countdown} 秒后开始下载`;
+            init() {
+                this.getFileLink();
+                this.startCountdown();
+                this.setupEventListeners();
+            }
+
+            getFileLink() {
+                const urlParams = new URLSearchParams(window.location.search);
+                this.fileLink = urlParams.get('file');
                 
-                if (countdown <= 0) {
-                    clearInterval(timer);
-                    window.location.href = fileLink;
-                    document.getElementById('thank-you').classList.remove('hidden');
-                    document.getElementById('download-button').classList.remove('hidden');
-                    document.getElementById('direct-download-tip').classList.remove('hidden');
-                    countdownElement.textContent = '';
+                if (!this.fileLink) {
+                    this.showError('未指定下载文件');
+                    return;
                 }
-            }, 1000);
+
+                // 设置下载按钮链接
+                const downloadButton = document.getElementById('download-button');
+                downloadButton.href = this.fileLink;
+            }
+
+            startCountdown() {
+                if (!this.fileLink) return;
+
+                const countdownElement = document.getElementById('countdown');
+                const countdownCircle = document.querySelector('.countdown-circle');
+                
+                const timer = setInterval(() => {
+                    this.countdown--;
+                    countdownElement.textContent = `${this.countdown} 秒后开始下载`;
+                    
+                    if (this.countdown <= 0) {
+                        clearInterval(timer);
+                        this.startDownload();
+                    }
+                }, 1000);
+            }
+
+            startDownload() {
+                // 隐藏倒计时，显示成功消息
+                document.querySelector('.countdown-container').style.display = 'none';
+                document.getElementById('success-message').classList.remove('hidden');
+                document.getElementById('download-controls').classList.remove('hidden');
+                
+                // 开始下载
+                try {
+                    // 创建隐藏的下载链接
+                    const link = document.createElement('a');
+                    link.href = this.fileLink;
+                    link.download = '';
+                    link.style.display = 'none';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    
+                    // 更新页面标题
+                    document.title = '下载中... - huluobuo.github.io';
+                    
+                    // 添加下载统计（可选）
+                    this.trackDownload();
+                    
+                } catch (error) {
+                    console.error('下载失败:', error);
+                    this.showError('下载失败，请尝试直接下载');
+                }
+            }
+
+            setupEventListeners() {
+                // 直接下载按钮事件
+                document.getElementById('download-button').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    
+                    const button = e.target.closest('.button');
+                    const icon = button.querySelector('i');
+                    const originalClass = icon.className;
+                    
+                    // 显示加载状态
+                    icon.className = 'ri-loader-4-line';
+                    icon.style.animation = 'spin 1s linear infinite';
+                    button.style.pointerEvents = 'none';
+                    
+                    // 延迟下载以显示动画
+                    setTimeout(() => {
+                        window.open(this.fileLink, '_blank');
+                        
+                        // 恢复按钮状态
+                        icon.className = originalClass;
+                        icon.style.animation = '';
+                        button.style.pointerEvents = '';
+                    }, 1000);
+                });
+
+                // 键盘快捷键
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        if (this.countdown <= 0) {
+                            document.getElementById('download-button').click();
+                        }
+                    }
+                });
+            }
+
+            showError(message) {
+                const section = document.querySelector('.download-section');
+                section.innerHTML = `
+                    <div class="download-icon" style="margin-bottom: 2rem;">
+                        <i class="ri-error-warning-line" style="font-size: 4rem; color: var(--error-color);"></i>
+                    </div>
+                    <h2 style="margin-bottom: 1rem; color: var(--error-color);">下载出错</h2>
+                    <div class="message error" style="margin-bottom: 2rem;">
+                        ${message}
+                    </div>
+                    <div class="back-link">
+                        <a href="./" style="color: var(--primary-color); text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem;">
+                            <i class="ri-arrow-left-line"></i>
+                            返回文件列表
+                        </a>
+                    </div>
+                `;
+            }
+
+            trackDownload() {
+                // 这里可以添加下载统计逻辑
+                console.log(`文件下载: ${this.fileLink}`);
+                
+                // 可以发送统计数据到服务器
+                // fetch('/api/track-download', {
+                //     method: 'POST',
+                //     headers: { 'Content-Type': 'application/json' },
+                //     body: JSON.stringify({ file: this.fileLink, timestamp: Date.now() })
+                // });
+            }
         }
+
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            new DownloadManager();
+        });
+
+        // 添加页面离开确认（可选）
+        window.addEventListener('beforeunload', (e) => {
+            // 如果正在下载，提示用户
+            if (document.getElementById('success-message').classList.contains('hidden') === false) {
+                e.preventDefault();
+                e.returnValue = '下载可能正在进行中，确定要离开吗？';
+            }
+        });
     </script>
 </body>
 </html>

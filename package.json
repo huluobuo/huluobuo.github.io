@@ -1,0 +1,23 @@
+{
+  "name": "huluobuo-website",
+  "version": "1.0.0",
+  "description": "huluobuo的个人网站",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "build": "echo 'Static site - no build needed'",
+    "test": "echo 'No tests specified'"
+  },
+  "keywords": [
+    "personal-website",
+    "music-player",
+    "file-download",
+    "portfolio"
+  ],
+  "author": "huluobuo",
+  "license": "MIT",
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}

@@ -3,68 +3,244 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>文件下载</title>
+    <title>文件下载 - huluobuo.github.io</title>
     <link rel="stylesheet" href="../styles.css">
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <meta name="description" content="文件下载中心 - 获取各种实用工具和资源">
 </head>
-<body class="bg-light text-dark antialiased">
-    <header class="header bg-dark text-white">
-        <div class="header-content max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
-            <a href="https://huluobuo.github.io"><h1 class="text-xl md:text-2xl font-bold">huluobuo.github.io</h1></a>
-            <a href="https://github.com/huluobuo" class="transition-all duration-300 hover:opacity-80">
-                <img src="../img/github_logo.png" alt="GitHub" class="w-8 h-8 rounded-full">
+<body>
+    <header class="header">
+        <div class="header-content">
+            <a href="/">
+                <h1>huluobuo.github.io</h1>
+            </a>
+            <a href="https://github.com/huluobuo" target="_blank" rel="noopener noreferrer" class="tooltip" data-tooltip="访问我的GitHub">
+                <img src="../img/github_logo.png" alt="GitHub" width="32" height="32">
             </a>
         </div>
     </header>
 
-    <main class="content max-w-6xl mx-auto px-4 py-8">
-        <section class="files-section bg-white rounded-xl shadow-lg p-6 md:p-8 transform transition-all duration-500 opacity-0" id="files-section">
-            <h2 class="text-2xl md:text-3xl font-bold mb-6 text-primary transition-all duration-500 opacity-0">文件下载</h2>
-            <div class="links-container grid grid-cols-1 md:grid-cols-2 gap-4 transition-all duration-500 opacity-0" id="files-container">
-                <!-- 文件列表将通过JavaScript动态生成 -->
+    <main class="content">
+        <section class="files-section" id="files-section">
+            <h2><i class="ri-download-cloud-line" style="margin-right: 0.5rem;"></i>文件下载中心</h2>
+            <p style="margin-bottom: 2rem; color: var(--gray-600);">这里提供各种实用工具和资源的下载，所有文件都经过安全检查。</p>
+            
+            <div class="search-container" style="margin-bottom: 2rem;">
+                <div style="position: relative;">
+                    <input type="text" id="search-input" placeholder="搜索文件..." 
+                           style="width: 100%; padding: 0.75rem 1rem 0.75rem 2.5rem; border: 2px solid var(--gray-200); border-radius: var(--border-radius); font-size: 1rem; transition: var(--transition);">
+                    <i class="ri-search-line" style="position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); color: var(--gray-400);"></i>
+                </div>
+            </div>
+
+            <div class="files-stats" style="display: flex; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap;">
+                <div class="stat-card" style="background: linear-gradient(135deg, var(--primary-color), var(--accent-color)); color: white; padding: 1rem; border-radius: var(--border-radius); flex: 1; min-width: 150px;">
+                    <div style="font-size: 1.5rem; font-weight: 700;" id="total-files">0</div>
+                    <div style="font-size: 0.875rem; opacity: 0.9;">总文件数</div>
+                </div>
+                <div class="stat-card" style="background: linear-gradient(135deg, var(--secondary-color), var(--primary-color)); color: white; padding: 1rem; border-radius: var(--border-radius); flex: 1; min-width: 150px;">
+                    <div style="font-size: 1.5rem; font-weight: 700;" id="total-size">0 KB</div>
+                    <div style="font-size: 0.875rem; opacity: 0.9;">总大小</div>
+                </div>
+            </div>
+
+            <div class="links-container" id="files-container">
+                <div class="loading-placeholder" style="grid-column: 1 / -1; text-align: center; padding: 3rem;">
+                    <div class="loading" style="margin: 0 auto 1rem;"></div>
+                    <p>正在加载文件列表...</p>
+                </div>
             </div>
         </section>
     </main>
 
     <script>
-        // 页面加载完成后触发内容动画
-        window.addEventListener('load', function() {
-            triggerContentAnimation();
-            loadFileList();
-        });
+        class FileManager {
+            constructor() {
+                this.files = [];
+                this.filteredFiles = [];
+                this.init();
+            }
 
-        // 触发内容区域动画
-        function triggerContentAnimation() {
-            const filesSection = document.getElementById('files-section');
-            filesSection.classList.remove('opacity-0');
-            filesSection.classList.add('opacity-100');
+            async init() {
+                await this.loadFileList();
+                this.setupSearch();
+                this.updateStats();
+                this.triggerAnimations();
+            }
 
-            // 触发文字元素动画
-            document.querySelectorAll('.files-section h2, #files-container').forEach(el => {
-                el.classList.remove('opacity-0');
-                el.classList.add('opacity-100');
-            });
-        }
+            async loadFileList() {
+                try {
+                    const response = await fetch('filelist.json');
+                    if (!response.ok) throw new Error('Failed to load file list');
+                    
+                    this.files = await response.json();
+                    this.filteredFiles = [...this.files];
+                    this.renderFiles();
+                } catch (error) {
+                    console.error('加载文件列表时出错:', error);
+                    this.showError('无法加载文件列表，请稍后重试。');
+                }
+            }
 
-        // 加载文件列表
-        function loadFileList() {
-            fetch('filelist.json')
-                .then(response => response.json())
-                .then(data => {
-                    const filesContainer = document.getElementById('files-container');
-                    data.forEach(file => {
-                        const fileLink = document.createElement('a');
-                        fileLink.href = `download.html?file=${encodeURIComponent(file.path)}`;
-                        fileLink.className = 'link-box bg-white p-6 rounded-xl shadow-md transition-all duration-300 hover:shadow-lg hover:-translate-y-1';
-                        fileLink.innerHTML = `
-                            <h3 class="text-xl font-semibold mb-2">${file.name}</h3>
-                            <p class="text-gray-600">${file.description} (${file.size})</p>
-                        `;
-                        filesContainer.appendChild(fileLink);
+            renderFiles() {
+                const container = document.getElementById('files-container');
+                
+                if (this.filteredFiles.length === 0) {
+                    container.innerHTML = `
+                        <div style="grid-column: 1 / -1; text-align: center; padding: 3rem;">
+                            <i class="ri-file-search-line" style="font-size: 3rem; color: var(--gray-400); margin-bottom: 1rem;"></i>
+                            <p style="color: var(--gray-600);">没有找到匹配的文件</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                container.innerHTML = this.filteredFiles.map((file, index) => `
+                    <a href="download.html?file=${encodeURIComponent(file.path)}" 
+                       class="link-box file-item" 
+                       style="animation-delay: ${index * 0.1}s;"
+                       data-file-name="${file.name.toLowerCase()}"
+                       data-file-size="${file.size}">
+                        <div style="display: flex; align-items: center; margin-bottom: 1rem;">
+                            <i class="ri-file-zip-line" style="font-size: 2rem; margin-right: 0.75rem; opacity: 0.8;"></i>
+                            <div style="flex: 1;">
+                                <h3 style="margin: 0; font-size: 1.1rem; line-height: 1.3;">${file.name}</h3>
+                                <div style="font-size: 0.875rem; opacity: 0.8; margin-top: 0.25rem;">
+                                    <span>${file.size}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="display: flex; align-items: center; justify-content: space-between; margin-top: auto;">
+                            <span style="font-size: 0.875rem; opacity: 0.8;">点击下载</span>
+                            <i class="ri-download-line" style="font-size: 1.25rem;"></i>
+                        </div>
+                    </a>
+                `).join('');
+
+                // 添加点击事件
+                this.addDownloadEvents();
+            }
+
+            addDownloadEvents() {
+                document.querySelectorAll('.file-item').forEach(item => {
+                    item.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        
+                        // 添加下载动画
+                        const downloadIcon = item.querySelector('.ri-download-line');
+                        downloadIcon.className = 'ri-loader-4-line';
+                        downloadIcon.style.animation = 'spin 1s linear infinite';
+                        
+                        // 延迟跳转以显示动画
+                        setTimeout(() => {
+                            window.location.href = item.href;
+                        }, 500);
                     });
-                })
-                .catch(error => console.error('加载文件列表时出错:', error));
+                });
+            }
+
+            setupSearch() {
+                const searchInput = document.getElementById('search-input');
+                
+                searchInput.addEventListener('input', utils.debounce((e) => {
+                    const query = e.target.value.toLowerCase().trim();
+                    
+                    if (query === '') {
+                        this.filteredFiles = [...this.files];
+                    } else {
+                        this.filteredFiles = this.files.filter(file => 
+                            file.name.toLowerCase().includes(query)
+                        );
+                    }
+                    
+                    this.renderFiles();
+                    this.updateStats();
+                }, 300));
+
+                // 搜索框焦点效果
+                searchInput.addEventListener('focus', () => {
+                    searchInput.style.borderColor = 'var(--primary-color)';
+                    searchInput.style.boxShadow = '0 0 0 3px rgba(59, 130, 246, 0.1)';
+                });
+
+                searchInput.addEventListener('blur', () => {
+                    searchInput.style.borderColor = 'var(--gray-200)';
+                    searchInput.style.boxShadow = 'none';
+                });
+            }
+
+            updateStats() {
+                const totalFiles = this.filteredFiles.length;
+                const totalSizeKB = this.filteredFiles.reduce((sum, file) => {
+                    const sizeMatch = file.size.match(/(\d+(?:\.\d+)?)\s*([KMG]?B?)/i);
+                    if (sizeMatch) {
+                        const value = parseFloat(sizeMatch[1]);
+                        const unit = sizeMatch[2].toUpperCase();
+                        switch (unit) {
+                            case 'GB': return sum + (value * 1024 * 1024);
+                            case 'MB': return sum + (value * 1024);
+                            case 'KB': case 'K': return sum + value;
+                            default: return sum + (value / 1024);
+                        }
+                    }
+                    return sum;
+                }, 0);
+
+                document.getElementById('total-files').textContent = totalFiles;
+                document.getElementById('total-size').textContent = utils.formatFileSize(totalSizeKB * 1024);
+            }
+
+            showError(message) {
+                const container = document.getElementById('files-container');
+                container.innerHTML = `
+                    <div class="message error" style="grid-column: 1 / -1;">
+                        <i class="ri-error-warning-line" style="margin-right: 0.5rem;"></i>
+                        ${message}
+                    </div>
+                `;
+            }
+
+            triggerAnimations() {
+                const section = document.getElementById('files-section');
+                section.style.opacity = '0';
+                section.style.transform = 'translateY(20px)';
+                
+                setTimeout(() => {
+                    section.style.transition = 'all 0.6s ease-out';
+                    section.style.opacity = '1';
+                    section.style.transform = 'translateY(0)';
+                }, 100);
+            }
         }
+
+        // 工具函数（简化版）
+        const utils = {
+            debounce(func, wait) {
+                let timeout;
+                return function executedFunction(...args) {
+                    const later = () => {
+                        clearTimeout(timeout);
+                        func(...args);
+                    };
+                    clearTimeout(timeout);
+                    timeout = setTimeout(later, wait);
+                };
+            },
+
+            formatFileSize(bytes) {
+                if (bytes === 0) return '0 Bytes';
+                const k = 1024;
+                const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+                const i = Math.floor(Math.log(bytes) / Math.log(k));
+                return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+            }
+        };
+
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            new FileManager();
+        });
     </script>
 </body>
 </html>

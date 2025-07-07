@@ -5,163 +5,87 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>huluobuo.github.io</title>
     <link rel="stylesheet" href="styles.css">
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#3B82F6',
-                        secondary: '#10B981',
-                        dark: '#1E293B',
-                        light: '#F8FAFC'
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'system-ui', 'sans-serif'],
-                    },
-                }
-            }
-        }
-    </script>
-    <style type="text/tailwindcss">
-        @layer utilities {
-            .content-auto {
-                content-visibility: auto;
-            }
-            .text-shadow {
-                text-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            }
-            .bg-gradient-custom {
-                background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            }
-        }
-    </style>
+    <meta name="description" content="huluobuo的个人网站 - 展示项目、分享资源">
+    <meta name="keywords" content="huluobuo, 个人网站, 项目展示, 文件下载, 音乐播放器">
 </head>
-<body class="bg-light text-dark antialiased">
-    <header class="header bg-dark text-white">
-        <div class="header-content max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
-            <a href="https://huluobuo.github.io"><h1 class="text-xl md:text-2xl font-bold">huluobuo.github.io</h1></a>
-            <a href="https://github.com/huluobuo" class="transition-all duration-300 hover:opacity-80">
-                <img src="img/github_logo.png" alt="GitHub" class="w-8 h-8 rounded-full">
+<body>
+    <header class="header">
+        <div class="header-content">
+            <a href="/">
+                <h1>huluobuo.github.io</h1>
+            </a>
+            <a href="https://github.com/huluobuo" target="_blank" rel="noopener noreferrer" class="tooltip" data-tooltip="访问我的GitHub">
+                <img src="img/github_logo.png" alt="GitHub" width="32" height="32">
             </a>
         </div>
     </header>
 
-    <main class="content max-w-6xl mx-auto px-4 py-8">
-        <section class="about-section bg-white rounded-xl shadow-lg p-6 md:p-8 mb-10 transform transition-all duration-500 opacity-0" id="about-section">
-            <h2 class="text-2xl md:text-3xl font-bold mb-6 text-primary transition-all duration-500 opacity-0" style="transition-delay: 0.1s;">关于我</h2>
-            <p class="mb-4 text-gray-700 leading-relaxed transition-all duration-500 opacity-0" style="transition-delay: 0.3s;">我是一名热爱编程的开发者，对技术充满热情。熟悉多种编程语言和技术栈，喜欢通过代码解决实际问题。</p>
-            <p class="mb-6 text-gray-700 leading-relaxed transition-all duration-500 opacity-0" style="transition-delay: 0.5s;">除了编程，我还对硬件操作有浓厚兴趣，喜欢探索各种电子设备的工作原理，并尝试自己动手制作一些小项目。</p>
+    <main class="content">
+        <section class="about-section" id="about-section">
+            <h2>关于我</h2>
+            <p>我是一名热爱编程的开发者，对技术充满热情。熟悉多种编程语言和技术栈，喜欢通过代码解决实际问题，创造有价值的应用程序。</p>
+            <p>除了编程，我还对硬件操作有浓厚兴趣，喜欢探索各种电子设备的工作原理，并尝试自己动手制作一些创新的小项目。</p>
 
-            <div class="mb-6 transition-all duration-500 opacity-0" style="transition-delay: 0.7s;">
-                <h3 class="text-lg font-semibold mb-3 text-gray-800">技能水平</h3>
-                <div class="space-y-3">
-                    <div>
-                        <div class="flex justify-between mb-1">
-                            <span class="text-sm font-medium text-gray-700">Python</span>
-                            <span class="text-sm font-medium text-gray-700">85%</span>
-                        </div>
-                        <div class="w-full bg-gray-200 rounded-full h-2.5">
-                            <div class="bg-primary h-2.5 rounded-full" style="width: 0%; transition: width 1s ease 0.9s;"></div>
-                        </div>
+            <div class="skills-section">
+                <h3 style="color: var(--gray-700); margin-bottom: 1.5rem; font-size: 1.25rem;">技能水平</h3>
+                <div class="skill-item">
+                    <div class="skill-label">
+                        <span>Python</span>
+                        <span>85%</span>
                     </div>
-                    <div>
-                        <div class="flex justify-between mb-1">
-                            <span class="text-sm font-medium text-gray-700">C</span>
-                            <span class="text-sm font-medium text-gray-700">75%</span>
-                        </div>
-                        <div class="w-full bg-gray-200 rounded-full h-2.5">
-                            <div class="bg-primary h-2.5 rounded-full" style="width: 0%; transition: width 1s ease 1.1s;"></div>
-                        </div>
+                    <div class="skill-bar">
+                        <div class="skill-progress" data-width="85%"></div>
                     </div>
-                    <div>
-                        <div class="flex justify-between mb-1">
-                            <span class="text-sm font-medium text-gray-700">HTML</span>
-                            <span class="text-sm font-medium text-gray-700">90%</span>
-                        </div>
-                        <div class="w-full bg-gray-200 rounded-full h-2.5">
-                            <div class="bg-primary h-2.5 rounded-full" style="width: 0%; transition: width 1s ease 1.3s;"></div>
-                        </div>
+                </div>
+                <div class="skill-item">
+                    <div class="skill-label">
+                        <span>C/C++</span>
+                        <span>75%</span>
                     </div>
-                    <div>
-                        <div class="flex justify-between mb-1">
-                            <span class="text-sm font-medium text-gray-700">CSS</span>
-                            <span class="text-sm font-medium text-gray-700">80%</span>
-                        </div>
-                        <div class="w-full bg-gray-200 rounded-full h-2.5">
-                            <div class="bg-primary h-2.5 rounded-full" style="width: 0%; transition: width 1s ease 1.5s;"></div>
-                        </div>
+                    <div class="skill-bar">
+                        <div class="skill-progress" data-width="75%"></div>
+                    </div>
+                </div>
+                <div class="skill-item">
+                    <div class="skill-label">
+                        <span>HTML/CSS</span>
+                        <span>90%</span>
+                    </div>
+                    <div class="skill-bar">
+                        <div class="skill-progress" data-width="90%"></div>
+                    </div>
+                </div>
+                <div class="skill-item">
+                    <div class="skill-label">
+                        <span>JavaScript</span>
+                        <span>80%</span>
+                    </div>
+                    <div class="skill-bar">
+                        <div class="skill-progress" data-width="80%"></div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section class="links-section bg-white rounded-xl shadow-lg p-6 md:p-8 transform transition-all duration-500 opacity-0" id="links-section">
-            <h2 class="text-2xl md:text-3xl font-bold mb-6 text-primary transition-all duration-500 opacity-0" style="transition-delay: 1.7s;">链接</h2>
-            <div class="links-container grid grid-cols-1 md:grid-cols-2 gap-4 transition-all duration-500 opacity-0" style="transition-delay: 1.9s;">
-                <a href="files/" class="link-box bg-white p-6 rounded-xl shadow-md transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
-                    <h3 class="text-xl font-semibold mb-2">文件下载</h3>
-                    <p class="text-gray-600">访问文件下载区域，获取相关资源</p>
+        <section class="links-section" id="links-section">
+            <h2>功能导航</h2>
+            <div class="links-container">
+                <a href="files/" class="link-box">
+                    <i class="ri-download-cloud-line" style="font-size: 2rem; margin-bottom: 0.5rem;"></i>
+                    <h3>文件下载</h3>
+                    <p>访问文件下载区域，获取相关资源和工具</p>
                 </a>
-                <a href="music/" class="link-box bg-white p-6 rounded-xl shadow-md transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
-                    <h3 class="text-xl font-semibold mb-2">音乐播放器</h3>
-                    <p class="text-gray-600">打开音乐播放器，聆听喜爱的音乐</p>
+                <a href="music/" class="link-box">
+                    <i class="ri-music-line" style="font-size: 2rem; margin-bottom: 0.5rem;"></i>
+                    <h3>音乐播放器</h3>
+                    <p>打开音乐播放器，聆听精选的音乐作品</p>
                 </a>
             </div>
         </section>
     </main>
 
-    <script>
-        // 页面加载完成后触发内容动画
-        window.addEventListener('load', function() {
-            triggerContentAnimation();
-        });
-
-        // 触发内容区域动画
-        function triggerContentAnimation() {
-            const aboutSection = document.getElementById('about-section');
-            const linksSection = document.getElementById('links-section');
-            aboutSection.classList.remove('opacity-0');
-            aboutSection.classList.add('opacity-100');
-
-            // 延迟触发链接区域动画
-            setTimeout(() => {
-                linksSection.classList.remove('opacity-0');
-                linksSection.classList.add('opacity-100');
-            }, 1000);
-
-            // 触发技能条动画
-            setTimeout(() => {
-                document.querySelectorAll('.bg-primary').forEach(bar => {
-                    const width = bar.parentElement.previousElementSibling.lastElementChild.textContent;
-                    bar.style.width = width;
-                });
-            }, 800);
-
-            // 触发文字元素动画
-            document.querySelectorAll('.about-section h2, .about-section p, .about-section > div, .links-section h2, .links-container').forEach(el => {
-                el.classList.remove('opacity-0');
-                el.classList.add('opacity-100');
-            });
-        }
-
-        // 图片懒加载
-        document.addEventListener('DOMContentLoaded', function() {
-            const lazyImages = document.querySelectorAll('img');
-            if ('IntersectionObserver' in window) {
-                const imageObserver = new IntersectionObserver((entries, observer) => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting) {
-                            const image = entry.target;
-                            image.classList.add('fade-in');
-                            imageObserver.unobserve(image);
-                        }
-                    });
-                });
-                lazyImages.forEach(img => imageObserver.observe(img));
-            }
-        });
-    </script>
+    <script src="js/animations.js"></script>
 </body>
 </html>
