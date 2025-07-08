@@ -26,7 +26,3 @@
 1. Fork 此仓库到您的 GitHub 账户。
 2. 创建一个新的分支用于您的更改。
 3. 提交您的更改并创建 Pull Request。
-
-## 许可协议
-
-本项目采用 [MIT 许可协议](https://opensource.org/licenses/MIT) ，详细信息请参考相关文档。

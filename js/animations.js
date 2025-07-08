@@ -8,7 +8,7 @@ class AnimationManager {
         this.setupIntersectionObserver();
         this.setupSkillBars();
         this.setupSmoothScrolling();
-        this.setupParallaxEffect();
+        // this.setupParallaxEffect(); // 禁用视差效果以修复按钮错位
         this.addLoadingStates();
     }
 
@@ -79,10 +79,10 @@ class AnimationManager {
 
         const updateParallax = () => {
             const scrolled = window.pageYOffset;
-            const parallaxElements = document.querySelectorAll('.link-box');
+            const parallaxElements = document.querySelectorAll('.parallax-bg');
             
             parallaxElements.forEach((element, index) => {
-                const speed = 0.5 + (index * 0.1);
+                const speed = 0.1 + (index * 0.05);
                 const yPos = -(scrolled * speed);
                 element.style.transform = `translateY(${yPos}px)`;
             });
@@ -101,24 +101,9 @@ class AnimationManager {
     }
 
     // 添加加载状态
+    // 移除加载状态，直接跳转
     addLoadingStates() {
-        // 为链接添加点击加载效果
-        document.querySelectorAll('.link-box').forEach(link => {
-            link.addEventListener('click', (e) => {
-                const originalContent = link.innerHTML;
-                link.innerHTML = `
-                    <div class="loading"></div>
-                    <span style="margin-left: 10px;">加载中...</span>
-                `;
-                
-                // 模拟加载延迟
-                setTimeout(() => {
-                    window.location.href = link.href;
-                }, 500);
-                
-                e.preventDefault();
-            });
-        });
+        // 原加载状态代码已移除，恢复默认链接跳转行为
     }
 
     // 添加鼠标跟随效果
