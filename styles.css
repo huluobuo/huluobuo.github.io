@@ -121,6 +121,9 @@ body {
 }
 
 @keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
     to {
         transform: rotate(360deg);
     }
@@ -488,6 +491,31 @@ p {
     border-radius: 50%;
     border-top-color: white;
     animation: spin 1s ease-in-out infinite;
+}
+
+/* 加载动画 - 深色背景版本 */
+.loading-dark {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(0, 0, 0, 0.1);
+    border-radius: 50%;
+    border-top-color: var(--primary-color);
+    animation: spin 1s linear infinite;
+}
+
+/* 按钮内的加载动画 */
+.button .loading {
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: white;
+    animation: spin 0.8s linear infinite;
+}
+
+/* 图标旋转动画 */
+.spin-icon {
+    animation: spin 1s linear infinite;
 }
 
 /* 进度条 */

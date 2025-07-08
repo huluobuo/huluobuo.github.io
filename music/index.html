@@ -43,7 +43,7 @@
             
             <div class="music-list-container" id="music-container">
                 <div class="loading-placeholder" style="grid-column: 1 / -1; text-align: center; padding: 3rem;">
-                    <div class="loading" style="margin: 0 auto 1rem;"></div>
+                    <div class="loading-dark" style="margin: 0 auto 1rem;"></div>
                     <p>正在加载音乐列表...</p>
                 </div>
             </div>
@@ -149,9 +149,8 @@
                 const loadIcon = loadBtn.querySelector('i');
                 
                 // 显示加载状态
-                loadIcon.className = 'ri-loader-4-line';
-                loadIcon.style.animation = 'spin 1s linear infinite';
-                loadBtn.innerHTML = '<i class="ri-loader-4-line" style="margin-right: 0.5rem; animation: spin 1s linear infinite;"></i>加载中...';
+                loadIcon.className = 'ri-loader-4-line spin-icon';
+                loadBtn.innerHTML = '<i class="ri-loader-4-line spin-icon" style="margin-right: 0.5rem;"></i>加载中...';
                 
                 setTimeout(() => {
                     const endIndex = Math.min(this.currentLoadIndex + this.tracksPerLoad, this.allTracks.length);

@@ -150,8 +150,7 @@
                     const originalClass = icon.className;
                     
                     // 显示加载状态
-                    icon.className = 'ri-loader-4-line';
-                    icon.style.animation = 'spin 1s linear infinite';
+                    icon.className = 'ri-loader-4-line spin-icon';
                     button.style.pointerEvents = 'none';
                     
                     // 延迟下载以显示动画
@@ -160,7 +159,6 @@
                         
                         // 恢复按钮状态
                         icon.className = originalClass;
-                        icon.style.animation = '';
                         button.style.pointerEvents = '';
                     }, 1000);
                 });
