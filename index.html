@@ -8,6 +8,43 @@
     <meta name="description" content="huluobuo的个人网站 - 展示项目、分享资源">
     <meta name="keywords" content="huluobuo, 个人网站, 项目展示, 文件下载, 音乐播放器">
     <style>
+        /* 加载动画样式 */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease-out;
+        }
+        .loading-container {
+            text-align: center;
+        }
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(0, 0, 0, 0.1);
+            border-top: 5px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .loading-text {
+            font-size: 1.2em;
+            color: #333;
+        }
+        .content-hidden {
+            display: none;
+        }
         /* 内联关键字体和图标 */
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
         .icon-download::before { content: "📁"; }
@@ -16,87 +53,120 @@
     </style>
 </head>
 <body>
-    <header class="header">
-        <div class="header-content">
-            <a href="/">
-                <h1>huluobuo.github.io</h1>
-            </a>
-            <a href="https://github.com/huluobuo" target="_blank" rel="noopener noreferrer" class="tooltip icon-github" data-tooltip="访问我的GitHub">
-                <img src="img/github_logo.png" alt="GitHub" width="32" height="32">
-            </a>
+    <!-- 加载动画 -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-container">
+            <div class="spinner"></div>
+            <div class="loading-text">页面加载中，请稍候...</div>
         </div>
-    </header>
+    </div>
 
-    <main class="content">
-        <section class="about-section" id="about-section">
-            <h2>关于我</h2>
-            <p>我是一名热爱编程的开发者，对技术充满热情。熟悉多种编程语言和技术栈，喜欢通过代码解决实际问题，创造有价值的应用程序。</p>
-            <p>除了编程，我还对硬件操作有浓厚兴趣，喜欢探索各种电子设备的工作原理，并尝试自己动手制作一些创新的小项目。</p>
-
-            <div class="skills-section">
-                <h3 style="color: var(--gray-700); margin-bottom: 1.5rem; font-size: 1.25rem;">技能水平</h3>
-                <div class="skill-item">
-                    <div class="skill-label">
-                        <span>Python</span>
-                        <span>85%</span>
-                    </div>
-                    <div class="skill-bar">
-                        <div class="skill-progress" data-width="85%"></div>
-                    </div>
-                </div>
-                <div class="skill-item">
-                    <div class="skill-label">
-                        <span>C/C++</span>
-                        <span>75%</span>
-                    </div>
-                    <div class="skill-bar">
-                        <div class="skill-progress" data-width="75%"></div>
-                    </div>
-                </div>
-                <div class="skill-item">
-                    <div class="skill-label">
-                        <span>HTML/CSS</span>
-                        <span>90%</span>
-                    </div>
-                    <div class="skill-bar">
-                        <div class="skill-progress" data-width="90%"></div>
-                    </div>
-                </div>
-                <div class="skill-item">
-                    <div class="skill-label">
-                        <span>JavaScript</span>
-                        <span>80%</span>
-                    </div>
-                    <div class="skill-bar">
-                        <div class="skill-progress" data-width="80%"></div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="links-section" id="links-section">
-            <h2>功能导航</h2>
-            <div class="links-container">
-                <a href="files/" class="link-box">
-                    <div class="parallax-bg"></div>
-                    <div class="link-content">
-                        <span class="icon-download" style="font-size: 2rem; margin-bottom: 0.5rem; display: block;"></span>
-                        <h3>文件下载</h3>
-                        <p>访问文件下载区域，获取相关资源和工具</p>
-                    </div>
+    <!-- 主内容区域 -->
+    <div class="content-hidden" id="mainContent">
+        <header class="header">
+            <div class="header-content">
+                <a href="/">
+                    <h1>huluobuo.github.io</h1>
                 </a>
-                <a href="music/" class="link-box">
-                    <div class="parallax-bg"></div>
-                    <div class="link-content">
-                        <span class="icon-music" style="font-size: 2rem; margin-bottom: 0.5rem; display: block;"></span>
-                        <h3>音乐播放器</h3>
-                        <p>打开音乐播放器，聆听精选的音乐作品</p>
-                    </div>
+                <a href="https://github.com/huluobuo" target="_blank" rel="noopener noreferrer" class="tooltip icon-github" data-tooltip="访问我的GitHub">
+                    <img src="img/github_logo.png" alt="GitHub" width="32" height="32">
                 </a>
             </div>
-        </section>
-    </main>
+        </header>
 
-    <script src="js/animations.js"></script>
+        <main class="content">
+            <section class="about-section" id="about-section">
+                <h2>关于我</h2>
+                <p>我是一名热爱编程的开发者，对技术充满热情。熟悉多种编程语言和技术栈，喜欢通过代码解决实际问题，创造有价值的应用程序。</p>
+                <p>除了编程，我还对硬件操作有浓厚兴趣，喜欢探索各种电子设备的工作原理，并尝试自己动手制作一些创新的小项目。</p>
+
+                <div class="skills-section">
+                    <h3 style="color: var(--gray-700); margin-bottom: 1.5rem; font-size: 1.25rem;">技能水平</h3>
+                    <div class="skill-item">
+                        <div class="skill-label">
+                            <span>Python</span>
+                            <span>85%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" data-width="85%"></div>
+                        </div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-label">
+                            <span>C/C++</span>
+                            <span>75%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" data-width="75%"></div>
+                        </div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-label">
+                            <span>HTML/CSS</span>
+                            <span>90%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" data-width="90%"></div>
+                        </div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-label">
+                            <span>JavaScript</span>
+                            <span>80%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" data-width="80%"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="links-section" id="links-section">
+                <h2>功能导航</h2>
+                <div class="links-container">
+                    <a href="files/" class="link-box">
+                        <div class="parallax-bg"></div>
+                        <div class="link-content">
+                            <span class="icon-download" style="font-size: 2rem; margin-bottom: 0.5rem; display: block;"></span>
+                            <h3>文件下载</h3>
+                            <p>访问文件下载区域，获取相关资源和工具</p>
+                        </div>
+                    </a>
+                    <a href="music/" class="link-box">
+                        <div class="parallax-bg"></div>
+                        <div class="link-content">
+                            <span class="icon-music" style="font-size: 2rem; margin-bottom: 0.5rem; display: block;"></span>
+                            <h3>音乐播放器</h3>
+                            <p>打开音乐播放器，聆听精选的音乐作品</p>
+                        </div>
+                    </a>
+                </div>
+            </section>
+        </main>
+
+        <script src="js/animations.js"></script>
+    </div>
+
+    <script>
+        // 页面加载完成后隐藏加载动画，显示主内容
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                const loadingOverlay = document.getElementById('loadingOverlay');
+                const mainContent = document.getElementById('mainContent');
+
+                // 添加淡出动画
+                loadingOverlay.style.opacity = '0';
+                loadingOverlay.style.pointerEvents = 'none';
+
+                // 显示主内容
+                mainContent.classList.remove('content-hidden');
+
+                // 完全移除加载层
+                setTimeout(function() {
+                    loadingOverlay.style.display = 'none';
+                }, 500);
+            }, 500); // 保持短暂延迟以展示加载动画
+        });
+    </script>
 </body>
 </html>
