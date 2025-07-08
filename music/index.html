@@ -131,11 +131,6 @@
                     
                     this.allTracks = await response.json();
                     
-                    // 如果歌曲少于5首，重复列表以便演示
-                    while (this.allTracks.length < 20) {
-                        this.allTracks = [...this.allTracks, ...this.allTracks];
-                    }
-                    
                 } catch (error) {
                     console.error('加载音乐列表时出错:', error);
                     this.showError('无法加载音乐列表，请稍后重试。');
@@ -156,22 +151,23 @@
                 // 显示加载状态
                 loadIcon.className = 'ri-loader-4-line';
                 loadIcon.style.animation = 'spin 1s linear infinite';
-                loadBtn.textContent = '加载中...';
-                loadBtn.prepend(loadIcon);
+                loadBtn.innerHTML = '<i class="ri-loader-4-line" style="margin-right: 0.5rem; animation: spin 1s linear infinite;"></i>加载中...';
                 
                 setTimeout(() => {
                     const endIndex = Math.min(this.currentLoadIndex + this.tracksPerLoad, this.allTracks.length);
                     const newTracks = this.allTracks.slice(this.currentLoadIndex, endIndex);
                     
-                    this.displayedTracks = [...this.displayedTracks, ...newTracks];
+                    // 防止重复添加相同的歌曲
+                    const existingPaths = new Set(this.displayedTracks.map(track => track.path));
+                    const uniqueNewTracks = newTracks.filter(track => !existingPaths.has(track.path));
+                    
+                    this.displayedTracks = [...this.displayedTracks, ...uniqueNewTracks];
                     this.currentLoadIndex = endIndex;
                     
                     this.renderPlaylist();
                     this.updateStats();
                     
                     // 恢复按钮状态
-                    loadIcon.className = 'ri-add-line';
-                    loadIcon.style.animation = '';
                     loadBtn.innerHTML = '<i class="ri-add-line" style="margin-right: 0.5rem;"></i>加载更多音乐';
                     
                     // 检查是否还有更多歌曲
@@ -203,7 +199,7 @@
                          data-index="${index}"
                          style="cursor: pointer; animation-delay: ${(index % this.tracksPerLoad) * 0.1}s; position: relative;">
                         <div style="display: flex; align-items: center; margin-bottom: 1rem;">
-                            <div class="track-number" style="width: 40px; height: 40px; background: var(--metal-gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 1rem; font-weight: 600; color: white; text-shadow: 0 2px 4px rgba(0,0,0,0.5); box-shadow: var(--shadow-3d);">
+                            <div class="track-number" style="width: 40px; height: 40px; background: rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 1rem; font-weight: 600;">
                                 ${index + 1}
                             </div>
                             <div style="flex: 1;">
@@ -219,9 +215,9 @@
                         </div>
                         <div class="playing-indicator" style="position: absolute; top: 1rem; right: 1rem; display: none;">
                             <div style="display: flex; gap: 2px; align-items: end; height: 16px;">
-                                <div style="width: 3px; animation: musicBar 1s ease-in-out infinite; animation-delay: 0s;"></div>
-                                <div style="width: 3px; animation: musicBar 1s ease-in-out infinite; animation-delay: 0.2s;"></div>
-                                <div style="width: 3px; animation: musicBar 1s ease-in-out infinite; animation-delay: 0.4s;"></div>
+                                <div style="width: 3px; background: white; animation: musicBar 1s ease-in-out infinite; animation-delay: 0s;"></div>
+                                <div style="width: 3px; background: white; animation: musicBar 1s ease-in-out infinite; animation-delay: 0.2s;"></div>
+                                <div style="width: 3px; background: white; animation: musicBar 1s ease-in-out infinite; animation-delay: 0.4s;"></div>
                             </div>
                         </div>
                     </div>
@@ -395,11 +391,11 @@
                     const indicator = item.querySelector('.playing-indicator');
                     
                     if (index === this.currentIndex) {
-                        item.style.background = 'var(--metal-gold)';
+                        item.style.background = 'linear-gradient(135deg, var(--secondary-color), var(--primary-color))';
                         playIcon.className = this.isPlaying ? 'ri-pause-line play-icon' : 'ri-play-line play-icon';
                         indicator.style.display = this.isPlaying ? 'block' : 'none';
                     } else {
-                        item.style.background = 'var(--metal-primary)';
+                        item.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
                         playIcon.className = 'ri-play-line play-icon';
                         indicator.style.display = 'none';
                     }

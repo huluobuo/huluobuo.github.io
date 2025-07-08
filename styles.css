@@ -1,4 +1,4 @@
-/* 现代化CSS样式 - 3D金属质感版本 */
+/* 现代化CSS样式 */
 :root {
     --primary-color: #3B82F6;
     --secondary-color: #10B981;
@@ -14,35 +14,10 @@
     --success-color: #10B981;
     --warning-color: #F59E0B;
     --error-color: #EF4444;
-    
-    /* 3D金属质感颜色 */
-    --metal-primary: linear-gradient(145deg, #c0c0c0, #a8a8a8);
-    --metal-secondary: linear-gradient(145deg, #e6e6e6, #cccccc);
-    --metal-dark: linear-gradient(145deg, #4a4a4a, #2d2d2d);
-    --metal-gold: linear-gradient(145deg, #ffd700, #ffb347);
-    --metal-silver: linear-gradient(145deg, #c0c0c0, #a8a8a8);
-    --metal-copper: linear-gradient(145deg, #b87333, #8b4513);
-    
     --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
     --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
     --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
     --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-    
-    /* 3D阴影效果 */
-    --shadow-3d: 
-        0 2px 4px rgba(0,0,0,0.1),
-        0 8px 16px rgba(0,0,0,0.1),
-        inset 0 1px 0 rgba(255,255,255,0.3),
-        inset 0 -1px 0 rgba(0,0,0,0.2);
-    --shadow-3d-hover: 
-        0 4px 8px rgba(0,0,0,0.15),
-        0 12px 24px rgba(0,0,0,0.15),
-        inset 0 1px 0 rgba(255,255,255,0.4),
-        inset 0 -1px 0 rgba(0,0,0,0.3);
-    --shadow-3d-pressed: 
-        inset 0 2px 4px rgba(0,0,0,0.3),
-        inset 0 -1px 0 rgba(255,255,255,0.2);
-    
     --border-radius: 0.75rem;
     --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -55,38 +30,31 @@
 
 body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background: 
-        radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3), transparent 50%),
-        radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3), transparent 50%),
-        radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.3), transparent 50%),
-        linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: var(--gray-800);
     line-height: 1.6;
     min-height: 100vh;
     overflow-x: hidden;
 }
 
-/* 自定义滚动条 - 3D效果 */
+/* 自定义滚动条 */
 ::-webkit-scrollbar {
-    width: 12px;
+    width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-    background: var(--metal-secondary);
-    border-radius: 6px;
-    box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+    background: var(--gray-100);
+    border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb {
-    background: var(--metal-primary);
-    border-radius: 6px;
-    box-shadow: var(--shadow-3d);
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+    border-radius: 4px;
     transition: var(--transition);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: var(--metal-gold);
-    box-shadow: var(--shadow-3d-hover);
+    background: linear-gradient(135deg, #2563EB, #7C3AED);
 }
 
 /* 动画定义 */
@@ -152,31 +120,21 @@ body {
     }
 }
 
-@keyframes metalShine {
-    0% {
-        background-position: -100% 0;
-    }
-    100% {
-        background-position: 100% 0;
-    }
-}
-
 @keyframes spin {
     to {
         transform: rotate(360deg);
     }
 }
 
-/* 头部样式 - 3D金属效果 */
+/* 头部样式 */
 .header {
-    background: var(--metal-dark);
+    background: rgba(30, 41, 59, 0.95);
     backdrop-filter: blur(20px);
-    border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     position: sticky;
     top: 0;
     z-index: 1000;
     animation: fadeInUp 0.8s ease-out;
-    box-shadow: var(--shadow-3d);
 }
 
 .header-content {
@@ -196,38 +154,22 @@ body {
 
 .header-content h1 {
     font-weight: 700;
-    background: var(--metal-gold);
+    background: linear-gradient(135deg, #60A5FA, #A78BFA);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-    position: relative;
-}
-
-.header-content h1::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-    animation: metalShine 3s infinite;
 }
 
 .header-content img {
     transition: var(--transition);
-    border: 3px solid transparent;
+    border: 2px solid transparent;
     border-radius: 50%;
-    box-shadow: var(--shadow-3d);
-    background: var(--metal-silver);
-    padding: 4px;
 }
 
 .header-content img:hover {
     transform: scale(1.1) rotate(5deg);
     border-color: var(--primary-color);
-    box-shadow: var(--shadow-3d-hover);
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
 }
 
 /* 主要内容区域 */
@@ -237,36 +179,20 @@ body {
     padding: 2rem;
 }
 
-/* 卡片样式 - 3D金属效果 */
+/* 卡片样式 */
 .about-section,
 .links-section,
 .files-section,
 .music-section {
-    background: var(--metal-secondary);
+    background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(20px);
-    border: 2px solid rgba(255, 255, 255, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: var(--border-radius);
     padding: 2rem;
     margin-bottom: 2rem;
-    box-shadow: var(--shadow-3d);
+    box-shadow: var(--shadow-xl);
     transition: var(--transition);
     animation: scaleIn 0.8s ease-out;
-    position: relative;
-    overflow: hidden;
-}
-
-.about-section::before,
-.links-section::before,
-.files-section::before,
-.music-section::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-    animation: metalShine 4s infinite;
 }
 
 .about-section:hover,
@@ -274,21 +200,20 @@ body {
 .files-section:hover,
 .music-section:hover {
     transform: translateY(-5px);
-    box-shadow: var(--shadow-3d-hover);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
 }
 
-/* 标题样式 - 3D金属效果 */
+/* 标题样式 */
 h2 {
     font-size: 2rem;
     font-weight: 700;
     margin-bottom: 1.5rem;
-    background: var(--metal-gold);
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
     position: relative;
     animation: fadeInLeft 1s ease-out;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
 }
 
 h2::after {
@@ -298,10 +223,9 @@ h2::after {
     left: 0;
     width: 60px;
     height: 4px;
-    background: var(--metal-gold);
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
     border-radius: 2px;
     animation: fadeInLeft 1.2s ease-out;
-    box-shadow: var(--shadow-3d);
 }
 
 /* 段落样式 */
@@ -309,10 +233,9 @@ p {
     color: var(--gray-700);
     margin-bottom: 1rem;
     animation: fadeInUp 1s ease-out;
-    text-shadow: 0 1px 2px rgba(255,255,255,0.5);
 }
 
-/* 技能条样式 - 3D金属效果 */
+/* 技能条样式 */
 .skill-item {
     margin-bottom: 1.5rem;
     animation: fadeInRight 1s ease-out;
@@ -324,27 +247,24 @@ p {
     margin-bottom: 0.5rem;
     font-weight: 600;
     color: var(--gray-700);
-    text-shadow: 0 1px 2px rgba(255,255,255,0.5);
 }
 
 .skill-bar {
     width: 100%;
-    height: 12px;
-    background: var(--metal-primary);
-    border-radius: 6px;
+    height: 8px;
+    background: var(--gray-200);
+    border-radius: 4px;
     overflow: hidden;
     position: relative;
-    box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
 }
 
 .skill-progress {
     height: 100%;
-    background: var(--metal-gold);
-    border-radius: 6px;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    border-radius: 4px;
     transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     overflow: hidden;
-    box-shadow: var(--shadow-3d);
 }
 
 .skill-progress::before {
@@ -357,7 +277,7 @@ p {
     background: linear-gradient(
         90deg,
         transparent,
-        rgba(255, 255, 255, 0.6),
+        rgba(255, 255, 255, 0.4),
         transparent
     );
     animation: shimmer 2s infinite;
@@ -400,15 +320,15 @@ p {
     }
 }
 
-/* 链接盒子样式 - 3D金属效果 */
+/* 链接盒子样式 */
 .link-box {
-    background: var(--metal-copper);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
     padding: 2rem;
     border-radius: var(--border-radius);
     text-decoration: none;
     transition: var(--transition);
-    box-shadow: var(--shadow-3d);
+    box-shadow: var(--shadow-lg);
     position: relative;
     overflow: hidden;
     min-height: 140px;
@@ -416,7 +336,6 @@ p {
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
-    border: 2px solid rgba(255,255,255,0.2);
 }
 
 .link-box::before {
@@ -429,7 +348,7 @@ p {
     background: linear-gradient(
         90deg,
         transparent,
-        rgba(255, 255, 255, 0.3),
+        rgba(255, 255, 255, 0.1),
         transparent
     );
     transition: var(--transition);
@@ -441,12 +360,7 @@ p {
 
 .link-box:hover {
     transform: translateY(-8px) scale(1.02);
-    box-shadow: var(--shadow-3d-hover);
-}
-
-.link-box:active {
-    transform: translateY(-4px) scale(1.01);
-    box-shadow: var(--shadow-3d-pressed);
+    box-shadow: 0 25px 50px -12px rgba(102, 126, 234, 0.4);
 }
 
 .link-box h3 {
@@ -454,40 +368,21 @@ p {
     font-weight: 600;
     margin-bottom: 0.5rem;
     color: white;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
 }
 
 .link-box p {
-    color: rgba(255, 255, 255, 0.9);
+    color: rgba(255, 255, 255, 0.8);
     margin: 0;
     font-size: 0.9rem;
-    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
 }
 
-/* 音乐项目样式 - 3D金属效果 */
-.music-item {
-    background: var(--metal-primary);
-    color: var(--gray-800);
-    min-height: 120px;
-    border: 2px solid rgba(255,255,255,0.3);
-}
-
-.music-item h3 {
-    color: var(--gray-800);
-    text-shadow: 0 1px 2px rgba(255,255,255,0.5);
-}
-
-.music-item p,
-.music-item span {
-    color: var(--gray-600);
-    text-shadow: 0 1px 2px rgba(255,255,255,0.3);
-}
-
-/* 播放器控制面板 - 3D金属效果 */
+/* 播放器控制面板 */
 .player-controls {
-    background: var(--metal-dark);
-    border: 2px solid rgba(255,255,255,0.2);
-    box-shadow: var(--shadow-3d);
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-xl);
     position: sticky;
     bottom: 0;
     z-index: 100;
@@ -495,28 +390,31 @@ p {
 }
 
 .control-btn {
-    background: var(--metal-silver);
-    border: 2px solid rgba(255,255,255,0.3);
-    box-shadow: var(--shadow-3d);
+    background: white;
+    border: none;
+    box-shadow: var(--shadow-sm);
     transition: var(--transition);
 }
 
 .control-btn:hover {
-    background: var(--metal-gold);
-    box-shadow: var(--shadow-3d-hover);
+    background: var(--primary-color);
+    color: white;
+    box-shadow: var(--shadow-md);
     transform: translateY(-2px);
 }
 
 .control-btn:active {
-    box-shadow: var(--shadow-3d-pressed);
     transform: translateY(0);
 }
 
-/* 统计卡片 - 3D金属效果 */
+/* 统计卡片 */
 .stat-card {
-    background: var(--metal-gold);
-    border: 2px solid rgba(255,255,255,0.3);
-    box-shadow: var(--shadow-3d);
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+    color: white;
+    padding: 1rem;
+    border-radius: var(--border-radius);
+    flex: 1;
+    min-width: 150px;
     position: relative;
     overflow: hidden;
 }
@@ -528,11 +426,11 @@ p {
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-    animation: metalShine 3s infinite;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    animation: shimmer 3s infinite;
 }
 
-/* 按钮样式 - 3D金属效果 */
+/* 按钮样式 */
 .button {
     display: inline-flex;
     align-items: center;
@@ -541,16 +439,15 @@ p {
     font-size: 1rem;
     font-weight: 600;
     color: white;
-    background: var(--metal-copper);
-    border: 2px solid rgba(255,255,255,0.3);
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+    border: none;
     border-radius: var(--border-radius);
     cursor: pointer;
     text-decoration: none;
     transition: var(--transition);
-    box-shadow: var(--shadow-3d);
+    box-shadow: var(--shadow-md);
     position: relative;
     overflow: hidden;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
 }
 
 .button::before {
@@ -563,7 +460,7 @@ p {
     background: linear-gradient(
         90deg,
         transparent,
-        rgba(255, 255, 255, 0.3),
+        rgba(255, 255, 255, 0.2),
         transparent
     );
     transition: var(--transition);
@@ -575,56 +472,49 @@ p {
 
 .button:hover {
     transform: translateY(-2px);
-    box-shadow: var(--shadow-3d-hover);
-    background: var(--metal-gold);
+    box-shadow: var(--shadow-lg);
 }
 
 .button:active {
     transform: translateY(0);
-    box-shadow: var(--shadow-3d-pressed);
 }
 
-/* 加载动画 - 3D金属效果 */
+/* 加载动画 */
 .loading {
     display: inline-block;
-    width: 24px;
-    height: 24px;
-    border: 4px solid var(--metal-primary);
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
     border-radius: 50%;
-    border-top-color: var(--metal-gold);
+    border-top-color: white;
     animation: spin 1s ease-in-out infinite;
-    box-shadow: var(--shadow-3d);
 }
 
-/* 进度条 - 3D金属效果 */
+/* 进度条 */
 .progress-bar {
-    background: var(--metal-primary);
-    box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
-    border: 1px solid rgba(255,255,255,0.2);
+    background: var(--gray-300);
+    border-radius: 3px;
 }
 
 #progress-fill {
-    background: var(--metal-gold);
-    box-shadow: var(--shadow-3d);
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+    border-radius: 3px;
 }
 
-/* 音量滑块 - 3D金属效果 */
+/* 音量滑块 */
 #volume-slider {
-    background: var(--metal-primary);
-    border-radius: 6px;
-    box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
-    border: 1px solid rgba(255,255,255,0.2);
+    background: var(--gray-300);
+    border-radius: 3px;
+    outline: none;
 }
 
 #volume-slider::-webkit-slider-thumb {
     appearance: none;
-    width: 20px;
-    height: 20px;
-    background: var(--metal-gold);
+    width: 16px;
+    height: 16px;
+    background: var(--primary-color);
     border-radius: 50%;
     cursor: pointer;
-    box-shadow: var(--shadow-3d);
-    border: 2px solid rgba(255,255,255,0.3);
 }
 
 /* 响应式设计 */
@@ -688,14 +578,14 @@ p {
 
 /* 特殊效果 */
 .glow {
-    box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
 }
 
 .pulse-animation {
     animation: pulse 2s infinite;
 }
 
-/* 工具提示 - 3D金属效果 */
+/* 工具提示 */
 .tooltip {
     position: relative;
     cursor: help;
@@ -707,7 +597,7 @@ p {
     bottom: 125%;
     left: 50%;
     transform: translateX(-50%);
-    background: var(--metal-dark);
+    background: var(--dark-color);
     color: white;
     padding: 0.5rem;
     border-radius: 4px;
@@ -717,8 +607,6 @@ p {
     visibility: hidden;
     transition: var(--transition);
     z-index: 1000;
-    box-shadow: var(--shadow-3d);
-    border: 1px solid rgba(255,255,255,0.2);
 }
 
 .tooltip:hover::before {
@@ -726,32 +614,30 @@ p {
     visibility: visible;
 }
 
-/* 成功/错误消息 - 3D金属效果 */
+/* 成功/错误消息 */
 .message {
     padding: 1rem;
     border-radius: var(--border-radius);
     margin-bottom: 1rem;
     font-weight: 500;
-    box-shadow: var(--shadow-3d);
-    border: 2px solid rgba(255,255,255,0.2);
 }
 
 .message.success {
-    background: var(--metal-secondary);
+    background: rgba(16, 185, 129, 0.1);
     color: var(--success-color);
-    border-color: var(--success-color);
+    border: 1px solid rgba(16, 185, 129, 0.2);
 }
 
 .message.error {
-    background: var(--metal-secondary);
+    background: rgba(239, 68, 68, 0.1);
     color: var(--error-color);
-    border-color: var(--error-color);
+    border: 1px solid rgba(239, 68, 68, 0.2);
 }
 
 .message.warning {
-    background: var(--metal-secondary);
+    background: rgba(245, 158, 11, 0.1);
     color: var(--warning-color);
-    border-color: var(--warning-color);
+    border: 1px solid rgba(245, 158, 11, 0.2);
 }
 
 /* 隐藏类 */
@@ -763,28 +649,72 @@ p {
 .load-more-btn {
     width: 100%;
     margin-top: 1rem;
-    background: var(--metal-primary);
-    color: var(--gray-800);
-}
-
-.load-more-btn:hover {
-    background: var(--metal-gold);
-    color: white;
 }
 
 /* 播放指示器动画 */
 @keyframes musicBar {
     0%, 100% { 
         height: 4px; 
-        background: var(--metal-gold);
     }
     50% { 
         height: 16px; 
-        background: var(--metal-copper);
     }
 }
 
 .playing-indicator div {
-    background: var(--metal-gold);
-    box-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    background: white;
+}
+
+/* 修复主页按钮错位问题 */
+.links-section .links-container {
+    align-items: stretch; /* 确保所有按钮高度一致 */
+}
+
+.links-section .link-box {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* 内容分布均匀 */
+    align-items: flex-start;
+    height: 100%; /* 确保高度一致 */
+}
+
+/* 确保按钮内容垂直居中 */
+.links-section .link-box > * {
+    width: 100%;
+}
+
+.links-section .link-box h3,
+.links-section .link-box p {
+    margin-bottom: auto;
+}
+
+/* 音乐播放器固定底部样式 */
+.music-player-fixed {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(30, 41, 59, 0.95);
+    backdrop-filter: blur(20px);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    z-index: 1000;
+    padding: 1.5rem;
+}
+
+.music-player-fixed .control-btn {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.music-player-fixed .control-btn:hover {
+    background: var(--primary-color);
+}
+
+.music-player-fixed #volume-slider {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.music-player-fixed .progress-bar {
+    background: rgba(255, 255, 255, 0.2);
 }
