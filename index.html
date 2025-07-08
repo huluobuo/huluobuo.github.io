@@ -5,10 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>huluobuo.github.io</title>
     <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
     <meta name="description" content="huluobuo的个人网站 - 展示项目、分享资源">
     <meta name="keywords" content="huluobuo, 个人网站, 项目展示, 文件下载, 音乐播放器">
+    <style>
+        /* 内联关键字体和图标 */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        .icon-download::before { content: "📁"; }
+        .icon-music::before { content: "🎵"; }
+        .icon-github::before { content: "🔗"; }
+    </style>
 </head>
 <body>
     <header class="header">
@@ -16,7 +21,7 @@
             <a href="/">
                 <h1>huluobuo.github.io</h1>
             </a>
-            <a href="https://github.com/huluobuo" target="_blank" rel="noopener noreferrer" class="tooltip" data-tooltip="访问我的GitHub">
+            <a href="https://github.com/huluobuo" target="_blank" rel="noopener noreferrer" class="tooltip icon-github" data-tooltip="访问我的GitHub">
                 <img src="img/github_logo.png" alt="GitHub" width="32" height="32">
             </a>
         </div>
@@ -74,14 +79,14 @@
             <div class="links-container">
                 <a href="files/" class="link-box">
                     <div>
-                        <i class="ri-download-cloud-line" style="font-size: 2rem; margin-bottom: 0.5rem; display: block;"></i>
+                        <span class="icon-download" style="font-size: 2rem; margin-bottom: 0.5rem; display: block;"></span>
                         <h3>文件下载</h3>
                         <p>访问文件下载区域，获取相关资源和工具</p>
                     </div>
                 </a>
                 <a href="music/" class="link-box">
                     <div>
-                        <i class="ri-music-line" style="font-size: 2rem; margin-bottom: 0.5rem; display: block;"></i>
+                        <span class="icon-music" style="font-size: 2rem; margin-bottom: 0.5rem; display: block;"></span>
                         <h3>音乐播放器</h3>
                         <p>打开音乐播放器，聆听精选的音乐作品</p>
                     </div>

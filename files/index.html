@@ -5,9 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>文件下载 - huluobuo.github.io</title>
     <link rel="stylesheet" href="../styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
     <meta name="description" content="文件下载中心 - 获取各种实用工具和资源">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+        .icon-download::before { content: "📁"; }
+        .icon-search::before { content: "🔍"; }
+        .icon-file::before { content: "📄"; }
+        .icon-arrow::before { content: "←"; }
+    </style>
 </head>
 <body>
     <header class="header">
@@ -23,14 +28,14 @@
 
     <main class="content">
         <section class="files-section" id="files-section">
-            <h2><i class="ri-download-cloud-line" style="margin-right: 0.5rem;"></i>文件下载中心</h2>
+            <h2><span class="icon-download" style="margin-right: 0.5rem;"></span>文件下载中心</h2>
             <p style="margin-bottom: 2rem; color: var(--gray-600);">这里提供各种实用工具和资源的下载，所有文件都经过安全检查。</p>
             
             <div class="search-container" style="margin-bottom: 2rem;">
                 <div style="position: relative;">
                     <input type="text" id="search-input" placeholder="搜索文件..." 
                            style="width: 100%; padding: 0.75rem 1rem 0.75rem 2.5rem; border: 2px solid var(--gray-200); border-radius: var(--border-radius); font-size: 1rem; transition: var(--transition);">
-                    <i class="ri-search-line" style="position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); color: var(--gray-400);"></i>
+                    <span class="icon-search" style="position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); color: var(--gray-400);"></span>
                 </div>
             </div>
 
@@ -46,10 +51,7 @@
             </div>
 
             <div class="links-container" id="files-container">
-                <div class="loading-placeholder" style="grid-column: 1 / -1; text-align: center; padding: 3rem;">
-                    <div class="loading-dark" style="margin: 0 auto 1rem;"></div>
-                    <p>正在加载文件列表...</p>
-                </div>
+                <p style="grid-column: 1 / -1; text-align: center; padding: 3rem; color: var(--gray-600);">正在加载文件列表...</p>
             </div>
         </section>
     </main>
@@ -103,7 +105,7 @@
                        data-file-name="${file.name.toLowerCase()}"
                        data-file-size="${file.size}">
                         <div style="display: flex; align-items: center; margin-bottom: 1rem;">
-                            <i class="ri-file-zip-line" style="font-size: 2rem; margin-right: 0.75rem; opacity: 0.8;"></i>
+                            <span class="icon-file" style="font-size: 2rem; margin-right: 0.75rem; opacity: 0.8;"></span>
                             <div style="flex: 1;">
                                 <h3 style="margin: 0; font-size: 1.1rem; line-height: 1.3;">${file.name}</h3>
                                 <div style="font-size: 0.875rem; opacity: 0.8; margin-top: 0.25rem;">
@@ -113,7 +115,7 @@
                         </div>
                         <div style="display: flex; align-items: center; justify-content: space-between; margin-top: auto;">
                             <span style="font-size: 0.875rem; opacity: 0.8;">点击下载</span>
-                            <i class="ri-download-line" style="font-size: 1.25rem;"></i>
+                            <span style="font-size: 1.25rem;">⬇</span>
                         </div>
                     </a>
                 `).join('');
@@ -128,9 +130,8 @@
                         e.preventDefault();
                         
                         // 添加下载动画
-                        const downloadIcon = item.querySelector('.ri-download-line');
-                        downloadIcon.className = 'ri-loader-4-line';
-                        downloadIcon.style.animation = 'spin 1s linear infinite';
+                        const downloadIcon = item.querySelector('span:last-child');
+                        downloadIcon.textContent = '⏳';
                         
                         // 延迟跳转以显示动画
                         setTimeout(() => {

@@ -5,9 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>文件下载 - huluobuo.github.io</title>
     <link rel="stylesheet" href="../styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
     <meta name="description" content="文件下载页面">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+        .icon-download::before { content: "⬇"; }
+        .icon-check::before { content: "✓"; }
+        .icon-error::before { content: "⚠"; }
+        .icon-arrow::before { content: "←"; }
+    </style>
 </head>
 <body>
     <header class="header">
@@ -24,13 +29,13 @@
     <main class="content">
         <section class="download-section" style="background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px); border-radius: var(--border-radius); padding: 3rem; text-align: center; box-shadow: var(--shadow-xl);">
             <div class="download-icon" style="margin-bottom: 2rem;">
-                <i class="ri-download-cloud-line" style="font-size: 4rem; color: var(--primary-color);"></i>
+                <span style="font-size: 4rem; color: var(--primary-color);">📁</span>
             </div>
             
             <h2 style="margin-bottom: 1.5rem; color: var(--gray-800);">准备下载文件</h2>
             
             <div class="countdown-container" style="margin-bottom: 2rem;">
-                <div class="countdown-circle" style="width: 80px; height: 80px; border: 4px solid var(--gray-200); border-top: 4px solid var(--primary-color); border-radius: 50%; margin: 0 auto 1rem; animation: spin 1s linear infinite;"></div>
+                <div class="countdown-circle" style="width: 80px; height: 80px; border: 4px solid var(--gray-200); border-radius: 50%; margin: 0 auto 1rem; background: var(--primary-color); opacity: 0.8;"></div>
                 <p id="countdown" style="font-size: 1.25rem; font-weight: 600; color: var(--gray-700);">3 秒后开始下载</p>
             </div>
 
@@ -47,19 +52,19 @@
             <div id="download-controls" class="hidden" style="margin-top: 2rem;">
                 <p id="direct-download-tip" style="margin-bottom: 1rem; color: var(--gray-600);">下载没有开始？</p>
                 <a id="download-button" href="#" class="button" style="display: inline-flex; align-items: center; gap: 0.5rem;">
-                    <i class="ri-download-line"></i>
+                    <span class="icon-download"></span>
                     直接下载
                 </a>
             </div>
 
             <div id="success-message" class="message success hidden" style="margin-top: 2rem;">
-                <i class="ri-check-line" style="margin-right: 0.5rem;"></i>
+                <span class="icon-check" style="margin-right: 0.5rem;"></span>
                 下载已开始！感谢您的使用。
             </div>
 
             <div class="back-link" style="margin-top: 2rem;">
                 <a href="./" style="color: var(--primary-color); text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem; transition: var(--transition);">
-                    <i class="ri-arrow-left-line"></i>
+                    <span class="icon-arrow"></span>
                     返回文件列表
                 </a>
             </div>
@@ -146,11 +151,11 @@
                     e.preventDefault();
                     
                     const button = e.target.closest('.button');
-                    const icon = button.querySelector('i');
-                    const originalClass = icon.className;
+                    const icon = button.querySelector('span');
+                    const originalText = icon.textContent;
                     
                     // 显示加载状态
-                    icon.className = 'ri-loader-4-line spin-icon';
+                    icon.textContent = '⏳';
                     button.style.pointerEvents = 'none';
                     
                     // 延迟下载以显示动画
@@ -158,7 +163,7 @@
                         window.open(this.fileLink, '_blank');
                         
                         // 恢复按钮状态
-                        icon.className = originalClass;
+                        icon.textContent = originalText;
                         button.style.pointerEvents = '';
                     }, 1000);
                 });
@@ -177,7 +182,7 @@
                 const section = document.querySelector('.download-section');
                 section.innerHTML = `
                     <div class="download-icon" style="margin-bottom: 2rem;">
-                        <i class="ri-error-warning-line" style="font-size: 4rem; color: var(--error-color);"></i>
+                        <span style="font-size: 4rem; color: var(--error-color);">⚠</span>
                     </div>
                     <h2 style="margin-bottom: 1rem; color: var(--error-color);">下载出错</h2>
                     <div class="message error" style="margin-bottom: 2rem;">
@@ -185,7 +190,7 @@
                     </div>
                     <div class="back-link">
                         <a href="./" style="color: var(--primary-color); text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem;">
-                            <i class="ri-arrow-left-line"></i>
+                            <span class="icon-arrow"></span>
                             返回文件列表
                         </a>
                     </div>
