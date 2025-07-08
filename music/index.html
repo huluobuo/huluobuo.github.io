@@ -21,91 +21,106 @@
         </div>
     </header>
 
-    <main class="content" style="flex: 1;">
+    <main class="content" style="flex: 1; padding-bottom: 200px;">
         <section class="music-section" id="music-section">
             <h2><i class="ri-music-line" style="margin-right: 0.5rem;"></i>音乐播放器</h2>
-            <p style="margin-bottom: 2rem; color: var(--gray-600);">精选音乐合集，点击任意歌曲开始播放。</p>
+            <p style="margin-bottom: 2rem; color: var(--gray-600);">精选音乐合集，向下滑动加载更多歌曲。</p>
             
-            <div class="player-controls" style="background: var(--gray-100); padding: 1.5rem; border-radius: var(--border-radius); margin-bottom: 2rem;">
-                <div class="now-playing" style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
-                    <div class="album-art" style="width: 60px; height: 60px; background: linear-gradient(135deg, var(--primary-color), var(--accent-color)); border-radius: var(--border-radius); display: flex; align-items: center; justify-content: center;">
-                        <i class="ri-music-2-line" style="font-size: 1.5rem; color: white;"></i>
-                    </div>
-                    <div class="track-info" style="flex: 1;">
-                        <div id="current-track" style="font-weight: 600; color: var(--gray-800);">选择一首歌曲开始播放</div>
-                        <div id="current-artist" style="color: var(--gray-600); font-size: 0.875rem;">huluobuo 音乐合集</div>
-                    </div>
-                    <div class="playback-controls" style="display: flex; gap: 0.5rem;">
-                        <button id="prev-btn" class="control-btn" style="width: 40px; height: 40px; border: none; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: var(--transition); box-shadow: var(--shadow-sm);">
-                            <i class="ri-skip-back-line"></i>
-                        </button>
-                        <button id="play-pause-btn" class="control-btn" style="width: 50px; height: 50px; border: none; background: var(--primary-color); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: var(--transition); box-shadow: var(--shadow-md);">
-                            <i class="ri-play-line"></i>
-                        </button>
-                        <button id="next-btn" class="control-btn" style="width: 40px; height: 40px; border: none; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: var(--transition); box-shadow: var(--shadow-sm);">
-                            <i class="ri-skip-forward-line"></i>
-                        </button>
-                    </div>
-                </div>
-                
-                <div class="progress-container" style="margin-bottom: 1rem;">
-                    <div class="progress-bar" style="width: 100%; height: 6px; background: var(--gray-300); border-radius: 3px; cursor: pointer; position: relative;">
-                        <div id="progress-fill" style="height: 100%; background: linear-gradient(135deg, var(--primary-color), var(--accent-color)); border-radius: 3px; width: 0%; transition: width 0.1s ease;"></div>
-                    </div>
-                    <div class="time-display" style="display: flex; justify-content: space-between; margin-top: 0.5rem; font-size: 0.875rem; color: var(--gray-600);">
-                        <span id="current-time">0:00</span>
-                        <span id="total-time">0:00</span>
-                    </div>
-                </div>
-                
-                <div class="volume-container" style="display: flex; align-items: center; gap: 1rem;">
-                    <i class="ri-volume-down-line" style="color: var(--gray-600);"></i>
-                    <input type="range" id="volume-slider" min="0" max="100" value="70" 
-                           style="flex: 1; height: 6px; background: var(--gray-300); border-radius: 3px; outline: none; cursor: pointer;">
-                    <i class="ri-volume-up-line" style="color: var(--gray-600);"></i>
-                </div>
-            </div>
-
             <div class="music-stats" style="display: flex; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap;">
-                <div class="stat-card" style="background: linear-gradient(135deg, var(--primary-color), var(--accent-color)); color: white; padding: 1rem; border-radius: var(--border-radius); flex: 1; min-width: 120px;">
-                    <div style="font-size: 1.5rem; font-weight: 700;" id="total-tracks">0</div>
-                    <div style="font-size: 0.875rem; opacity: 0.9;">总曲目</div>
+                <div class="stat-card" style="padding: 1rem; border-radius: var(--border-radius); flex: 1; min-width: 120px;">
+                    <div style="font-size: 1.5rem; font-weight: 700; color: white; text-shadow: 0 2px 4px rgba(0,0,0,0.5);" id="total-tracks">0</div>
+                    <div style="font-size: 0.875rem; opacity: 0.9; color: white;">已加载</div>
                 </div>
-                <div class="stat-card" style="background: linear-gradient(135deg, var(--secondary-color), var(--primary-color)); color: white; padding: 1rem; border-radius: var(--border-radius); flex: 1; min-width: 120px;">
-                    <div style="font-size: 1.5rem; font-weight: 700;" id="total-duration">0:00</div>
-                    <div style="font-size: 0.875rem; opacity: 0.9;">总时长</div>
+                <div class="stat-card" style="padding: 1rem; border-radius: var(--border-radius); flex: 1; min-width: 120px;">
+                    <div style="font-size: 1.5rem; font-weight: 700; color: white; text-shadow: 0 2px 4px rgba(0,0,0,0.5);" id="total-duration">0:00</div>
+                    <div style="font-size: 0.875rem; opacity: 0.9; color: white;">总时长</div>
                 </div>
-                <div class="stat-card" style="background: linear-gradient(135deg, var(--accent-color), var(--secondary-color)); color: white; padding: 1rem; border-radius: var(--border-radius); flex: 1; min-width: 120px;">
-                    <div style="font-size: 1.5rem; font-weight: 700;" id="current-index">-</div>
-                    <div style="font-size: 0.875rem; opacity: 0.9;">当前曲目</div>
+                <div class="stat-card" style="padding: 1rem; border-radius: var(--border-radius); flex: 1; min-width: 120px;">
+                    <div style="font-size: 1.5rem; font-weight: 700; color: white; text-shadow: 0 2px 4px rgba(0,0,0,0.5);" id="current-index">-</div>
+                    <div style="font-size: 0.875rem; opacity: 0.9; color: white;">当前曲目</div>
                 </div>
             </div>
             
-            <div class="links-container" id="music-container">
+            <div class="music-list-container" id="music-container">
                 <div class="loading-placeholder" style="grid-column: 1 / -1; text-align: center; padding: 3rem;">
                     <div class="loading" style="margin: 0 auto 1rem;"></div>
                     <p>正在加载音乐列表...</p>
                 </div>
             </div>
+
+            <div id="load-more-container" class="hidden" style="text-align: center; margin-top: 1rem;">
+                <button id="load-more-btn" class="button load-more-btn">
+                    <i class="ri-add-line" style="margin-right: 0.5rem;"></i>
+                    加载更多音乐
+                </button>
+            </div>
         </section>
     </main>
+
+    <!-- 固定在底部的播放器控制面板 -->
+    <div class="player-controls" style="position: fixed; bottom: 0; left: 0; right: 0; background: var(--metal-dark); padding: 1.5rem; border-top: 2px solid rgba(255,255,255,0.2); z-index: 1000;">
+        <div style="max-width: 1200px; margin: 0 auto;">
+            <div class="now-playing" style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                <div class="album-art" style="width: 60px; height: 60px; background: var(--metal-gold); border-radius: var(--border-radius); display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-3d);">
+                    <i class="ri-music-2-line" style="font-size: 1.5rem; color: white;"></i>
+                </div>
+                <div class="track-info" style="flex: 1;">
+                    <div id="current-track" style="font-weight: 600; color: white; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">选择一首歌曲开始播放</div>
+                    <div id="current-artist" style="color: rgba(255,255,255,0.8); font-size: 0.875rem;">huluobuo 音乐合集</div>
+                </div>
+                <div class="playback-controls" style="display: flex; gap: 0.5rem;">
+                    <button id="prev-btn" class="control-btn" style="width: 40px; height: 40px; border: none; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: var(--transition);">
+                        <i class="ri-skip-back-line" style="color: var(--gray-800);"></i>
+                    </button>
+                    <button id="play-pause-btn" class="control-btn" style="width: 50px; height: 50px; border: none; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: var(--transition);">
+                        <i class="ri-play-line" style="color: var(--gray-800);"></i>
+                    </button>
+                    <button id="next-btn" class="control-btn" style="width: 40px; height: 40px; border: none; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: var(--transition);">
+                        <i class="ri-skip-forward-line" style="color: var(--gray-800);"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="progress-container" style="margin-bottom: 1rem;">
+                <div class="progress-bar" style="width: 100%; height: 8px; border-radius: 4px; cursor: pointer; position: relative;">
+                    <div id="progress-fill" style="height: 100%; border-radius: 4px; width: 0%; transition: width 0.1s ease;"></div>
+                </div>
+                <div class="time-display" style="display: flex; justify-content: space-between; margin-top: 0.5rem; font-size: 0.875rem; color: rgba(255,255,255,0.8);">
+                    <span id="current-time">0:00</span>
+                    <span id="total-time">0:00</span>
+                </div>
+            </div>
+            
+            <div class="volume-container" style="display: flex; align-items: center; gap: 1rem;">
+                <i class="ri-volume-down-line" style="color: rgba(255,255,255,0.8);"></i>
+                <input type="range" id="volume-slider" min="0" max="100" value="70" 
+                       style="flex: 1; height: 8px; outline: none; cursor: pointer;">
+                <i class="ri-volume-up-line" style="color: rgba(255,255,255,0.8);"></i>
+            </div>
+        </div>
+    </div>
 
     <audio id="audio-player" preload="metadata" style="display: none;"></audio>
 
     <script>
         class MusicPlayer {
             constructor() {
-                this.playlist = [];
+                this.allTracks = [];
+                this.displayedTracks = [];
                 this.currentIndex = -1;
                 this.isPlaying = false;
                 this.audio = document.getElementById('audio-player');
+                this.tracksPerLoad = 5;
+                this.currentLoadIndex = 0;
+                this.isLoading = false;
                 this.init();
             }
 
             async init() {
                 await this.loadPlaylist();
                 this.setupEventListeners();
-                this.updateStats();
+                this.setupInfiniteScroll();
+                this.loadInitialTracks();
                 this.triggerAnimations();
             }
 
@@ -114,18 +129,66 @@
                     const response = await fetch('./musiclist.json');
                     if (!response.ok) throw new Error('Failed to load playlist');
                     
-                    this.playlist = await response.json();
-                    this.renderPlaylist();
+                    this.allTracks = await response.json();
+                    
+                    // 如果歌曲少于5首，重复列表以便演示
+                    while (this.allTracks.length < 20) {
+                        this.allTracks = [...this.allTracks, ...this.allTracks];
+                    }
+                    
                 } catch (error) {
                     console.error('加载音乐列表时出错:', error);
                     this.showError('无法加载音乐列表，请稍后重试。');
                 }
             }
 
+            loadInitialTracks() {
+                this.loadMoreTracks();
+            }
+
+            loadMoreTracks() {
+                if (this.isLoading || this.currentLoadIndex >= this.allTracks.length) return;
+                
+                this.isLoading = true;
+                const loadBtn = document.getElementById('load-more-btn');
+                const loadIcon = loadBtn.querySelector('i');
+                
+                // 显示加载状态
+                loadIcon.className = 'ri-loader-4-line';
+                loadIcon.style.animation = 'spin 1s linear infinite';
+                loadBtn.textContent = '加载中...';
+                loadBtn.prepend(loadIcon);
+                
+                setTimeout(() => {
+                    const endIndex = Math.min(this.currentLoadIndex + this.tracksPerLoad, this.allTracks.length);
+                    const newTracks = this.allTracks.slice(this.currentLoadIndex, endIndex);
+                    
+                    this.displayedTracks = [...this.displayedTracks, ...newTracks];
+                    this.currentLoadIndex = endIndex;
+                    
+                    this.renderPlaylist();
+                    this.updateStats();
+                    
+                    // 恢复按钮状态
+                    loadIcon.className = 'ri-add-line';
+                    loadIcon.style.animation = '';
+                    loadBtn.innerHTML = '<i class="ri-add-line" style="margin-right: 0.5rem;"></i>加载更多音乐';
+                    
+                    // 检查是否还有更多歌曲
+                    if (this.currentLoadIndex >= this.allTracks.length) {
+                        document.getElementById('load-more-container').classList.add('hidden');
+                    } else {
+                        document.getElementById('load-more-container').classList.remove('hidden');
+                    }
+                    
+                    this.isLoading = false;
+                }, 1000); // 模拟加载延迟
+            }
+
             renderPlaylist() {
                 const container = document.getElementById('music-container');
                 
-                if (this.playlist.length === 0) {
+                if (this.displayedTracks.length === 0) {
                     container.innerHTML = `
                         <div style="grid-column: 1 / -1; text-align: center; padding: 3rem;">
                             <i class="ri-music-line" style="font-size: 3rem; color: var(--gray-400); margin-bottom: 1rem;"></i>
@@ -135,12 +198,12 @@
                     return;
                 }
 
-                container.innerHTML = this.playlist.map((track, index) => `
+                container.innerHTML = this.displayedTracks.map((track, index) => `
                     <div class="link-box music-item" 
                          data-index="${index}"
-                         style="cursor: pointer; animation-delay: ${index * 0.1}s; position: relative;">
+                         style="cursor: pointer; animation-delay: ${(index % this.tracksPerLoad) * 0.1}s; position: relative;">
                         <div style="display: flex; align-items: center; margin-bottom: 1rem;">
-                            <div class="track-number" style="width: 40px; height: 40px; background: rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 1rem; font-weight: 600;">
+                            <div class="track-number" style="width: 40px; height: 40px; background: var(--metal-gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 1rem; font-weight: 600; color: white; text-shadow: 0 2px 4px rgba(0,0,0,0.5); box-shadow: var(--shadow-3d);">
                                 ${index + 1}
                             </div>
                             <div style="flex: 1;">
@@ -156,23 +219,13 @@
                         </div>
                         <div class="playing-indicator" style="position: absolute; top: 1rem; right: 1rem; display: none;">
                             <div style="display: flex; gap: 2px; align-items: end; height: 16px;">
-                                <div style="width: 3px; background: white; animation: musicBar 1s ease-in-out infinite; animation-delay: 0s;"></div>
-                                <div style="width: 3px; background: white; animation: musicBar 1s ease-in-out infinite; animation-delay: 0.2s;"></div>
-                                <div style="width: 3px; background: white; animation: musicBar 1s ease-in-out infinite; animation-delay: 0.4s;"></div>
+                                <div style="width: 3px; animation: musicBar 1s ease-in-out infinite; animation-delay: 0s;"></div>
+                                <div style="width: 3px; animation: musicBar 1s ease-in-out infinite; animation-delay: 0.2s;"></div>
+                                <div style="width: 3px; animation: musicBar 1s ease-in-out infinite; animation-delay: 0.4s;"></div>
                             </div>
                         </div>
                     </div>
                 `).join('');
-
-                // 添加音乐条动画
-                const style = document.createElement('style');
-                style.textContent = `
-                    @keyframes musicBar {
-                        0%, 100% { height: 4px; }
-                        50% { height: 16px; }
-                    }
-                `;
-                document.head.appendChild(style);
 
                 this.addPlaylistEvents();
             }
@@ -183,6 +236,16 @@
                         const index = parseInt(item.dataset.index);
                         this.playTrack(index);
                     });
+                });
+            }
+
+            setupInfiniteScroll() {
+                const container = document.getElementById('music-container');
+                
+                container.addEventListener('scroll', () => {
+                    if (container.scrollTop + container.clientHeight >= container.scrollHeight - 50) {
+                        this.loadMoreTracks();
+                    }
                 });
             }
 
@@ -199,6 +262,11 @@
 
                 document.getElementById('next-btn').addEventListener('click', () => {
                     this.nextTrack();
+                });
+
+                // 加载更多按钮
+                document.getElementById('load-more-btn').addEventListener('click', () => {
+                    this.loadMoreTracks();
                 });
 
                 // 音量控制
@@ -252,14 +320,15 @@
             }
 
             playTrack(index) {
-                if (index < 0 || index >= this.playlist.length) return;
+                if (index < 0 || index >= this.displayedTracks.length) return;
 
                 this.currentIndex = index;
-                const track = this.playlist[index];
+                const track = this.displayedTracks[index];
                 
                 // 更新UI
                 this.updateNowPlaying(track);
                 this.updatePlaylistUI();
+                this.updateStats();
                 
                 // 加载并播放音频
                 this.audio.src = track.path;
@@ -294,17 +363,18 @@
                 }
                 
                 this.updatePlayButton();
+                this.updatePlaylistUI();
             }
 
             previousTrack() {
-                if (this.playlist.length === 0) return;
-                const newIndex = this.currentIndex <= 0 ? this.playlist.length - 1 : this.currentIndex - 1;
+                if (this.displayedTracks.length === 0) return;
+                const newIndex = this.currentIndex <= 0 ? this.displayedTracks.length - 1 : this.currentIndex - 1;
                 this.playTrack(newIndex);
             }
 
             nextTrack() {
-                if (this.playlist.length === 0) return;
-                const newIndex = this.currentIndex >= this.playlist.length - 1 ? 0 : this.currentIndex + 1;
+                if (this.displayedTracks.length === 0) return;
+                const newIndex = this.currentIndex >= this.displayedTracks.length - 1 ? 0 : this.currentIndex + 1;
                 this.playTrack(newIndex);
             }
 
@@ -325,11 +395,11 @@
                     const indicator = item.querySelector('.playing-indicator');
                     
                     if (index === this.currentIndex) {
-                        item.style.background = 'linear-gradient(135deg, var(--secondary-color), var(--primary-color))';
+                        item.style.background = 'var(--metal-gold)';
                         playIcon.className = this.isPlaying ? 'ri-pause-line play-icon' : 'ri-play-line play-icon';
                         indicator.style.display = this.isPlaying ? 'block' : 'none';
                     } else {
-                        item.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+                        item.style.background = 'var(--metal-primary)';
                         playIcon.className = 'ri-play-line play-icon';
                         indicator.style.display = 'none';
                     }
@@ -343,8 +413,8 @@
             }
 
             updateStats() {
-                const totalTracks = this.playlist.length;
-                const totalDuration = this.playlist.reduce((sum, track) => sum + (track.time_big * 60), 0);
+                const totalTracks = this.displayedTracks.length;
+                const totalDuration = this.displayedTracks.reduce((sum, track) => sum + (track.time_big * 60), 0);
                 
                 document.getElementById('total-tracks').textContent = totalTracks;
                 document.getElementById('total-duration').textContent = this.formatTime(totalDuration);
