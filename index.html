@@ -50,6 +50,14 @@
         .icon-download::before { content: "📁"; }
         .icon-music::before { content: "🎵"; }
         .icon-github::before { content: "🔗"; }
+        
+        /* 修改GitHub图片悬停效果 */
+        .header-content img:hover {
+            transform: scale(1.1);
+            border-color: var(--primary-color);
+            box-shadow: 0 0 20px rgba(59,130,246,0.5);
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -75,51 +83,7 @@
         </header>
 
         <main class="content">
-            <section class="about-section" id="about-section">
-                <h2>关于我</h2>
-                <p>我是一名热爱编程的开发者，对技术充满热情。熟悉多种编程语言和技术栈，喜欢通过代码解决实际问题，创造有价值的应用程序。</p>
-                <p>除了编程，我还对硬件操作有浓厚兴趣，喜欢探索各种电子设备的工作原理，并尝试自己动手制作一些创新的小项目。</p>
 
-                <div class="skills-section">
-                    <h3 style="color: var(--gray-700); margin-bottom: 1.5rem; font-size: 1.25rem;">技能水平</h3>
-                    <div class="skill-item">
-                        <div class="skill-label">
-                            <span>Python</span>
-                            <span>85%</span>
-                        </div>
-                        <div class="skill-bar">
-                            <div class="skill-progress" data-width="85%"></div>
-                        </div>
-                    </div>
-                    <div class="skill-item">
-                        <div class="skill-label">
-                            <span>C/C++</span>
-                            <span>75%</span>
-                        </div>
-                        <div class="skill-bar">
-                            <div class="skill-progress" data-width="75%"></div>
-                        </div>
-                    </div>
-                    <div class="skill-item">
-                        <div class="skill-label">
-                            <span>HTML/CSS</span>
-                            <span>90%</span>
-                        </div>
-                        <div class="skill-bar">
-                            <div class="skill-progress" data-width="90%"></div>
-                        </div>
-                    </div>
-                    <div class="skill-item">
-                        <div class="skill-label">
-                            <span>JavaScript</span>
-                            <span>80%</span>
-                        </div>
-                        <div class="skill-bar">
-                            <div class="skill-progress" data-width="80%"></div>
-                        </div>
-                    </div>
-                </div>
-            </section>
 
             <section class="links-section" id="links-section">
                 <h2>功能导航</h2>
@@ -129,7 +93,7 @@
                         <div class="link-content">
                             <span class="icon-download" style="font-size: 2rem; margin-bottom: 0.5rem; display: block;"></span>
                             <h3>文件下载</h3>
-                            <p>访问文件下载区域，获取相关资源和工具</p>
+                            <p>我认为比较好的东西</p>
                         </div>
                     </a>
                     <a href="music/" class="link-box">
@@ -137,7 +101,7 @@
                         <div class="link-content">
                             <span class="icon-music" style="font-size: 2rem; margin-bottom: 0.5rem; display: block;"></span>
                             <h3>音乐播放器</h3>
-                            <p>打开音乐播放器，聆听精选的音乐作品</p>
+                            <p>全是我喜欢的音乐，如果你想要贡献点音乐，可以通过邮箱联系我</p>
                         </div>
                     </a>
                 </div>

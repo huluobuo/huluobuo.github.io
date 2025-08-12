@@ -79,24 +79,7 @@
                 <h2><span class="icon-download" style="margin-right: 0.5rem;"></span>文件下载中心</h2>
                 <p style="margin-bottom: 2rem; color: var(--gray-600);">这里提供各种实用工具和资源的下载，所有文件都经过安全检查。</p>
                 
-                <div class="search-container" style="margin-bottom: 2rem;">
-                    <div style="position: relative;">
-                        <input type="text" id="search-input" placeholder="搜索文件..." 
-                               style="width: 100%; padding: 0.75rem 1rem 0.75rem 2.5rem; border: 2px solid var(--gray-200); border-radius: var(--border-radius); font-size: 1rem; transition: var(--transition);">
-                        <span class="icon-search" style="position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); color: var(--gray-400);"></span>
-                    </div>
-                </div>
 
-                <div class="files-stats" style="display: flex; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap;">
-                    <div class="stat-card" style="background: linear-gradient(135deg, var(--primary-color), var(--accent-color)); color: white; padding: 1rem; border-radius: var(--border-radius); flex: 1; min-width: 150px;">
-                        <div style="font-size: 1.5rem; font-weight: 700;" id="total-files">0</div>
-                        <div style="font-size: 0.875rem; opacity: 0.9;">总文件数</div>
-                    </div>
-                    <div class="stat-card" style="background: linear-gradient(135deg, var(--secondary-color), var(--primary-color)); color: white; padding: 1rem; border-radius: var(--border-radius); flex: 1; min-width: 150px;">
-                        <div style="font-size: 1.5rem; font-weight: 700;" id="total-size">0 KB</div>
-                        <div style="font-size: 0.875rem; opacity: 0.9;">总大小</div>
-                    </div>
-                </div>
 
                 <div class="links-container" id="files-container">
                     <p style="grid-column: 1 / -1; text-align: center; padding: 3rem; color: var(--gray-600);">正在加载文件列表...</p>
@@ -109,14 +92,11 @@
             class FileManager {
                 constructor() {
                     this.files = [];
-                    this.filteredFiles = [];
                     this.init();
                 }
 
                 async init() {
                     await this.loadFileList();
-                    this.setupSearch();
-                    this.updateStats();
                     this.triggerAnimations();
                 }
 
@@ -137,22 +117,12 @@
                 renderFiles() {
                     const container = document.getElementById('files-container');
                     
-                    if (this.filteredFiles.length === 0) {
-                        container.innerHTML = `
-                            <div style="grid-column: 1 / -1; text-align: center; padding: 3rem;">
-                                <i class="ri-file-search-line" style="font-size: 3rem; color: var(--gray-400); margin-bottom: 1rem;"></i>
-                                <p style="color: var(--gray-600);">没有找到匹配的文件</p>
-                            </div>
-                        `;
-                        return;
-                    }
-
-                    container.innerHTML = this.filteredFiles.map((file, index) => `
-                        <a href="download.html?file=${encodeURIComponent(file.path)}" 
-                           class="link-box file-item" 
-                           style="animation-delay: ${index * 0.1}s;"
+                    container.innerHTML = this.files.map((file, index) => `
+                        <div class="link-box file-item" 
+                           style="animation-delay: ${index * 0.1}s; cursor: pointer;"
                            data-file-name="${file.name.toLowerCase()}"
-                           data-file-size="${file.size}">
+                           data-file-size="${file.size}"
+                           data-file-path="${encodeURIComponent(file.path)}">
                             <div style="display: flex; align-items: center; margin-bottom: 1rem;">
                                 <span class="icon-file" style="font-size: 2rem; margin-right: 0.75rem; opacity: 0.8;"></span>
                                 <div style="flex: 1;">
@@ -167,79 +137,85 @@
                                 <span style="font-size: 0.875rem; opacity: 0.8;">点击下载</span>
                                 <span style="font-size: 1.25rem;">⬇</span>
                             </div>
-                        </a>
+                        </div>
                     `).join('');
 
-                    // 添加点击事件
-                    this.addDownloadEvents();
+                    // 添加直接下载事件
+                    this.addDirectDownloadEvents();
                 }
 
-                addDownloadEvents() {
+                addDirectDownloadEvents() {
                     document.querySelectorAll('.file-item').forEach(item => {
                         item.addEventListener('click', (e) => {
-                            e.preventDefault();
+                            const filePath = item.dataset.filePath;
                             
                             // 添加下载动画
                             const downloadIcon = item.querySelector('span:last-child');
                             downloadIcon.textContent = '⏳';
                             
-                            // 延迟跳转以显示动画
+                            // 直接创建下载链接
+                            const link = document.createElement('a');
+                            link.href = decodeURIComponent(filePath);
+                            link.download = '';
+                            link.style.display = 'none';
+                            document.body.appendChild(link);
+                            
+                            // 触发下载
                             setTimeout(() => {
-                                window.location.href = item.href;
-                            }, 500);
+                                link.click();
+                                document.body.removeChild(link);
+                                
+                                // 恢复图标
+                                downloadIcon.textContent = '⬇';
+                                
+                                // 显示下载成功提示
+                                this.showDownloadSuccess(item);
+                            }, 300);
                         });
                     });
                 }
 
-                setupSearch() {
-                    const searchInput = document.getElementById('search-input');
+                showDownloadSuccess(item) {
+                    // 创建成功提示
+                    const successMsg = document.createElement('div');
+                    successMsg.style.cssText = `
+                        position: absolute;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%);
+                        background: var(--success-color);
+                        color: white;
+                        padding: 0.5rem 1rem;
+                        border-radius: var(--border-radius);
+                        font-size: 0.875rem;
+                        z-index: 1000;
+                        animation: fadeInOut 2s ease-in-out;
+                    `;
+                    successMsg.textContent = '下载已开始';
                     
-                    searchInput.addEventListener('input', utils.debounce((e) => {
-                        const query = e.target.value.toLowerCase().trim();
-                        
-                        if (query === '') {
-                            this.filteredFiles = [...this.files];
-                        } else {
-                            this.filteredFiles = this.files.filter(file => 
-                                file.name.toLowerCase().includes(query)
-                            );
-                        }
-                        
-                        this.renderFiles();
-                        this.updateStats();
-                    }, 300));
-
-                    // 搜索框焦点效果
-                    searchInput.addEventListener('focus', () => {
-                        searchInput.style.borderColor = 'var(--primary-color)';
-                        searchInput.style.boxShadow = '0 0 0 3px rgba(59, 130, 246, 0.1)';
-                    });
-
-                    searchInput.addEventListener('blur', () => {
-                        searchInput.style.borderColor = 'var(--gray-200)';
-                        searchInput.style.boxShadow = 'none';
-                    });
-                }
-
-                updateStats() {
-                    const totalFiles = this.filteredFiles.length;
-                    const totalSizeKB = this.filteredFiles.reduce((sum, file) => {
-                        const sizeMatch = file.size.match(/(\d+(?:\.\d+)?)\s*([KMG]?B?)/i);
-                        if (sizeMatch) {
-                            const value = parseFloat(sizeMatch[1]);
-                            const unit = sizeMatch[2].toUpperCase();
-                            switch (unit) {
-                                case 'GB': return sum + (value * 1024 * 1024);
-                                case 'MB': return sum + (value * 1024);
-                                case 'KB': case 'K': return sum + value;
-                                default: return sum + (value / 1024);
+                    // 添加动画样式
+                    if (!document.getElementById('download-animation-style')) {
+                        const style = document.createElement('style');
+                        style.id = 'download-animation-style';
+                        style.textContent = `
+                            @keyframes fadeInOut {
+                                0% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+                                50% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+                                100% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
                             }
+                        `;
+                        document.head.appendChild(style);
+                    }
+                    
+                    item.style.position = 'relative';
+                    item.appendChild(successMsg);
+                    
+                    // 2秒后移除提示
+                    setTimeout(() => {
+                        if (successMsg.parentNode) {
+                            successMsg.parentNode.removeChild(successMsg);
                         }
-                        return sum;
-                    }, 0);
-
-                    document.getElementById('total-files').textContent = totalFiles;
-                    document.getElementById('total-size').textContent = utils.formatFileSize(totalSizeKB * 1024);
+                    }, 2000);
                 }
 
                 showError(message) {

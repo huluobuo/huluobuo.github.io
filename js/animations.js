@@ -8,7 +8,6 @@ class AnimationManager {
         this.setupIntersectionObserver();
         this.setupSkillBars();
         this.setupSmoothScrolling();
-        // this.setupParallaxEffect(); // 禁用视差效果以修复按钮错位
         this.addLoadingStates();
     }
 
