@@ -1,12 +1,14 @@
 [
     {
         "name": "fastgithub_win-x64.zip",
-        "size": "17285 K",
-        "path": "./fastgithub_win-x64.zip"
+        "size": "16.9 MB",
+        "path": "./fastgithub_win-x64.zip",
+        "description": "GitHub加速工具，解决访问GitHub慢的问题"
     },
     {
         "name": "Donald-Trump.zip",
-        "size": "220 K",
-        "path": "./Donald-Trump.zip"
+        "size": "220 KB",
+        "path": "./Donald-Trump.zip",
+        "description": "相关资源文件包"
     }
 ]

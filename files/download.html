@@ -7,6 +7,44 @@
     <link rel="stylesheet" href="../styles.min.css">
     <meta name="description" content="文件下载页面">
     <style>
+        /* 加载动画样式 - 与其他页面保持一致 */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease-out;
+        }
+        .loading-container {
+            text-align: center;
+        }
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(0, 0, 0, 0.1);
+            border-top: 5px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .loading-text {
+            font-size: 1.2em;
+            color: #333;
+        }
+        .content-hidden {
+            display: none;
+        }
+        
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
         .icon-download::before { content: "⬇"; }
         .icon-check::before { content: "✓"; }
@@ -15,16 +53,26 @@
     </style>
 </head>
 <body>
-    <header class="header">
-        <div class="header-content">
-            <a href="/">
-                <h1>huluobuo.github.io</h1>
-            </a>
-            <a href="https://github.com/huluobuo" target="_blank" rel="noopener noreferrer" class="tooltip" data-tooltip="访问我的GitHub">
-                <img src="../img/github_logo.png" alt="GitHub" width="32" height="32">
-            </a>
+    <!-- 加载动画 - 与其他页面保持一致 -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-container">
+            <div class="spinner"></div>
+            <div class="loading-text">下载页面加载中，请稍候...</div>
         </div>
-    </header>
+    </div>
+
+    <!-- 主内容区域 -->
+    <div class="content-hidden" id="mainContent">
+        <header class="header">
+            <div class="header-content">
+                <a href="/">
+                    <h1>huluobuo.github.io</h1>
+                </a>
+                <a href="https://github.com/huluobuo" target="_blank" rel="noopener noreferrer" class="tooltip" data-tooltip="访问我的GitHub">
+                    <img src="../img/github_logo.png" alt="GitHub" width="32" height="32">
+                </a>
+            </div>
+        </header>
 
     <main class="content">
         <section class="download-section" style="background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px); border-radius: var(--border-radius); padding: 3rem; text-align: center; box-shadow: var(--shadow-xl);">
@@ -39,15 +87,7 @@
                 <p id="countdown" style="font-size: 1.25rem; font-weight: 600; color: var(--gray-700);">3 秒后开始下载</p>
             </div>
 
-            <div class="download-info" style="background: var(--gray-100); padding: 1.5rem; border-radius: var(--border-radius); margin-bottom: 2rem;">
-                <h3 style="margin-bottom: 1rem; color: var(--gray-800);">下载说明</h3>
-                <ul style="text-align: left; color: var(--gray-600); line-height: 1.8;">
-                    <li>文件将在倒计时结束后自动开始下载</li>
-                    <li>如果下载没有开始，请点击下方的直接下载按钮</li>
-                    <li>请确保您的浏览器允许下载文件</li>
-                    <li>下载完成后请及时查杀病毒</li>
-                </ul>
-            </div>
+
 
             <div id="download-controls" class="hidden" style="margin-top: 2rem;">
                 <p id="direct-download-tip" style="margin-bottom: 1rem; color: var(--gray-600);">下载没有开始？</p>
@@ -72,6 +112,26 @@
     </main>
 
     <script>
+        // 页面加载完成后初始化并隐藏加载动画
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                // 隐藏加载动画
+                const loadingOverlay = document.getElementById('loadingOverlay');
+                const mainContent = document.getElementById('mainContent');
+
+                loadingOverlay.style.opacity = '0';
+                loadingOverlay.style.pointerEvents = 'none';
+                mainContent.classList.remove('content-hidden');
+
+                setTimeout(function() {
+                    loadingOverlay.style.display = 'none';
+                }, 500);
+
+                // 初始化下载管理器
+                const downloadManager = new DownloadManager();
+            }, 500);
+        });
+
         class DownloadManager {
             constructor() {
                 this.countdown = 3;

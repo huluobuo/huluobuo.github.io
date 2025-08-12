@@ -349,8 +349,9 @@
                             <span class="song-number">${index + 1}</span>
                             <div class="song-details">
                                 <h3 class="song-item-title">${song.name}</h3>
+                                <p class="song-item-artist" style="margin: 0; font-size: 0.875rem; color: #777;">${song.artist || '未知艺术家'}</p>
                             </div>
-                            <span class="song-duration">${this.formatTime(song.time_big * 60)}</span>
+                            <span class="song-duration">${song.duration || this.formatTime(song.time_big * 60)}</span>
                         </li>
                     `).join('');
 
@@ -375,7 +376,7 @@
 
                     // 更新歌曲信息
                     this.currentSongTitle.textContent = song.name;
-                    // this.currentSongArtist.textContent = song.artist;
+                    this.currentSongArtist.textContent = song.artist || '未知艺术家';
                     this.audio.src = song.path;
 
                     // 更新播放列表选中状态

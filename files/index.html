@@ -104,6 +104,7 @@
             </section>
         </main>
 
+        <script src="../js/animations.js"></script>
         <script>
             class FileManager {
                 constructor() {
@@ -156,6 +157,7 @@
                                 <span class="icon-file" style="font-size: 2rem; margin-right: 0.75rem; opacity: 0.8;"></span>
                                 <div style="flex: 1;">
                                     <h3 style="margin: 0; font-size: 1.1rem; line-height: 1.3;">${file.name}</h3>
+                                    <p style="margin: 0.25rem 0; font-size: 0.875rem; color: var(--gray-600);">${file.description || '暂无描述'}</p>
                                     <div style="font-size: 0.875rem; opacity: 0.8; margin-top: 0.25rem;">
                                         <span>${file.size}</span>
                                     </div>

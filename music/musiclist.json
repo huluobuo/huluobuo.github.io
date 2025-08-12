@@ -1,81 +1,113 @@
 [
     {
         "name": "天下乌鸦一般黑",
+        "artist": "未知艺术家",
+        "duration": "2:24",
         "time_big": 2.40,
         "path": "./001.mp3"
     },
     {
         "name": "WayBack",
+        "artist": "未知艺术家",
+        "duration": "3:17",
         "time_big": 3.28,
         "path": "./002.mp3"
     },
     {
         "name": "心如止水",
+        "artist": "Ice Paper",
+        "duration": "3:03",
         "time_big": 3.05,
         "path": "./003.mp3"
     },
     {
         "name": "Say When",
+        "artist": "Unknown Artist",
+        "duration": "3:02",
         "time_big": 3.03,
         "path": "./004.mp3"
     },
     {
-        "name": "Stitches_ShawnMendes",
+        "name": "Stitches",
+        "artist": "Shawn Mendes",
+        "duration": "3:16",
         "time_big": 3.26,
         "path": "./005.mp3"
     },
     {
-        "name": "Syndicate_Hbe",
+        "name": "Syndicate",
+        "artist": "Hbe",
+        "duration": "1:54",
         "time_big": 1.54,
         "path": "./006.mp3"
     },
     {
-        "name": "罗生门Follow_梨冻紧Wiz_H张子豪",
+        "name": "罗生门Follow",
+        "artist": "梨冻紧/Wiz_H/张子豪",
+        "duration": "4:02",
         "time_big": 4.03,
         "path": "./007.mp3"
     },
     {
-        "name": "难生恨_藤柒吖",
+        "name": "难生恨",
+        "artist": "藤柒吖",
+        "duration": "3:26",
         "time_big": 3.43,
         "path": "./008.mp3"
     },
     {
-        "name": "？？？",
+        "name": "未知曲目",
+        "artist": "未知艺术家",
+        "duration": "2:16",
         "time_big": 2.26,
         "path": "./009.mp3"
     },
     {
-        "name": "CounterAttackMankindSashaVersionSashaVersion_SamuelKim",
+        "name": "Counter Attack Mankind",
+        "artist": "Samuel Kim",
+        "duration": "4:35",
         "time_big": 4.58,
         "path": "./010.mp3"
     },
     {
-        "name": "Lightning_AIRUI",
+        "name": "Lightning",
+        "artist": "AIRUI",
+        "duration": "1:24",
         "time_big": 1.24,
         "path": "./011.mp3"
     },
     {
-        "name": "悬溺_葛东琪",
+        "name": "悬溺",
+        "artist": "葛东琪",
+        "duration": "3:10",
         "time_big": 3.17,
         "path": "./012.mp3"
     },
     {
-        "name": "Eutopia_YoohsicRoomz",
+        "name": "Eutopia",
+        "artist": "Yoohsic Roomz",
+        "duration": "4:31",
         "time_big": 4.52,
         "path": "./013.mp3"
     },
     {
-        "name": "collapsingworld_Lightscape",
+        "name": "collapsing world",
+        "artist": "Lightscape",
+        "duration": "3:06",
         "time_big": 3.10,
         "path": "./014.mp3"
     },
     {
-        "name": "DieForYou_TheWeeknd",
+        "name": "Die For You",
+        "artist": "The Weeknd",
+        "duration": "4:12",
         "time_big": 4.20,
         "path": "./015.mp3"
     },
     {
-        "name": "小孩_罗森涛",
+        "name": "小孩",
+        "artist": "罗森涛",
+        "duration": "3:23",
         "time_big": 3.39,
         "path": "./016.mp3"
     }
