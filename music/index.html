@@ -14,24 +14,25 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background-color: #f0f0f0;
+            background: rgba(22, 33, 62, 0.95);
             display: flex;
             justify-content: center;
             align-items: center;
             z-index: 9999;
             transition: opacity 0.5s ease-out;
+            backdrop-filter: blur(5px);
         }
         .loading-container {
             text-align: center;
         }
         .spinner {
-            width: 50px;
-            height: 50px;
-            border: 5px solid rgba(0, 0, 0, 0.1);
-            border-top: 5px solid #3498db;
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(255,255,255,0.1);
+            border-top: 3px solid #4fd1c5;
             border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 20px;
+            animation: spin 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite;
+            margin: 0 auto 15px;
         }
         @keyframes spin {
             0% { transform: rotate(0deg); }
@@ -53,19 +54,26 @@
             font-family: sans-serif;
         }
         .player-container {
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            border-radius: 1rem 1rem 0 0;
-            padding: 1rem;
+            backdrop-filter: blur(10px);
+            background: rgba(26, 26, 46, 0.95);
+            border-radius: 1rem;
+            padding: 1rem 1.5rem 1.5rem 1.5rem;
             color: white;
             box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.2);
             margin-bottom: 0;
             position: fixed;
-            bottom: 0;
+            bottom: 20px;
             left: 0;
             right: 0;
-            max-width: 1200px;
+            max-width: 90%;
+            width: 1000px;
             margin-left: auto;
             margin-right: auto;
+            height: 180px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.3s ease;
         }
         .album-cover {
             width: 180px;
@@ -76,11 +84,14 @@
             margin-bottom: 1.5rem;
         }
         .song-info {
-            margin-bottom: 1.5rem;
+            margin: 0.5rem 0;
         }
         .song-title {
-            font-size: 1.75rem;
-            margin: 0 0 0.5rem 0;
+            font-size: 1.2rem;
+            margin: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         .song-artist {
             color: #b0b0b0;
@@ -89,7 +100,7 @@
         }
         .progress-container {
             width: 100%;
-            margin: 1.5rem 0;
+            margin: 0.5rem 0;
         }
         .progress-bar {
             width: 100%;
@@ -118,7 +129,7 @@
             align-items: center;
             justify-content: center;
             gap: 1.5rem;
-            margin: 1.5rem 0;
+            margin: 0.5rem 0;
         }
         .control-btn {
             background: none;
@@ -131,21 +142,24 @@
             transform: scale(1.1);
         }
         .play-btn {
-            width: 60px;
-            height: 60px;
+            width: 45px;
+            height: 45px;
             border-radius: 50%;
             background-color: white;
             color: #16213e;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.5rem;
+            font-size: 1.2rem;
         }
         .volume-control {
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            margin-top: 1rem;
+            margin-top: 0.5rem;
+            position: absolute;
+            right: 1.5rem;
+            bottom: 1.5rem;
         }
         .volume-icon {
             color: #b0b0b0;
@@ -168,7 +182,7 @@
             border-radius: 1rem;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
             overflow: hidden;
-            padding-bottom: 220px;
+            padding-bottom: 200px;
         }
         .playlist-header {
             padding: 1.5rem;
@@ -200,7 +214,9 @@
             transition: background-color 0.2s ease;
         }
         .song-item:hover {
-            background-color: #f9f9f9;
+            background-color: rgba(255, 255, 255, 0.1);
+            transform: translateX(10px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .song-item.active {
             background-color: rgba(52, 152, 219, 0.1);
@@ -259,7 +275,7 @@
             <section class="player-container">
                 <div class="song-info">
                     <h2 class="song-title" id="current-song-title"></h2>
-                    <p class="song-artist" id="current-song-artist"></p>
+                    
                 </div>
                 <div class="progress-container">
                     <div class="progress-bar" id="progress-bar">
@@ -310,7 +326,7 @@
                     this.volumeFill = document.getElementById('volume-fill');
                     this.songList = document.getElementById('song-list');
                     this.currentSongTitle = document.getElementById('current-song-title');
-                    this.currentSongArtist = document.getElementById('current-song-artist');
+                    
                     this.songCount = document.getElementById('song-count');
                     this.songs = [];
                     this.currentSongIndex = 0;
@@ -320,17 +336,20 @@
                 }
 
                 async init() {
-                    await this.loadMusicList();
-                    this.setupEventListeners();
-                    this.updateSongCount();
-                }
+            await this.loadMusicList();
+            this.setupEventListeners();
+            this.updateSongCount();
+            this.setupProgressDrag();
+            this.lastVolume = 0.7; // 初始音量
+            this.setVolume(0.7);
+        }
 
                 async loadMusicList() {
                     try {
                         const response = await fetch('musiclist.json');
                         if (!response.ok) throw new Error('Failed to load music list');
 
-                        this.songs = await response.json();
+                        this.songs = (await response.json()).map(name => ({ name }));
                         this.renderPlaylist();
 
                         // 加载第一首歌曲
@@ -349,9 +368,9 @@
                             <span class="song-number">${index + 1}</span>
                             <div class="song-details">
                                 <h3 class="song-item-title">${song.name}</h3>
-                                <p class="song-item-artist" style="margin: 0; font-size: 0.875rem; color: #777;">${song.artist || '未知艺术家'}</p>
+                                
                             </div>
-                            <span class="song-duration">${song.duration || this.formatTime(song.time_big * 60)}</span>
+                            
                         </li>
                     `).join('');
 
@@ -376,8 +395,10 @@
 
                     // 更新歌曲信息
                     this.currentSongTitle.textContent = song.name;
-                    this.currentSongArtist.textContent = song.artist || '未知艺术家';
-                    this.audio.src = song.path;
+                    
+                    // 确保文件名与实际文件完全匹配
+            const sanitizedName = song.name.replace(/[\/\\:*?"<>|]/g, '');
+            this.audio.src = `${sanitizedName}.mp3`;
 
                     // 更新播放列表选中状态
                     document.querySelectorAll('.song-item').forEach((item, i) => {
@@ -421,18 +442,97 @@
                     this.totalTimeDisplay.textContent = this.formatTime(this.audio.duration);
                 }
 
-                setProgress(e) {
-                    const rect = this.progressBar.getBoundingClientRect();
-                    const pos = (e.clientX - rect.left) / rect.width;
-                    this.audio.currentTime = pos * this.audio.duration;
-                }
+                // 点击进度条调整进度
+        setProgress(e) {
+            // 确保音频时长已加载且有效
+            if (!this.audio.duration || isNaN(this.audio.duration)) {
+                console.error('音频时长未加载或无效');
+                return;
+            }
+            
+            const rect = this.progressBar.getBoundingClientRect();
+            const pos = (e.clientX - rect.left) / rect.width;
+            this.audio.currentTime = pos * this.audio.duration;
+        }
 
-                setVolume(e) {
-                    const rect = this.volumeSlider.getBoundingClientRect();
-                    const volume = (e.clientX - rect.left) / rect.width;
-                    this.audio.volume = Math.max(0, Math.min(1, volume));
-                    this.volumeFill.style.width = `${volume * 100}%`;
+        // 拖动进度条调整进度
+        setupProgressDrag() {
+            let isDragging = false;
+
+            // 鼠标按下时开始拖动
+            this.progressBar.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                this.setProgress(e);
+                document.addEventListener('mousemove', this.handleDrag);
+                document.addEventListener('mouseup', this.handleDragEnd);
+            });
+
+            // 触摸设备支持
+            this.progressBar.addEventListener('touchstart', (e) => {
+                isDragging = true;
+                this.setProgress(e.touches[0]);
+                document.addEventListener('touchmove', this.handleDragTouch);
+                document.addEventListener('touchend', this.handleDragEnd);
+            });
+
+            // 处理拖动的回调函数
+            this.handleDrag = (e) => {
+                if (isDragging) {
+                    this.setProgress(e);
                 }
+            };
+
+            this.handleDragTouch = (e) => {
+                if (isDragging) {
+                    this.setProgress(e.touches[0]);
+                }
+            };
+
+            this.handleDragEnd = () => {
+                isDragging = false;
+                document.removeEventListener('mousemove', this.handleDrag);
+                document.removeEventListener('mouseup', this.handleDragEnd);
+                document.removeEventListener('touchmove', this.handleDragTouch);
+                document.removeEventListener('touchend', this.handleDragEnd);
+            };
+        }
+
+                // 设置音量
+        setVolume(volume) {
+            // 如果传入的是事件对象，则从事件中获取音量值
+            if (volume && typeof volume === 'object' && 'clientX' in volume) {
+                const rect = this.volumeSlider.getBoundingClientRect();
+                volume = (volume.clientX - rect.left) / rect.width;
+            }
+
+            // 限制音量在0-1之间
+            volume = Math.max(0, Math.min(1, volume));
+            this.audio.volume = volume;
+            this.volumeFill.style.width = `${volume * 100}%`;
+
+            // 更新音量图标
+            const volumeIcon = document.querySelector('.volume-icon');
+            if (volume === 0) {
+                volumeIcon.textContent = '🔇';
+            } else if (volume < 0.3) {
+                volumeIcon.textContent = '🔈';
+            } else if (volume < 0.7) {
+                volumeIcon.textContent = '🔉';
+            } else {
+                volumeIcon.textContent = '🔊';
+            }
+        }
+
+        // 切换静音
+        toggleMute() {
+            const volumeIcon = document.querySelector('.volume-icon');
+            if (this.audio.volume > 0) {
+                this.lastVolume = this.audio.volume;
+                this.setVolume(0);
+            } else {
+                this.setVolume(this.lastVolume || 0.7);
+            }
+        }
 
                 formatTime(seconds) {
                     const minutes = Math.floor(seconds / 60);
@@ -445,30 +545,43 @@
                 }
 
                 setupEventListeners() {
-                    // 播放/暂停按钮
-                    this.playBtn.addEventListener('click', () => this.togglePlay());
+            // 播放/暂停按钮
+            this.playBtn.addEventListener('click', () => this.togglePlay());
 
-                    // 上一首/下一首按钮
-                    this.prevBtn.addEventListener('click', () => this.prevSong());
-                    this.nextBtn.addEventListener('click', () => this.nextSong());
+            // 上一首/下一首按钮
+            this.prevBtn.addEventListener('click', () => this.prevSong());
+            this.nextBtn.addEventListener('click', () => this.nextSong());
 
-                    // 进度条更新
-                    this.audio.addEventListener('timeupdate', () => this.updateProgress());
+            // 进度条更新
+            this.audio.addEventListener('timeupdate', () => this.updateProgress());
 
-                    // 点击进度条调整进度
-                    this.progressBar.addEventListener('click', (e) => this.setProgress(e));
+            // 点击进度条调整进度
+            this.progressBar.addEventListener('click', (e) => this.setProgress(e));
 
-                    // 点击音量条调整音量
-                    this.volumeSlider.addEventListener('click', (e) => this.setVolume(e));
+            // 点击音量条调整音量
+            this.volumeSlider.addEventListener('click', (e) => this.setVolume(e));
 
-                    // 歌曲播放结束自动播放下一首
-                    this.audio.addEventListener('ended', () => this.nextSong());
+            // 音量图标点击切换静音
+            document.querySelector('.volume-icon').addEventListener('click', () => this.toggleMute());
 
-                    // 加载完成后更新总时长
-                    this.audio.addEventListener('loadedmetadata', () => {
-                        this.totalTimeDisplay.textContent = this.formatTime(this.audio.duration);
-                    });
-                }
+            // 歌曲播放结束自动播放下一首
+            this.audio.addEventListener('ended', () => this.nextSong());
+
+            // 添加错误处理
+            this.audio.addEventListener('error', (e) => {
+                console.error('音频加载错误:', e);
+                console.error('错误代码:', this.audio.error.code);
+                console.error('尝试加载的URL:', this.audio.src);
+                alert(`无法加载音乐文件: ${this.audio.src}\n错误代码: ${this.audio.error.code}`);
+                // 尝试播放下一首
+                this.nextSong();
+            });
+
+            // 加载完成后更新总时长
+            this.audio.addEventListener('loadedmetadata', () => {
+                this.totalTimeDisplay.textContent = this.formatTime(this.audio.duration);
+            });
+        }
             }
 
             // 页面加载完成后初始化并隐藏加载动画
