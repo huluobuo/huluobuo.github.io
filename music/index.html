@@ -349,7 +349,22 @@
                         const response = await fetch('musiclist.json');
                         if (!response.ok) throw new Error('Failed to load music list');
 
-                        this.songs = (await response.json()).map(name => ({ name }));
+                        const data = await response.json();
+                        // 确保数据是数组
+                        if (!Array.isArray(data)) {
+                            throw new Error('音乐列表数据不是数组');
+                        }
+
+                        // 处理音乐列表数据，确保每个元素都是带有name属性的对象
+                        this.songs = data.map(item => {
+                            // 如果item已经是对象且有name属性，直接使用
+                            if (typeof item === 'object' && item !== null && 'name' in item) {
+                                return { name: String(item.name) };
+                            }
+                            // 否则，假设item是字符串
+                            return { name: String(item) };
+                        });
+
                         this.renderPlaylist();
 
                         // 加载第一首歌曲
@@ -392,6 +407,12 @@
                     // 更新当前歌曲索引
                     this.currentSongIndex = index;
                     const song = this.songs[index];
+
+                    // 确保song.name是字符串
+                    if (typeof song.name !== 'string') {
+                        console.error('歌曲名称不是字符串:', song);
+                        return;
+                    }
 
                     // 更新歌曲信息
                     this.currentSongTitle.textContent = song.name;
