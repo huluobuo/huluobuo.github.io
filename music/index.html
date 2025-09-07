@@ -353,7 +353,7 @@
 
                 async loadMusicList() {
                     try {
-                        const response = await fetch('musiclist.json');
+                        const response = await fetch('https://new-huluobuo.github.io/music/musiclist.json');
                         if (!response.ok) throw new Error('Failed to load music list');
 
                         const data = await response.json();
@@ -426,7 +426,7 @@
                     
                     // 确保文件名与实际文件完全匹配
             const sanitizedName = song.name.replace(/[\/\\:*?"<>|]/g, '');
-            this.audio.src = `${sanitizedName}.mp3`;
+            this.audio.src = `https://new-huluobuo.github.io/music/${sanitizedName}.mp3`;
 
                     // 更新播放列表选中状态
                     document.querySelectorAll('.song-item').forEach((item, i) => {
