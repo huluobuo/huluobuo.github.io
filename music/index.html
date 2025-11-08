@@ -353,7 +353,7 @@
 
                 async loadMusicList() {
                     try {
-                        const response = await fetch('https://new-huluobuo.github.io/music/musiclist.json');
+                        const response = await fetch('./musiclist.json');    // 还是这样吧...
                         if (!response.ok) throw new Error('Failed to load music list');
 
                         const data = await response.json();
