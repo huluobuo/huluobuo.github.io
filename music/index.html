@@ -426,7 +426,7 @@
                     
                     // 确保文件名与实际文件完全匹配
             const sanitizedName = song.name.replace(/[\/\\:*?"<>|]/g, '');
-            this.audio.src = `https://new-huluobuo.github.io/music/${sanitizedName}.mp3`;
+            this.audio.src = `./${sanitizedName}.mp3`;
 
                     // 更新播放列表选中状态
                     document.querySelectorAll('.song-item').forEach((item, i) => {
