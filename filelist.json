@@ -2,19 +2,19 @@
     {
         "name": "fastgithub_win-x64.zip",
         "size": "17285 KB",
-        "path": "./fastgithub_win-x64.zip",
+        "path": "./files/fastgithub_win-x64.zip",
         "description": "GitHub加速工具，解决访问GitHub慢的问题"
     },
     {
         "name": "Donald-Trump.zip",
         "size": "220 KB",
-        "path": "./Donald-Trump.zip",
+        "path": "./files/Donald-Trump.zip",
         "description": "一个大帅哥"
     },
     {
         "name": "Never Gonna Give You Up.zip",
         "size": "25591 KB",
-        "path": "./Never Gonna Give You Up.zip",
+        "path": "./files/Never Gonna Give You Up.zip",
         "description": "世界名曲"
     }
 ]
