@@ -597,7 +597,7 @@
         }
 
         function loadMusicList() {
-            fetch('./musiclist.json')
+            fetch('./api/musiclist.json')
                 .then(response => response.json())
                 .then(data => {
                     musicList = data;

@@ -179,7 +179,7 @@
     <script>
         async function loadFiles() {
             try {
-                const response = await fetch('./filelist.json');
+                const response = await fetch('./api/filelist.json');
                 const files = await response.json();
                 
                 const fileList = document.getElementById('fileList');
