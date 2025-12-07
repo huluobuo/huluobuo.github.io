@@ -102,21 +102,11 @@ body {
 
 .progress {
     height: 100%;
-    background: linear-gradient(90deg, #238636, #2ea043);
+    background: #2ea043;
     border-radius: 4px;
     width: 0%;
     transition: width 0.1s;
     position: relative;
-}
-
-.progress::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    width: 20px;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3));
 }
 
 .time-info {
@@ -205,7 +195,7 @@ body {
 
 .volume-progress {
     height: 100%;
-    background: linear-gradient(90deg, #58a6ff, #79c0ff);
+    background: #58a6ff;
     border-radius: 3px;
     width: 70%;
 }
@@ -306,8 +296,8 @@ body {
     background: #161b22;
 }
 
-.music-item.playing {
-    background: linear-gradient(135deg, #1c6ea4, #238636);
+.music-item.selected {
+    background: #2ea043;
     color: #f0f6fc;
 }
 

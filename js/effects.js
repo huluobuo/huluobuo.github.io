@@ -46,7 +46,7 @@ class ImageLoader {
     }
 
     applyBackground() {
-        document.body.style.background = `url('${this.highQualityImage.src || this.backgroundImage.src}') center/cover no-repeat fixed`;
+        document.body.style.background = `url('${this.backgroundImage.src}') center/cover no-repeat fixed`;
         document.body.style.backgroundSize = 'cover';
         document.body.style.backgroundPosition = 'center';
         document.body.style.backgroundAttachment = 'fixed';

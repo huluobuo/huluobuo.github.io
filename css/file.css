@@ -126,8 +126,7 @@ body {
     right: -2px;
     bottom: -2px;
     background: linear-gradient(45deg, 
-        #ff6b6b, #ffa726, #ffee58, #4ecdc4, 
-        #45b7d1, #96ceb4, #f78fb3, #ff9ff3);
+        #58a6ff, #2ea043, #58a6ff, #2ea043);
     background-size: 400% 400%;
     border-radius: 8px;
     z-index: -1;
@@ -137,7 +136,7 @@ body {
 }
 
 .file-section:hover::before {
-    opacity: 1;
+    opacity: 0.3;
 }
 
 @keyframes gradientBorder {
@@ -163,8 +162,6 @@ body {
     padding: 16px 20px;
     border-bottom: 1px solid #21262d;
     transition: all 0.3s ease;
-    position: relative;
-    margin: 4px 0;
     cursor: pointer;
     animation: fadeInUp 0.3s ease-out;
     gap: 1rem;
@@ -180,20 +177,8 @@ body {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
-/* 文件项分隔线增强 */
-.file-item::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 20px;
-    right: 20px;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, #30363d, transparent);
-    opacity: 0.6;
-}
-
 .file-item.selected {
-    background: linear-gradient(135deg, #1c6ea4, #238636);
+    background: #2ea043;
     color: #f0f6fc;
 }
 
@@ -267,27 +252,12 @@ body {
     backdrop-filter: blur(10px);
 }
 
-.file-actions a::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(88, 166, 255, 0.3), transparent);
-    transition: left 0.5s ease;
-}
-
 .file-actions a:hover {
     background-color: #58a6ff;
     color: white;
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(88, 166, 255, 0.3);
     border-color: #58a6ff;
-}
-
-.file-actions a:hover::before {
-    left: 100%;
 }
 
 .file-actions a:active {
