@@ -1,4 +1,4 @@
-/* 主样式文件 - 包含首页样式 */
+/* GitHub风格个人网站样式 - 重构版 */
 * {
     margin: 0;
     padding: 0;
@@ -6,48 +6,110 @@
 }
 
 body {
-    font-family: 'Microsoft YaHei', 'Segoe UI', Arial, sans-serif;
-    background: url('../img/背景.png') center/cover no-repeat fixed;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft YaHei', sans-serif;
     min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    color: #333;
+    color: #24292f;
+    background: rgba(13, 17, 23, 0.85);
+    overflow-x: hidden;
     position: relative;
 }
 
-body::before {
-    content: '';
+/* 背景图片加载器 */
+.background-loader {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(255, 255, 255, 0.75);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    z-index: -1;
+    background: linear-gradient(135deg, #0d1117 0%, #161b22 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    transition: opacity 0.5s ease;
 }
 
-.container {
+.background-loader.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.loading-text {
+    color: #58a6ff;
+    font-size: 1.2em;
+    font-weight: 500;
+}
+
+/* 苹果风格滚动文字特效 */
+.scroll-text-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, rgba(13, 17, 23, 0.95) 0%, rgba(22, 27, 34, 0.95) 100%);
+    z-index: 900;
+    transition: transform 0.9s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform;
+}
+
+.scroll-text-container.scrolled {
+    transform: translateY(-100%);
+    transition-delay: 0s;
+}
+
+.scroll-text-content {
     text-align: center;
-    padding: 40px;
-    background: rgba(255, 255, 255, 0.7);
-    backdrop-filter: blur(20px) saturate(180%);
-    -webkit-backdrop-filter: blur(20px) saturate(180%);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 20px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-    max-width: 600px;
-    width: 90%;
-    animation: fadeIn 1s ease-in;
+    color: #ffffff;
+    opacity: 0;
+    animation: fadeInUp 1.5s ease-out 0.5s forwards;
 }
 
-@keyframes fadeIn {
+.scroll-title {
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 700;
+    margin-bottom: 1rem;
+    background: linear-gradient(135deg, #58a6ff 0%, #8b949e 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.2;
+}
+
+.scroll-subtitle {
+    font-size: clamp(1.2rem, 3vw, 1.8rem);
+    color: #8b949e;
+    margin-bottom: 3rem;
+    opacity: 0.8;
+}
+
+.scroll-indicator {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    animation: bounce 2s infinite;
+}
+
+.scroll-arrow {
+    font-size: 1.5rem;
+    color: #58a6ff;
+}
+
+.scroll-hint {
+    font-size: 0.9rem;
+    color: #8b949e;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+@keyframes fadeInUp {
     from {
         opacity: 0;
-        transform: translateY(-20px);
+        transform: translateY(30px);
     }
     to {
         opacity: 1;
@@ -55,101 +117,769 @@ body::before {
     }
 }
 
-.avatar {
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    margin: 0 auto 20px;
-    border: 5px solid #fff;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-    animation: float 3s ease-in-out infinite;
-}
-
-@keyframes float {
-    0%, 100% {
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
         transform: translateY(0);
     }
-    50% {
+    40% {
         transform: translateY(-10px);
+    }
+    60% {
+        transform: translateY(-5px);
     }
 }
 
-h1 {
-    font-size: 2.5em;
-    margin-bottom: 10px;
-    color: #2c3e50;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+/* GitHub风格主容器 */
+.github-container {
+    min-height: 100vh;
+    background: rgba(13, 17, 23, 0.85);
+    position: relative;
+    z-index: 800;
+    transform: translateY(100vh);
+    transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform;
 }
 
-.subtitle {
-    font-size: 1.2em;
-    color: #7f8c8d;
-    margin-bottom: 30px;
-}
-
-.nav-links {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    margin-top: 30px;
-}
-
-.nav-link {
-    display: inline-block;
-    padding: 15px 30px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    text-decoration: none;
-    border-radius: 50px;
-    font-size: 1.1em;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-}
-
-.nav-link:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
-}
-
-.nav-link:active {
+.github-container.visible {
     transform: translateY(0);
 }
 
+/* GitHub风格头部 */
+.github-header {
+    background: linear-gradient(135deg, #0d1117 0%, #161b22 100%);
+    border-bottom: 1px solid #30363d;
+    padding: 3rem 2rem 2rem;
+}
+
+.header-content {
+    max-width: 1280px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.profile-section {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.profile-avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 3px solid #30363d;
+    transition: transform 0.3s ease;
+}
+
+.profile-avatar:hover {
+    transform: scale(1.05);
+}
+
+.profile-info h1 {
+    font-size: 2.5rem;
+    font-weight: 600;
+    color: #f0f6fc;
+    margin-bottom: 0.5rem;
+}
+
+.profile-bio {
+    font-size: 1.2rem;
+    color: #8b949e;
+    margin: 0;
+}
+
+.stats-section {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;
+    background: rgba(88, 166, 255, 0.1);
+    border-radius: 12px;
+    border: 1px solid rgba(88, 166, 255, 0.2);
+    transition: all 0.3s ease;
+}
+
+.stat:hover {
+    background: rgba(88, 166, 255, 0.2);
+    transform: translateY(-2px);
+}
+
+.stat-number {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #58a6ff;
+    margin-bottom: 0.25rem;
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    color: #8b949e;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* GitHub风格主内容 */
+.github-main {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 3rem 2rem;
+}
+
+.repo-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+}
+
+.github-repos {
+    grid-column: 1 / -1;
+    width: 100%;
+    margin-bottom: 2rem;
+}
+
+.repo-card {
+    display: block;
+    background: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 12px;
+    padding: 1.5rem;
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.repo-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(88, 166, 255, 0.1), transparent);
+    transition: left 0.5s ease;
+}
+
+.repo-card:hover {
+    transform: translateY(-4px);
+    border-color: #58a6ff;
+    box-shadow: 0 8px 32px rgba(88, 166, 255, 0.15);
+}
+
+.repo-card:hover::before {
+    left: 100%;
+}
+
+.repo-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.repo-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #f0f6fc;
+    margin: 0;
+}
+
+.repo-badge {
+    background: #238636;
+    color: #ffffff;
+    padding: 0.25rem 0.75rem;
+    border-radius: 2rem;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.repo-description {
+    color: #8b949e;
+    margin-bottom: 1rem;
+    line-height: 1.5;
+}
+
+.repo-meta {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.repo-language {
+    background: rgba(88, 166, 255, 0.1);
+    color: #58a6ff;
+    padding: 0.25rem 0.75rem;
+    border-radius: 2rem;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.repo-stats {
+    color: #8b949e;
+    font-size: 0.8rem;
+}
+
+/* GitHub仓库模块样式 */
+.github-repos {
+    background: linear-gradient(135deg, #161b22 0%, #1c2128 100%);
+    border: 1px solid #30363d;
+    position: relative;
+}
+
+.github-repos::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, 
+        #ff6b6b, #ffa726, #ffee58, #4ecdc4, 
+        #45b7d1, #96ceb4, #f78fb3, #ff9ff3);
+    background-size: 400% 400%;
+    border-radius: 14px;
+    z-index: -1;
+    animation: gradientBorder 3s ease infinite;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.github-repos:hover::before {
+    opacity: 0.3;
+}
+
+.repos-list {
+    margin-top: 1rem;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+}
+
+.loading-repos {
+    text-align: center;
+    color: #8b949e;
+    font-size: 0.9rem;
+    padding: 1rem;
+    grid-column: 1 / -1;
+}
+
+.repo-item {
+    background: rgba(13, 17, 23, 0.5);
+    border: 1px solid #30363d;
+    border-radius: 8px;
+    padding: 1rem;
+    transition: all 0.3s ease;
+}
+
+.repo-item:hover {
+    background: rgba(22, 27, 34, 0.8);
+    border-color: #58a6ff;
+    transform: translateY(-2px);
+}
+
+.repo-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.repo-item-title {
+    margin: 0;
+    font-size: 1rem;
+}
+
+.repo-item-link {
+    color: #58a6ff;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.repo-item-link:hover {
+    color: #79c0ff;
+    text-decoration: underline;
+}
+
+.repo-item-badge {
+    font-size: 0.7rem;
+    padding: 0.2rem 0.6rem;
+    border-radius: 2rem;
+    font-weight: 500;
+}
+
+.repo-item-badge.public {
+    background: rgba(35, 134, 54, 0.2);
+    color: #3fb950;
+    border: 1px solid rgba(35, 134, 54, 0.3);
+}
+
+.repo-item-badge.private {
+    background: rgba(248, 81, 73, 0.2);
+    color: #f85149;
+    border: 1px solid rgba(248, 81, 73, 0.3);
+}
+
+.repo-item-description {
+    color: #8b949e;
+    font-size: 0.85rem;
+    line-height: 1.4;
+    margin-bottom: 0.75rem;
+}
+
+.repo-item-meta {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    font-size: 0.8rem;
+}
+
+.repo-item-language {
+    color: #58a6ff;
+    background: rgba(88, 166, 255, 0.1);
+    padding: 0.2rem 0.6rem;
+    border-radius: 2rem;
+}
+
+.repo-item-stars,
+.repo-item-forks {
+    color: #8b949e;
+}
+
+@keyframes gradientBorder {
+    0%, 100% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+}
+
+/* GitHub风格底部 */
+.github-footer {
+    border-top: 1px solid #30363d;
+    padding: 2rem;
+    background: #0d1117;
+}
+
+.footer-content {
+    max-width: 1280px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
 .github-link {
-    margin-top: 30px;
     display: inline-flex;
     align-items: center;
-    gap: 8px;
-    color: #333;
+    gap: 0.5rem;
+    color: #58a6ff;
     text-decoration: none;
-    font-size: 0.9em;
+    font-weight: 500;
     transition: color 0.3s ease;
 }
 
 .github-link:hover {
-    color: #667eea;
+    color: #79c0ff;
 }
 
 .github-logo {
     width: 20px;
     height: 20px;
-    filter: invert(1);
-    transition: filter 0.3s ease;
+    filter: brightness(0) invert(1);
 }
 
-.github-link:hover .github-logo {
-    filter: invert(1) brightness(1.2);
+.footer-text {
+    color: #8b949e;
+    font-size: 0.9rem;
 }
 
-@media (max-width: 768px) {
-    h1 {
-        font-size: 2em;
+/* 响应式设计 - 更完善的适配方案 */
+
+/* 超大屏幕适配 (1440px+) */
+@media (min-width: 1440px) {
+    .header-content, .github-main, .footer-content {
+        max-width: 1200px;
     }
     
-    .container {
-        padding: 30px 20px;
+    .repo-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 25px;
+    }
+    
+    .scroll-title {
+        font-size: 2.5rem;
+    }
+    
+    .scroll-subtitle {
+        font-size: 1.3rem;
+    }
+    
+    .profile-info h1 {
+        font-size: 2.5rem;
+    }
+    
+    .profile-bio {
+        font-size: 1.3rem;
+    }
+}
+
+/* 中等屏幕适配 (1024px - 1439px) */
+@media (max-width: 1439px) and (min-width: 1024px) {
+    .header-content, .github-main, .footer-content {
+        max-width: 900px;
+    }
+    
+    .repo-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+    
+    .scroll-title {
+        font-size: 2.2rem;
+    }
+}
+
+/* 平板适配 (768px - 1023px) */
+@media (max-width: 1023px) and (min-width: 768px) {
+    .github-header {
+        padding: 2rem 1.5rem 1.5rem;
+    }
+    
+    .github-main {
+        padding: 2rem 1.5rem;
+    }
+    
+    .repo-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 18px;
+    }
+    
+    .stats-section {
+        gap: 18px;
+    }
+    
+    .profile-section {
+        flex-direction: row;
+        text-align: left;
+    }
+    
+    .profile-avatar {
+        width: 140px;
+        height: 140px;
+    }
+    
+    .scroll-title {
+        font-size: 2rem;
+    }
+    
+    .scroll-subtitle {
+        font-size: 1.1rem;
+    }
+    
+    .profile-info h1 {
+        font-size: 2rem;
+    }
+    
+    .profile-bio {
+        font-size: 1.1rem;
+    }
+    
+    .repo-card {
+        padding: 18px;
+    }
+    
+    .repo-title {
+        font-size: 1.2rem;
+    }
+    
+    .repo-description {
+        font-size: 0.95rem;
+    }
+    
+    .stat {
+        padding: 18px;
+    }
+    
+    .stat-number {
+        font-size: 2rem;
+    }
+    
+    .stat-label {
+        font-size: 0.95rem;
+    }
+}
+
+/* 手机适配 (481px - 767px) */
+@media (max-width: 767px) and (min-width: 481px) {
+    .github-header {
+        padding: 2rem 1rem 1.5rem;
+    }
+    
+    .github-main {
+        padding: 2rem 1rem;
+    }
+    
+    .repo-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .stats-section {
+        justify-content: center;
+        gap: 15px;
+    }
+    
+    .profile-section {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+    }
+    
+    .profile-avatar {
+        width: 120px;
+        height: 120px;
+    }
+    
+    .scroll-title {
+        font-size: 1.8rem;
+    }
+    
+    .scroll-subtitle {
+        font-size: 1rem;
+    }
+    
+    .profile-info h1 {
+        font-size: 1.8rem;
+    }
+    
+    .profile-bio {
+        font-size: 1rem;
+    }
+    
+    .repo-card {
+        padding: 15px;
+    }
+    
+    .repo-title {
+        font-size: 1.1rem;
+    }
+    
+    .repo-description {
+        font-size: 0.9rem;
+    }
+    
+    .stat {
+        padding: 15px;
+        min-width: 100px;
+    }
+    
+    .stat-number {
+        font-size: 1.8rem;
+    }
+    
+    .stat-label {
+        font-size: 0.9rem;
+    }
+    
+    .footer-content {
+        flex-direction: column;
+        text-align: center;
+    }
+}
+
+/* 小手机适配 (320px - 480px) */
+@media (max-width: 480px) {
+    .github-header {
+        padding: 1.5rem 1rem 1rem;
+    }
+    
+    .github-main {
+        padding: 1.5rem 1rem;
+    }
+    
+    .repo-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+    
+    .stats-section {
+        justify-content: center;
+        gap: 10px;
+    }
+    
+    .profile-avatar {
+        width: 100px;
+        height: 100px;
+    }
+    
+    .scroll-title {
+        font-size: 1.5rem;
+        padding: 0 10px;
+    }
+    
+    .scroll-subtitle {
+        font-size: 0.9rem;
+        line-height: 1.4;
+    }
+    
+    .profile-info h1 {
+        font-size: 1.5rem;
+        margin-bottom: 8px;
+    }
+    
+    .profile-bio {
+        font-size: 0.9rem;
+        line-height: 1.4;
+    }
+    
+    .header-content {
+        gap: 1.5rem;
+    }
+    
+    .repo-card {
+        padding: 12px;
+    }
+    
+    .repo-title {
+        font-size: 1rem;
+        margin-bottom: 6px;
+    }
+    
+    .repo-description {
+        font-size: 0.85rem;
+        line-height: 1.3;
+    }
+    
+    .stat {
+        padding: 12px;
+    }
+    
+    .stat-number {
+        font-size: 1.5rem;
+    }
+    
+    .stat-label {
+        font-size: 0.85rem;
+    }
+    
+    .github-footer {
+        font-size: 0.8rem;
+        padding: 15px 0;
+    }
+}
+
+/* 超小屏幕适配 (小于320px) */
+@media (max-width: 319px) {
+    .scroll-title {
+        font-size: 1.3rem;
+        line-height: 1.1;
+        padding: 0 5px;
+    }
+    
+    .scroll-subtitle {
+        font-size: 0.8rem;
+    }
+    
+    .profile-avatar {
+        width: 80px;
+        height: 80px;
+    }
+    
+    .profile-info h1 {
+        font-size: 1.3rem;
+    }
+    
+    .profile-bio {
+        font-size: 0.8rem;
+    }
+    
+    .repo-card, .stat {
+        padding: 8px;
+    }
+    
+    .repo-title {
+        font-size: 0.9rem;
+    }
+    
+    .repo-description {
+        font-size: 0.75rem;
+    }
+    
+    .stat-number {
+        font-size: 1.3rem;
+    }
+    
+    .stat-label {
+        font-size: 0.75rem;
+    }
+}
+
+/* 横屏适配 */
+@media (max-height: 500px) and (orientation: landscape) {
+    .scroll-text-container {
+        height: 60vh;
+    }
+    
+    .scroll-title {
+        font-size: 1.5rem;
+        line-height: 1.2;
+    }
+    
+    .profile-section {
+        margin-bottom: 15px;
+    }
+    
+    .repo-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+    }
+}
+
+/* 高DPI屏幕适配 */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .profile-avatar {
+        border-width: 3px;
+    }
+    
+    .repo-card {
+        border-width: 1.5px;
+    }
+    
+    .stat {
+        border-width: 1.5px;
+    }
+}
+
+/* 打印样式 */
+@media print {
+    .scroll-text-container,
+    .background-loader {
+        display: none !important;
+    }
+    
+    .github-container {
+        background: white !important;
+        color: black !important;
+        box-shadow: none !important;
+    }
+    
+    .repo-card,
+    .stat {
+        border: 1px solid #ccc !important;
+        background: white !important;
+        color: black !important;
     }
 }

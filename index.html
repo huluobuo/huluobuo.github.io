@@ -3,25 +3,113 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>欢迎来到我的个人网站</title>
+    <title>huluobuo的个人网站</title>
     <link rel="stylesheet" href="./css/style.css">
 </head>
 <body>
-    <div class="container">
-        <img src="./img/头像.png" alt="头像" class="avatar">
-        <h1>欢迎来到我的个人网站</h1>
-        <p class="subtitle">探索音乐与文件的精彩世界</p>
-        
-        <div class="nav-links">
-            <a href="./music.html" class="nav-link">🎵 音乐库</a>
-            <a href="./file.html" class="nav-link">📁 文件库</a>
-        </div>
-
-        <a href="https://github.com/huluobuo" class="github-link" target="_blank">
-            <img src="./img/github_logo.png" alt="GitHub" class="github-logo">
-            <span>GitHub</span>
-        </a>
+    <!-- 背景图片加载器 -->
+    <div id="backgroundLoader" class="background-loader">
+        <div class="loading-text">加载中...</div>
     </div>
+
+    <!-- 苹果风格的滚动文字特效 -->
+    <div class="scroll-text-container">
+        <div class="scroll-text-content">
+            <h2 class="scroll-title">欢迎来到huluobuo的个人网站</h2>
+            <p class="scroll-subtitle">探索音乐与代码的无限可能</p>
+            <div class="scroll-indicator">
+                <span class="scroll-arrow">↓</span>
+                <span class="scroll-hint">继续探索</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- GitHub风格的主内容区域 -->
+    <div class="github-container">
+        <header class="github-header">
+            <div class="header-content">
+                <div class="profile-section">
+                    <img src="./img/头像.png" alt="头像" class="profile-avatar">
+                    <div class="profile-info">
+                        <h1 class="profile-name">huluobuo</h1>
+                        <p class="profile-bio">热爱编程与音乐的开发者</p>
+                    </div>
+                </div>
+                <div class="stats-section">
+                    <div class="stat" data-type="projects">
+                        <span class="stat-number">0 个</span>
+                        <span class="stat-label">项目</span>
+                    </div>
+                    <div class="stat" data-type="music">
+                        <span class="stat-number">0 首</span>
+                        <span class="stat-label">音乐</span>
+                    </div>
+                    <div class="stat" data-type="files">
+                        <span class="stat-number">0 个</span>
+                        <span class="stat-label">文件</span>
+                    </div>
+                    <div class="stat" data-type="followers">
+                        <span class="stat-number">0 个</span>
+                        <span class="stat-label">粉丝</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="github-main">
+            <div class="repo-grid">
+                <a href="./music.html" class="repo-card">
+                    <div class="repo-header">
+                        <h3 class="repo-title">🎵 音乐库</h3>
+                        <span class="repo-badge">Public</span>
+                    </div>
+                    <p class="repo-description">我个人非常喜欢的音乐和我收藏多年的音乐</p>
+                    <div class="repo-meta">
+                        <span class="repo-language">Audio</span>
+                        <span class="repo-stats">0 首歌曲</span>
+                    </div>
+                </a>
+
+                <a href="./file.html" class="repo-card">
+                    <div class="repo-header">
+                        <h3 class="repo-title">📁 文件库</h3>
+                        <span class="repo-badge">Public</span>
+                    </div>
+                    <p class="repo-description">比较实用或好玩的文件</p>
+                    <div class="repo-meta">
+                        <span class="repo-language">Files</span>
+                        <span class="repo-stats">0 个文件</span>
+                    </div>
+                </a>
+
+                <!-- GitHub仓库模块 -->
+                <div class="repo-card github-repos" id="githubReposSection">
+                    <div class="repo-header">
+                        <h3 class="repo-title">📚 我的GitHub仓库</h3>
+                        <span class="repo-badge">Loading...</span>
+                    </div>
+                    <p class="repo-description">我的GitHub开源项目与代码仓库</p>
+                    <div class="repos-list" id="reposList">
+                        <div class="loading-repos">正在加载仓库数据...</div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="github-footer">
+            <div class="footer-content">
+                <a href="https://github.com/huluobuo" class="github-link" target="_blank">
+                    <img src="./img/github_logo.png" alt="GitHub" class="github-logo">
+                    <span>GitHub Profile</span>
+                </a>
+                <div class="footer-text">
+                    <p>© 2025 huluobuo. Built with ❤️</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script src="./js/effects.js"></script>
 </body>
 </html>
 

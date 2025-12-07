@@ -3,56 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>音乐库</title>
+    <title>音乐播放器 - huluobuo</title>
     <link rel="stylesheet" href="./css/music.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <div class="header">
-        <a href="./index.html" class="back-link">← 返回首页</a>
-        <h1>🎵 音乐库</h1>
-    </div>
-
-    <div class="container">
-        <div class="player-container">
+    <!-- GitHub风格头部 -->
+    <header class="github-header">
+        <div class="header-content">
+            <a href="index.html" class="back-link">
+                <i class="fas fa-arrow-left"></i> 返回首页
+            </a>
+            <h1>音乐播放器</h1>
+        </div>
+    </header>
+    
+    <!-- GitHub风格主内容区域 -->
+    <main class="github-main">
+        <!-- 播放器区域 -->
+        <section class="player-section">
             <div class="now-playing">正在播放</div>
-            <div class="current-song" id="currentSong">请选择一首歌曲</div>
+            <div class="current-song" id="currentSong">选择一首歌曲开始播放</div>
             <audio id="audioPlayer" preload="metadata"></audio>
             <div class="progress-container">
                 <div class="progress-bar" id="progressBar">
                     <div class="progress" id="progress"></div>
                 </div>
                 <div class="time-info">
-                    <span id="currentTime">0:00</span>
-                    <span id="duration">0:00</span>
+                    <span id="currentTime">00:00</span>
+                    <span id="duration">00:00</span>
                 </div>
             </div>
+            
             <div class="control-section">
                 <div class="control-buttons">
-                    <button class="control-btn" id="prevBtn" title="上一首">⏮</button>
-                    <button class="control-btn play-pause" id="playPauseBtn" title="播放/暂停">▶</button>
-                    <button class="control-btn" id="nextBtn" title="下一首">⏭</button>
+                    <button class="control-btn" id="prevBtn" title="上一首">
+                        <i class="fas fa-step-backward"></i>
+                    </button>
+                    <button class="control-btn play-pause" id="playPauseBtn" title="播放/暂停">
+                        <i class="fas fa-play"></i>
+                    </button>
+                    <button class="control-btn" id="nextBtn" title="下一首">
+                        <i class="fas fa-step-forward"></i>
+                    </button>
                 </div>
+                
                 <div class="volume-control">
-                    <span class="volume-icon" id="volumeIcon">🔊</span>
+                    <i class="fas fa-volume-up volume-icon" id="volumeIcon"></i>
                     <div class="volume-slider" id="volumeSlider">
                         <div class="volume-progress" id="volumeProgress"></div>
                     </div>
                 </div>
-                <button class="play-mode-btn" id="playModeBtn" title="播放模式">🔁 列表循环</button>
+                
+                <button class="play-mode-btn" id="playModeBtn" title="播放模式">
+                    <i class="fas fa-random"></i> 随机播放
+                </button>
+            </div>
+        </section>
+        
+        <!-- 搜索框 -->
+        <div class="search-section">
+            <div class="search-box">
+                <input type="text" class="search-input" id="searchInput" placeholder="搜索歌曲...">
+                <i class="fas fa-search search-icon"></i>
             </div>
         </div>
-
-        <div class="search-box">
-            <input type="text" class="search-input" id="searchInput" placeholder="搜索歌曲...">
-            <span class="search-icon">🔍</span>
-        </div>
-
+        
+        <!-- 统计信息 -->
         <div class="stats" id="stats">共 <span id="totalCount">0</span> 首歌曲</div>
-
-        <div id="musicList" class="music-list">
-            <div class="loading">加载中...</div>
-        </div>
-    </div>
+        
+        <!-- 音乐列表 -->
+        <section class="music-section">
+            <div class="music-list" id="musicList">
+                <div class="loading">
+                    <i class="fas fa-spinner fa-spin"></i> 加载中...
+                </div>
+            </div>
+        </section>
+    </main>
 
     <script>
         let musicList = [];

@@ -3,20 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>文件库</title>
+    <title>文件库 - huluobuo</title>
     <link rel="stylesheet" href="./css/file.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <div class="header">
-        <a href="./index.html" class="back-link">← 返回首页</a>
-        <h1>📁 文件库</h1>
-    </div>
-
-    <div class="container">
-        <div id="fileList" class="file-list">
-            <div class="loading">加载中...</div>
+    <!-- GitHub风格头部 -->
+    <header class="github-header">
+        <div class="header-content">
+            <a href="index.html" class="back-link">
+                <i class="fas fa-arrow-left"></i> 返回首页
+            </a>
+            <h1>文件库</h1>
         </div>
-    </div>
+    </header>
+    
+    <!-- GitHub风格主内容区域 -->
+    <main class="github-main">
+        <!-- 搜索框 -->
+        <div class="search-section">
+            <div class="search-box">
+                <input type="text" class="search-input" id="searchInput" placeholder="搜索文件...">
+                <i class="fas fa-search search-icon"></i>
+            </div>
+        </div>
+        
+        <!-- 统计信息 -->
+        <div class="stats" id="stats">共 <span id="totalCount">0</span> 个文件</div>
+        
+        <!-- 文件列表 -->
+        <section class="file-section">
+            <div class="file-list" id="fileList">
+                <div class="loading">
+                    <i class="fas fa-spinner fa-spin"></i> 加载中...
+                </div>
+            </div>
+        </section>
+    </main>
 
     <script>
         async function loadFiles() {
@@ -28,34 +51,117 @@
                 fileList.innerHTML = '';
 
                 if (files.length === 0) {
-                    fileList.innerHTML = '<div class="loading">暂无文件</div>';
+                    fileList.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-folder-open"></i>
+                            <h3>暂无文件</h3>
+                            <p>文件库目前是空的</p>
+                        </div>
+                    `;
                     return;
                 }
 
                 files.forEach((file, index) => {
-                    const card = document.createElement('div');
-                    card.className = 'file-card';
-                    card.style.animationDelay = `${index * 0.1}s`;
+                    const fileItem = document.createElement('div');
+                    fileItem.className = 'file-item';
+                    fileItem.style.animationDelay = `${index * 0.1}s`;
                     
-                    const icon = '📦';
+                    // 根据文件扩展名设置图标
+                    const fileExt = file.name.split('.').pop().toLowerCase();
+                    let iconClass = 'fas fa-file';
+                    
+                    switch(fileExt) {
+                        case 'zip': case 'rar': case '7z':
+                            iconClass = 'fas fa-file-archive';
+                            break;
+                        case 'pdf':
+                            iconClass = 'fas fa-file-pdf';
+                            break;
+                        case 'doc': case 'docx':
+                            iconClass = 'fas fa-file-word';
+                            break;
+                        case 'xls': case 'xlsx':
+                            iconClass = 'fas fa-file-excel';
+                            break;
+                        case 'ppt': case 'pptx':
+                            iconClass = 'fas fa-file-powerpoint';
+                            break;
+                        case 'jpg': case 'jpeg': case 'png': case 'gif': case 'svg':
+                            iconClass = 'fas fa-file-image';
+                            break;
+                        case 'mp3': case 'wav': case 'flac':
+                            iconClass = 'fas fa-file-audio';
+                            break;
+                        case 'mp4': case 'avi': case 'mov':
+                            iconClass = 'fas fa-file-video';
+                            break;
+                        case 'txt': case 'md':
+                            iconClass = 'fas fa-file-alt';
+                            break;
+                        default:
+                            iconClass = 'fas fa-file';
+                    }
+                    
                     const filePath = file.path.startsWith('./') ? file.path : `./${file.path}`;
                     
-                    card.innerHTML = `
-                        <div class="file-icon">${icon}</div>
-                        <div class="file-name">${file.name}</div>
-                        <div class="file-size">大小: ${file.size}</div>
-                        <div class="file-description">${file.description || '无描述'}</div>
-                        <a href="${filePath}" class="download-btn" download>下载文件</a>
+                    fileItem.innerHTML = `
+                        <div class="file-icon">
+                            <i class="${iconClass}"></i>
+                        </div>
+                        <div class="file-info">
+                            <div class="file-name">${file.name}</div>
+                            <div class="file-meta">
+                                <span class="file-size">${file.size}</span>
+                                <span class="file-date">${file.date || ''}</span>
+                            </div>
+                        </div>
+                        <div class="file-actions">
+                            <button class="action-btn download-btn" title="下载文件" onclick="window.open('${filePath}', '_blank')">
+                                <i class="fas fa-download"></i>
+                            </button>
+                            <button class="action-btn" title="查看详情" onclick="showFileInfo('${file.name}', '${file.size}', '${file.description || '无描述'}')">
+                                <i class="fas fa-info"></i>
+                            </button>
+                        </div>
                     `;
                     
-                    fileList.appendChild(card);
+                    fileList.appendChild(fileItem);
                 });
+                
+                // 更新统计信息
+                document.getElementById('totalCount').textContent = files.length;
+                document.getElementById('stats').textContent = `共 ${files.length} 个文件`;
+                
             } catch (error) {
-                document.getElementById('fileList').innerHTML = 
-                    '<div class="loading">加载失败，请稍后重试</div>';
+                document.getElementById('fileList').innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <h3>加载失败</h3>
+                        <p>请稍后重试</p>
+                    </div>
+                `;
                 console.error('加载文件列表失败:', error);
             }
         }
+
+        function showFileInfo(name, size, description) {
+            alert(`文件名: ${name}\n文件大小: ${size}\n描述: ${description}`);
+        }
+
+        // 搜索功能
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const fileItems = document.querySelectorAll('.file-item');
+            
+            fileItems.forEach(item => {
+                const fileName = item.querySelector('.file-name').textContent.toLowerCase();
+                if (fileName.includes(searchTerm)) {
+                    item.style.display = 'flex';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        });
 
         loadFiles();
     </script>
