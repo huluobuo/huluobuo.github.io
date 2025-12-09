@@ -98,6 +98,15 @@ body {
     cursor: pointer;
     position: relative;
     overflow: hidden;
+    transition: background-color 0.2s;
+}
+
+.progress-bar:hover {
+    background: #30363d;
+}
+
+.progress-bar.dragging {
+    background: #40464d;
 }
 
 .progress {
@@ -107,6 +116,35 @@ body {
     width: 0%;
     transition: width 0.1s;
     position: relative;
+    box-shadow: 0 0 4px rgba(46, 160, 67, 0.3);
+}
+
+.progress.dragging {
+    background: #3d914e;
+}
+
+.progress::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 12px;
+    height: 12px;
+    background: #2ea043;
+    border-radius: 50%;
+    transform: translate(50%, -25%);
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.progress-bar:hover .progress::after,
+.progress-bar.dragging .progress::after {
+    opacity: 1;
+}
+
+.progress-bar.dragging .progress::after {
+    background: #3d914e;
+    transform: translate(50%, -25%) scale(1.2);
 }
 
 .time-info {
@@ -191,6 +229,15 @@ body {
     border-radius: 3px;
     cursor: pointer;
     position: relative;
+    transition: background-color 0.2s;
+}
+
+.volume-slider:hover {
+    background: #30363d;
+}
+
+.volume-slider.dragging {
+    background: #40464d;
 }
 
 .volume-progress {
@@ -198,6 +245,36 @@ body {
     background: #58a6ff;
     border-radius: 3px;
     width: 70%;
+    box-shadow: 0 0 4px rgba(88, 166, 255, 0.3);
+    position: relative;
+}
+
+.volume-progress.dragging {
+    background: #4a9cff;
+}
+
+.volume-progress::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 10px;
+    height: 10px;
+    background: #58a6ff;
+    border-radius: 50%;
+    transform: translate(50%, -33%);
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.volume-slider:hover .volume-progress::after,
+.volume-slider.dragging .volume-progress::after {
+    opacity: 1;
+}
+
+.volume-slider.dragging .volume-progress::after {
+    background: #4a9cff;
+    transform: translate(50%, -33%) scale(1.2);
 }
 
 /* 播放模式 */
