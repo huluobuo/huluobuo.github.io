@@ -4,41 +4,24 @@
 class ImageLoader {
     constructor() {
         this.backgroundImage = new Image();
-        this.highQualityImage = new Image();
         this.loadingElement = document.getElementById('backgroundLoader');
         this.isLoaded = false;
     }
 
     async loadImages() {
         return new Promise((resolve) => {
-            // 先加载普通背景图
+            // 只加载普通背景图，取消高清背景图
             this.backgroundImage.src = '../img/背景.png';
             
             this.backgroundImage.onload = () => {
-                console.log('普通背景图加载完成');
-                
-                // 延迟加载高清背景图
-                setTimeout(() => {
-                    this.highQualityImage.src = '../img/高清背景.PNG';
-                    
-                    this.highQualityImage.onload = () => {
-                        console.log('高清背景图加载完成');
-                        this.applyBackground();
-                        this.hideLoader();
-                        resolve();
-                    };
-                    
-                    this.highQualityImage.onerror = () => {
-                        console.log('高清背景图加载失败，使用普通背景图');
-                        this.applyBackground();
-                        this.hideLoader();
-                        resolve();
-                    };
-                }, 500);
+                console.log('背景图加载完成');
+                this.applyBackground();
+                this.hideLoader();
+                resolve();
             };
             
             this.backgroundImage.onerror = () => {
-                console.log('普通背景图加载失败，使用默认背景');
+                console.log('背景图加载失败，使用默认背景');
                 this.hideLoader();
                 resolve();
             };
@@ -233,19 +216,36 @@ class DataManager {
 
     async loadStatsData() {
         try {
-            // 加载项目数量（从GitHub API）
-            await this.loadGitHubStats();
+            // 设置加载状态
+            this.showLoadingState();
             
-            // 加载音乐文件数量
-            await this.loadMusicCount();
-            
-            // 加载文件数量
-            await this.loadFileCount();
+            // 并行加载所有数据
+            await Promise.all([
+                this.loadGitHubStats(),
+                this.loadMusicCount(),
+                this.loadFileCount()
+            ]);
             
         } catch (error) {
             console.warn('统计数据加载失败:', error);
             this.handleDataLoadError();
+        } finally {
+            // 确保隐藏加载状态
+            this.hideLoadingState();
         }
+    }
+
+    showLoadingState() {
+        // 显示加载状态
+        const loadingElements = document.querySelectorAll('.stat-number, .repo-stats');
+        loadingElements.forEach(el => {
+            el.textContent = '加载中...';
+        });
+    }
+
+    hideLoadingState() {
+        // 确保UI更新
+        this.updateUI();
     }
 
     async loadGitHubStats() {
@@ -263,11 +263,13 @@ class DataManager {
             this.stats.projects = 17; // 默认值
             this.stats.followers = 0;
         }
+        // 确保UI更新
+        this.updateUI();
     }
 
     async loadMusicCount() {
         try {
-            const response = await fetch('./musiclist.json');
+            const response = await fetch('./api/musiclist.json');
             if (response.ok) {
                 const data = await response.json();
                 this.stats.music = Array.isArray(data) ? data.length : 0;
@@ -282,7 +284,7 @@ class DataManager {
 
     async loadFileCount() {
         try {
-            const response = await fetch('./filelist.json');
+            const response = await fetch('./api/filelist.json');
             if (response.ok) {
                 const data = await response.json();
                 this.stats.files = Array.isArray(data) ? data.length : 0;
@@ -297,6 +299,12 @@ class DataManager {
 
     async loadGitHubRepos() {
         try {
+            // 显示加载状态
+            const reposList = document.getElementById('reposList');
+            if (reposList) {
+                reposList.innerHTML = '<div style="text-align: center; padding: 20px;">加载中...</div>';
+            }
+            
             const response = await fetch('https://api.github.com/users/huluobuo/repos?sort=updated&per_page=6');
             if (response.ok) {
                 this.githubRepos = await response.json();
