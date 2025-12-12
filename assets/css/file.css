@@ -1,5 +1,31 @@
 /* GitHub风格文件库样式 */
 
+/* 背景图片加载器 */
+.background-loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #0d1117;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    transition: opacity 0.5s ease;
+}
+
+.background-loader.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.loading-text {
+    color: #58a6ff;
+    font-size: 1.2em;
+    font-weight: 500;
+}
+
 /* 全局样式 */
 body {
     margin: 0;

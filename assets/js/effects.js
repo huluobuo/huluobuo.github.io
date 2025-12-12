@@ -1,17 +1,38 @@
-// 图片加载优化和滚动特效脚本
+/*
+ * huluobuo个人网站特效脚本
+ * 主要包含以下功能模块：
+ * - 图片加载器 (ImageLoader)
+ * - 滚动效果控制器 (ScrollEffectController)
+ * - 视差滚动效果 (ParallaxEffect)
+ * - 数据自动获取与展示管理器 (DataManager)
+ */
 
-// 图片加载器
+/**
+ * 图片加载器类
+ * 负责背景图片的异步加载和应用
+ */
 class ImageLoader {
-    constructor() {
+    /**
+     * 构造函数
+     * @param {string} backgroundUrl - 背景图片的URL，默认为null
+     */
+    constructor(backgroundUrl = null) {
         this.backgroundImage = new Image();
         this.loadingElement = document.getElementById('backgroundLoader');
         this.isLoaded = false;
+        this.backgroundUrl = backgroundUrl;
     }
 
     async loadImages() {
         return new Promise((resolve) => {
-            // 只加载普通背景图，取消高清背景图
-            this.backgroundImage.src = '../img/背景.png';
+            // 如果没有提供背景图片URL，则直接隐藏加载器
+            if (!this.backgroundUrl) {
+                this.hideLoader();
+                resolve();
+                return;
+            }
+            
+            this.backgroundImage.src = this.backgroundUrl;
             
             this.backgroundImage.onload = () => {
                 console.log('背景图加载完成');
@@ -21,7 +42,7 @@ class ImageLoader {
             };
             
             this.backgroundImage.onerror = () => {
-                console.log('背景图加载失败，使用默认背景');
+                console.log('背景图加载失败，不使用背景图');
                 this.hideLoader();
                 resolve();
             };
@@ -178,7 +199,10 @@ class ScrollEffectController {
 class ParallaxEffect {
     constructor() {
         this.sections = document.querySelectorAll('.github-header, .github-main');
-        this.init();
+        // 只有在找到相关元素时才初始化
+        if (this.sections.length > 0) {
+            this.init();
+        }
     }
 
     init() {
@@ -203,6 +227,7 @@ class DataManager {
             projects: 0,
             music: 0,
             files: 0,
+            images: 0,
             followers: 0
         };
         this.githubRepos = [];
@@ -223,7 +248,8 @@ class DataManager {
             await Promise.all([
                 this.loadGitHubStats(),
                 this.loadMusicCount(),
-                this.loadFileCount()
+                this.loadFileCount(),
+                this.loadImageCount()
             ]);
             
         } catch (error) {
@@ -259,8 +285,8 @@ class DataManager {
                 throw new Error('GitHub API请求失败');
             }
         } catch (error) {
-            console.warn('GitHub统计数据加载失败，使用默认值');
-            this.stats.projects = 17; // 默认值
+            console.warn('GitHub统计数据加载失败');
+            this.stats.projects = 0;
             this.stats.followers = 0;
         }
         // 确保UI更新
@@ -277,8 +303,8 @@ class DataManager {
                 throw new Error('音乐列表加载失败');
             }
         } catch (error) {
-            console.warn('音乐数量加载失败，使用默认值');
-            this.stats.music = 70; // 默认值
+            console.warn('音乐数量加载失败');
+            this.stats.music = 0;
         }
     }
 
@@ -292,8 +318,23 @@ class DataManager {
                 throw new Error('文件列表加载失败');
             }
         } catch (error) {
-            console.warn('文件数量加载失败，使用默认值');
-            this.stats.files = 3; // 默认值
+            console.warn('文件数量加载失败');
+            this.stats.files = 0;
+        }
+    }
+
+    async loadImageCount() {
+        try {
+            const response = await fetch('./api/imagelist.json');
+            if (response.ok) {
+                const data = await response.json();
+                this.stats.images = Array.isArray(data) ? data.length : 0;
+            } else {
+                throw new Error('图片列表加载失败');
+            }
+        } catch (error) {
+            console.warn('图片数量加载失败');
+            this.stats.images = 0;
         }
     }
 
@@ -333,9 +374,11 @@ class DataManager {
         // 更新卡片统计数据
         const musicStats = document.querySelector('.repo-card[href="./music.html"] .repo-stats');
         const fileStats = document.querySelector('.repo-card[href="./file.html"] .repo-stats');
+        const imageStats = document.querySelector('.repo-card[href="./images.html"] .repo-stats');
         
         if (musicStats) musicStats.textContent = `${this.stats.music} 首歌曲`;
         if (fileStats) fileStats.textContent = `${this.stats.files} 个文件`;
+        if (imageStats) imageStats.textContent = `${this.stats.images} 张图片`;
     }
 
     updateGitHubReposUI() {
@@ -417,6 +460,7 @@ class DataManager {
             projects: '个',
             music: '首',
             files: '个',
+            images: '张',
             followers: '个'
         };
         return units[type] || '';
@@ -427,8 +471,18 @@ class DataManager {
 document.addEventListener('DOMContentLoaded', async () => {
     console.log('页面加载完成，开始初始化特效...');
     
+    // 根据当前页面路径决定是否加载背景图片
+    const currentPath = window.location.pathname;
+    const pageName = currentPath.split('/').pop() || 'index.html';
+    
+    // 只有在首页加载背景图片，其他页面根据需要通过外部调用
+    let backgroundUrl = null;
+    if (pageName === 'index.html') {
+        backgroundUrl = './img/背景.png';
+    }
+    
     // 初始化图片加载器
-    const imageLoader = new ImageLoader();
+    const imageLoader = new ImageLoader(backgroundUrl);
     await imageLoader.loadImages();
     
     // 初始化数据管理器
@@ -436,31 +490,43 @@ document.addEventListener('DOMContentLoaded', async () => {
     await dataManager.init();
     
     // 初始化滚动效果控制器
-    const scrollController = new ScrollEffectController();
-    scrollController.init();
+    // 只有在首页初始化滚动效果控制器
+    if (pageName === 'index.html') {
+        const scrollController = new ScrollEffectController();
+        scrollController.init();
+    }
     
     // 初始化视差效果
-    const parallaxEffect = new ParallaxEffect();
+    // 只有在首页初始化视差效果，避免影响其他页面
+    if (pageName === 'index.html') {
+        const parallaxEffect = new ParallaxEffect();
+    }
     
-    // 添加鼠标移动效果
-    document.addEventListener('mousemove', (e) => {
-        const mouseX = e.clientX / window.innerWidth;
-        const mouseY = e.clientY / window.innerHeight;
-        
-        document.querySelectorAll('.repo-card').forEach(card => {
-            const rect = card.getBoundingClientRect();
-            const cardX = rect.left + rect.width / 2;
-            const cardY = rect.top + rect.height / 2;
+    // 添加鼠标移动效果 - 只有在有repo-card元素时才添加
+    const repoCards = document.querySelectorAll('.repo-card');
+    if (repoCards.length > 0) {
+        document.addEventListener('mousemove', (e) => {
+            const mouseX = e.clientX / window.innerWidth;
+            const mouseY = e.clientY / window.innerHeight;
             
-            const distanceX = (e.clientX - cardX) / window.innerWidth;
-            const distanceY = (e.clientY - cardY) / window.innerHeight;
-            
-            card.style.transform = `perspective(1000px) rotateY(${distanceX * 5}deg) rotateX(${-distanceY * 5}deg)`;
+            repoCards.forEach(card => {
+                const rect = card.getBoundingClientRect();
+                const cardX = rect.left + rect.width / 2;
+                const cardY = rect.top + rect.height / 2;
+                
+                const distanceX = (e.clientX - cardX) / window.innerWidth;
+                const distanceY = (e.clientY - cardY) / window.innerHeight;
+                
+                card.style.transform = `perspective(1000px) rotateY(${distanceX * 5}deg) rotateX(${-distanceY * 5}deg)`;
+            });
         });
-    });
+    }
     
     console.log('特效初始化完成！');
 });
+
+// 暴露ImageLoader类到全局，方便其他页面调用
+window.ImageLoader = ImageLoader;
 
 // 添加CSS动画类
 const style = document.createElement('style');

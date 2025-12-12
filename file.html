@@ -1,13 +1,25 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+<!--
+    文件库页面
+    主要功能：
+    - 文件列表展示和搜索
+    - 文件下载功能
+    - 文件信息查看
+    - 支持多种文件类型的图标显示
+-->
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>文件库 - huluobuo</title>
-    <link rel="stylesheet" href="./css/file.css">
+    <link rel="stylesheet" href="./assets/css/file.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
+    <!-- 背景图片加载器 -->
+    <div id="backgroundLoader" class="background-loader">
+        <div class="loading-text">加载中...</div>
+    </div>
     <!-- GitHub风格头部 -->
     <header class="github-header">
         <div class="header-content">
@@ -164,6 +176,16 @@
         });
 
         loadFiles();
+    </script>
+    
+    <script src="./assets/js/effects.js"></script>
+    <script>
+        // 页面加载完成后初始化背景加载
+        document.addEventListener('DOMContentLoaded', async () => {
+            // 初始化图片加载器，为文件页面添加背景
+            const imageLoader = new ImageLoader('./img/背景.png');
+            await imageLoader.loadImages();
+        });
     </script>
 </body>
 </html>

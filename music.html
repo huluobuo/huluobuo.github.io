@@ -1,13 +1,26 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+<!--
+    音乐播放器页面
+    主要功能：
+    - 音乐列表展示和搜索
+    - 音乐播放控制（播放/暂停、上一首/下一首）
+    - 音量控制
+    - 播放模式切换（列表循环、单曲循环、随机播放）
+    - 进度条显示和手动调整
+-->
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>音乐播放器 - huluobuo</title>
-    <link rel="stylesheet" href="./css/music.css">
+    <link rel="stylesheet" href="./assets/css/music.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
+    <!-- 背景图片加载器 -->
+    <div id="backgroundLoader" class="background-loader">
+        <div class="loading-text">加载中...</div>
+    </div>
     <!-- GitHub风格头部 -->
     <header class="github-header">
         <div class="header-content">
@@ -105,12 +118,6 @@
         const statsEl = document.getElementById('stats');
         const totalCountEl = document.getElementById('totalCount');
         
-        // 缓存管理
-        let audioCache = new Map(); // 存储已缓存的音频对象
-        let currentCacheKey = null; // 当前播放的缓存键
-        let preloadQueue = []; // 预加载队列
-        const MAX_CACHE_SIZE = 3; // 最大缓存数量
-
         // 初始化音量
         audioPlayer.volume = 0.7;
         volumeProgress.style.width = '70%';
@@ -122,90 +129,9 @@
             return `${mins}:${secs.toString().padStart(2, '0')}`;
         }
 
-        function getMusicPath(name) {
-            return `./musics/${name}.mp3`;
-        }
-
         // 获取音乐文件路径
         function getMusicPath(musicName) {
             return `./musics/${musicName}.mp3`;
-        }
-
-        // 获取缓存键
-        function getCacheKey(index) {
-            return filteredList[index];
-        }
-
-        // 预加载音频
-        function preloadAudio(index) {
-            if (index < 0 || index >= filteredList.length) return;
-            
-            const cacheKey = getCacheKey(index);
-            if (audioCache.has(cacheKey)) return; // 已缓存
-            
-            const musicPath = getMusicPath(filteredList[index]);
-            const audio = new Audio();
-            
-            audio.preload = 'auto';
-            audio.src = musicPath;
-            
-            // 监听缓存进度
-            audio.addEventListener('progress', () => {
-                console.log(`预加载进度: ${cacheKey}`, audio.buffered.length > 0 ? audio.buffered.end(0) : 0);
-            });
-            
-            audio.addEventListener('canplaythrough', () => {
-                console.log(`预加载完成: ${cacheKey}`);
-                audioCache.set(cacheKey, audio);
-                updateStats();
-            });
-            
-            audio.addEventListener('error', (error) => {
-                console.error(`预加载失败: ${cacheKey}`, error);
-            });
-        }
-
-        // 清理缓存
-        function cleanupCache() {
-            if (audioCache.size > MAX_CACHE_SIZE) {
-                // 保留当前播放和最近使用的缓存
-                const keysToRemove = [];
-                for (const [key, audio] of audioCache) {
-                    if (key !== currentCacheKey && !preloadQueue.includes(key)) {
-                        keysToRemove.push(key);
-                    }
-                }
-                
-                // 清理多余的缓存
-                keysToRemove.slice(0, audioCache.size - MAX_CACHE_SIZE).forEach(key => {
-                    const audio = audioCache.get(key);
-                    audio.src = ''; // 释放资源
-                    audioCache.delete(key);
-                    console.log(`清理缓存: ${key}`);
-                });
-                updateStats();
-            }
-        }
-
-        // 更新统计信息
-        function updateStats() {
-            statsEl.textContent = `缓存: ${audioCache.size}/${MAX_CACHE_SIZE} | 预加载: ${preloadQueue.length}`;
-        }
-
-        // 管理预加载队列
-        function managePreloadQueue(currentIndex) {
-            preloadQueue = [];
-            
-            // 预加载当前歌曲的后续几首
-            for (let i = 1; i <= 2; i++) {
-                const nextIndex = (currentIndex + i) % filteredList.length;
-                if (nextIndex !== currentIndex) {
-                    preloadQueue.push(getCacheKey(nextIndex));
-                    preloadAudio(nextIndex);
-                }
-            }
-            
-            cleanupCache();
         }
 
         function playMusic(index) {
@@ -213,24 +139,10 @@
             
             currentIndex = index;
             const musicName = filteredList[index];
-            const cacheKey = getCacheKey(index);
+            const musicPath = getMusicPath(musicName);
             
-            // 优先使用缓存
-            if (audioCache.has(cacheKey)) {
-                const cachedAudio = audioCache.get(cacheKey);
-                audioPlayer.src = cachedAudio.src;
-                console.log(`使用缓存播放: ${musicName}`);
-            } else {
-                const musicPath = getMusicPath(musicName);
-                audioPlayer.src = musicPath;
-                console.log(`直接播放: ${musicName}`);
-            }
-            
-            currentCacheKey = cacheKey;
+            audioPlayer.src = musicPath;
             currentSongEl.textContent = musicName;
-            
-            // 预加载后续歌曲
-            managePreloadQueue(index);
             
             audioPlayer.play().catch(e => {
                 console.error('播放失败:', e);
@@ -448,19 +360,6 @@
         });
 
         audioPlayer.addEventListener('ended', () => {
-            // 歌曲播放完成后清理当前歌曲的缓存（除非是单曲循环）
-            if (playMode !== 1 && currentCacheKey) {
-                setTimeout(() => {
-                    if (currentCacheKey && audioCache.has(currentCacheKey)) {
-                        const audio = audioCache.get(currentCacheKey);
-                        audio.src = ''; // 释放资源
-                        audioCache.delete(currentCacheKey);
-                        console.log(`播放完成，清理缓存: ${currentCacheKey}`);
-                        updateStats();
-                    }
-                }, 1000); // 延迟1秒清理，确保下一首歌曲已开始播放
-            }
-            
             if (playMode === 1) { // 单曲循环
                 audioPlayer.currentTime = 0;
                 audioPlayer.play();
@@ -476,7 +375,7 @@
         progressBar.addEventListener('mousedown', (e) => {
             isProgressDragging = true;
             progressBar.classList.add('dragging');
-            progressBar.querySelector('.progress').classList.add('dragging');
+            progress.classList.add('dragging');
             updateProgress(e);
         });
         
@@ -489,7 +388,7 @@
         document.addEventListener('mouseup', () => {
             isProgressDragging = false;
             progressBar.classList.remove('dragging');
-            progressBar.querySelector('.progress').classList.remove('dragging');
+            progress.classList.remove('dragging');
         });
         
         progressBar.addEventListener('click', (e) => {
@@ -499,13 +398,30 @@
         function updateProgress(e) {
             const rect = progressBar.getBoundingClientRect();
             const percent = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
-            audioPlayer.currentTime = percent * audioPlayer.duration;
+            const newTime = percent * audioPlayer.duration;
+            
+            // 设置音频播放时间
+            audioPlayer.currentTime = newTime;
+            
+            // 手动更新进度条视觉效果
+            progress.style.width = (percent * 100) + '%';
+            currentTimeEl.textContent = formatTime(newTime);
         }
 
         audioPlayer.addEventListener('play', updatePlayButton);
         audioPlayer.addEventListener('pause', updatePlayButton);
 
         loadMusicList();
+    </script>
+    
+    <script src="./assets/js/effects.js"></script>
+    <script>
+        // 页面加载完成后初始化背景加载
+        document.addEventListener('DOMContentLoaded', async () => {
+            // 初始化图片加载器，为音乐页面添加背景
+            const imageLoader = new ImageLoader('./img/背景.png');
+            await imageLoader.loadImages();
+        });
     </script>
 </body>
 </html>

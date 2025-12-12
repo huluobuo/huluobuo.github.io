@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<!--
+    图片库页面
+    主要功能：
+    - 图片列表展示和搜索
+    - 图片查看器（支持大图查看）
+    - 图片下载功能
+    - 图片导航（上一张/下一张）
+    - 支持键盘导航
+-->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>图片库 - huluobuo</title>
+    <link rel="stylesheet" href="./assets/css/images.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- 背景图片加载器 -->
+    <div id="backgroundLoader" class="background-loader">
+        <div class="loading-text">加载中...</div>
+    </div>
+    
+    <!-- GitHub风格头部 -->
+    <header class="github-header">
+        <div class="header-content">
+            <a href="index.html" class="back-link">
+                <i class="fas fa-arrow-left"></i> 返回首页
+            </a>
+            <h1>图片库</h1>
+        </div>
+    </header>
+    
+    <!-- GitHub风格主内容区域 -->
+    <main class="github-main">
+        <!-- 搜索框 -->
+        <div class="search-section">
+            <div class="search-box">
+                <input type="text" class="search-input" id="searchInput" placeholder="搜索图片...">
+                <i class="fas fa-search search-icon"></i>
+            </div>
+        </div>
+        
+        <!-- 统计信息 -->
+        <div class="stats" id="stats">共 <span id="totalCount">0</span> 张图片</div>
+        
+        <!-- 图片列表 -->
+        <section class="image-section">
+            <div class="image-grid" id="imageGrid">
+                <div class="loading">
+                    <i class="fas fa-spinner fa-spin"></i> 加载中...
+                </div>
+            </div>
+        </section>
+        
+        <!-- 图片查看器 -->
+        <div class="image-viewer" id="imageViewer">
+            <div class="image-viewer-content">
+                <button class="close-btn" id="closeViewer"><i class="fas fa-times"></i></button>
+                <button class="nav-btn prev-btn" id="prevImage"><i class="fas fa-chevron-left"></i></button>
+                <button class="nav-btn next-btn" id="nextImage"><i class="fas fa-chevron-right"></i></button>
+                <div class="zoom-controls">
+                    <button class="zoom-btn zoom-out" id="zoomOut"><i class="fas fa-search-minus"></i></button>
+                    <button class="zoom-btn zoom-reset" id="zoomReset"><i class="fas fa-sync-alt"></i></button>
+                    <button class="zoom-btn zoom-in" id="zoomIn"><i class="fas fa-search-plus"></i></button>
+                    <button class="zoom-btn rotate" id="rotate"><i class="fas fa-redo"></i></button>
+                </div>
+                <img src="" alt="查看图片" class="viewer-image" id="viewerImage">
+                <div class="image-info" id="viewerImageInfo"></div>
+            </div>
+        </div>
+    </main>
+
+    <script src="./assets/js/effects.js"></script>
+    <script>
+        // 页面加载完成后初始化背景加载
+        document.addEventListener('DOMContentLoaded', async () => {
+            // 初始化图片加载器，为图片页面添加背景
+            const imageLoader = new ImageLoader('./img/背景.png');
+            await imageLoader.loadImages();
+        });
+        
+        let imageList = [];
+        let filteredList = [];
+        let currentViewIndex = -1;
+        // 图片缩放相关变量
+        let currentZoom = 1;
+        let minZoom = 0.5;
+        let maxZoom = 3;
+        let zoomStep = 0.25;
+        // 图片旋转相关变量
+        let currentRotation = 0;
+        const rotationStep = 90;
+        // 拖拽相关变量
+        let isDragging = false;
+        let startX, startY, translateX = 0, translateY = 0;
+        
+        const imageGrid = document.getElementById('imageGrid');
+        const searchInput = document.getElementById('searchInput');
+        const totalCountEl = document.getElementById('totalCount');
+        const imageViewer = document.getElementById('imageViewer');
+        const viewerImage = document.getElementById('viewerImage');
+        const viewerImageInfo = document.getElementById('viewerImageInfo');
+        const closeViewer = document.getElementById('closeViewer');
+        const prevImage = document.getElementById('prevImage');
+        const nextImage = document.getElementById('nextImage');
+        const zoomIn = document.getElementById('zoomIn');
+        const zoomOut = document.getElementById('zoomOut');
+        const zoomReset = document.getElementById('zoomReset');
+        const rotate = document.getElementById('rotate');
+        
+        // 获取图片文件路径
+        function getImagePath(imageName) {
+            return `./images/${imageName}`;
+        }
+        
+        function loadImageList() {
+            fetch('./api/imagelist.json')
+                .then(response => response.json())
+                .then(data => {
+                    imageList = data;
+                    filteredList = data;
+                    totalCountEl.textContent = data.length;
+                    renderImageGrid();
+                })
+                .catch(error => {
+                    document.getElementById('imageGrid').innerHTML = 
+                        '<div class="loading">加载失败，请稍后重试</div>';
+                    console.error('加载图片列表失败:', error);
+                });
+        }
+        
+        function renderImageGrid() {
+            const imageGridEl = document.getElementById('imageGrid');
+            imageGridEl.innerHTML = '';
+
+            if (filteredList.length === 0) {
+                imageGridEl.innerHTML = '<div class="loading">没有找到匹配的图片</div>';
+                totalCountEl.textContent = '0';
+                return;
+            }
+
+            totalCountEl.textContent = filteredList.length;
+
+            filteredList.forEach((image, index) => {
+                const imageItem = document.createElement('div');
+                imageItem.className = 'image-item';
+                imageItem.style.animationDelay = `${index * 0.03}s`;
+                
+                imageItem.innerHTML = `
+                    <div class="image-container">
+                        <img src="${getImagePath(image)}" alt="${image}" class="image-thumbnail" loading="lazy">
+                        <div class="image-overlay">
+                            <div class="image-name">${image}</div>
+                            <div class="image-actions">
+                                <button class="action-btn view-btn" onclick="viewImage(${index})">
+                                    <i class="fas fa-eye"></i> 查看
+                                </button>
+                                <button class="action-btn download-btn" onclick="downloadImage('${getImagePath(image)}', '${image}')">
+                                    <i class="fas fa-download"></i> 下载
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                imageItem.addEventListener('click', (e) => {
+                    if (!e.target.closest('.action-btn')) {
+                        viewImage(index);
+                    }
+                });
+                
+                imageGridEl.appendChild(imageItem);
+            });
+        }
+        
+        // 查看图片
+        function viewImage(index) {
+            if (index < 0 || index >= filteredList.length) return;
+            
+            currentViewIndex = index;
+            const imageName = filteredList[index];
+            const imagePath = getImagePath(imageName);
+            
+            // 重置缩放和拖拽状态
+            resetZoom();
+            
+            viewerImage.src = imagePath;
+            viewerImageInfo.textContent = imageName;
+            imageViewer.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+        
+        // 缩放图片
+        function zoomImage(scale) {
+            currentZoom = Math.max(minZoom, Math.min(maxZoom, scale));
+            updateImageTransform();
+        }
+        
+        // 更新图片变换
+        function updateImageTransform() {
+            viewerImage.style.transform = `scale(${currentZoom}) rotate(${currentRotation}deg) translate(${translateX}px, ${translateY}px)`;
+        }
+        
+        // 放大图片
+        function handleZoomIn() {
+            zoomImage(currentZoom + zoomStep);
+        }
+        
+        // 缩小图片
+        function handleZoomOut() {
+            zoomImage(currentZoom - zoomStep);
+        }
+        
+        // 旋转图片
+        function handleRotate() {
+            currentRotation = (currentRotation + rotationStep) % 360;
+            updateImageTransform();
+        }
+        
+        // 重置图片变换
+        function resetZoom() {
+            currentZoom = 1;
+            currentRotation = 0;
+            translateX = 0;
+            translateY = 0;
+            updateImageTransform();
+        }
+        
+        // 下载图片
+        function downloadImage(imageUrl, imageName) {
+            const a = document.createElement('a');
+            a.href = imageUrl;
+            a.download = imageName;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+        
+        // 关闭图片查看器
+        closeViewer.addEventListener('click', () => {
+            imageViewer.style.display = 'none';
+            document.body.style.overflow = 'auto';
+            currentViewIndex = -1;
+            // 重置缩放和拖拽状态
+            resetZoom();
+        });
+        
+        // 放大按钮事件
+        zoomIn.addEventListener('click', handleZoomIn);
+        
+        // 缩小按钮事件
+        zoomOut.addEventListener('click', handleZoomOut);
+        
+        // 重置缩放按钮事件
+        zoomReset.addEventListener('click', resetZoom);
+        
+        // 旋转按钮事件
+        rotate.addEventListener('click', handleRotate);
+        
+        // 鼠标滚轮缩放
+        imageViewer.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            if (e.deltaY < 0) {
+                // 向上滚动，放大
+                handleZoomIn();
+            } else {
+                // 向下滚动，缩小
+                handleZoomOut();
+            }
+        });
+        
+        // 拖拽功能
+        viewerImage.addEventListener('mousedown', (e) => {
+            if (currentZoom === 1) return; // 只有放大时才能拖拽
+            isDragging = true;
+            startX = e.clientX - translateX;
+            startY = e.clientY - translateY;
+            viewerImage.style.cursor = 'grabbing';
+        });
+        
+        document.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            
+            translateX = e.clientX - startX;
+            translateY = e.clientY - startY;
+            updateImageTransform();
+        });
+        
+        document.addEventListener('mouseup', () => {
+            isDragging = false;
+            viewerImage.style.cursor = currentZoom === 1 ? 'default' : 'grab';
+        });
+        
+        // 点击查看器外部关闭
+        imageViewer.addEventListener('click', (e) => {
+            if (e.target === imageViewer) {
+                closeViewer.click();
+            }
+        });
+        
+        // 查看上一张图片
+        prevImage.addEventListener('click', () => {
+            if (currentViewIndex > 0) {
+                viewImage(currentViewIndex - 1);
+            } else {
+                viewImage(filteredList.length - 1);
+            }
+        });
+        
+        // 查看下一张图片
+        nextImage.addEventListener('click', () => {
+            if (currentViewIndex < filteredList.length - 1) {
+                viewImage(currentViewIndex + 1);
+            } else {
+                viewImage(0);
+            }
+        });
+        
+        // 点击查看器外部关闭
+        imageViewer.addEventListener('click', (e) => {
+            if (e.target === imageViewer) {
+                closeViewer.click();
+            }
+        });
+        
+        // 键盘导航
+        document.addEventListener('keydown', (e) => {
+            if (imageViewer.style.display === 'flex') {
+                if (e.key === 'Escape') {
+                    closeViewer.click();
+                } else if (e.key === 'ArrowLeft') {
+                    prevImage.click();
+                } else if (e.key === 'ArrowRight') {
+                    nextImage.click();
+                }
+            }
+        });
+        
+        // 搜索功能
+        searchInput.addEventListener('input', (e) => {
+            const keyword = e.target.value.toLowerCase();
+            filteredList = imageList.filter(image => 
+                image.toLowerCase().includes(keyword)
+            );
+            renderImageGrid();
+        });
+        
+        // 初始化加载图片列表
+        loadImageList();
+    </script>
+</body>
+</html>

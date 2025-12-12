@@ -1,10 +1,18 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+<!--
+    huluobuo的个人网站首页
+    主要功能：
+    - 展示个人信息和统计数据
+    - 提供音乐库、文件库和图片库的入口
+    - 显示GitHub仓库信息
+    - 实现滚动特效和视差效果
+-->
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>huluobuo的个人网站</title>
-    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="./assets/css/style.css">
 </head>
 <body>
     <!-- 背景图片加载器 -->
@@ -82,6 +90,18 @@
                     </div>
                 </a>
 
+                <a href="./images.html" class="repo-card">
+                    <div class="repo-header">
+                        <h3 class="repo-title">🖼️ 图片库</h3>
+                        <span class="repo-badge">Public</span>
+                    </div>
+                    <p class="repo-description">收藏的各类图片和壁纸</p>
+                    <div class="repo-meta">
+                        <span class="repo-language">Images</span>
+                        <span class="repo-stats">0 张图片</span>
+                    </div>
+                </a>
+
                 <!-- GitHub仓库模块 -->
                 <div class="repo-card github-repos" id="githubReposSection">
                     <div class="repo-header">
@@ -109,7 +129,7 @@
         </footer>
     </div>
 
-    <script src="./js/effects.js"></script>
+    <script src="./assets/js/effects.js"></script>
 </body>
 </html>
 
