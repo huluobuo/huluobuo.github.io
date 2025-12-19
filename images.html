@@ -57,16 +57,16 @@
         <!-- 图片查看器 -->
         <div class="image-viewer" id="imageViewer">
             <div class="image-viewer-content">
-                <button class="close-btn" id="closeViewer"><i class="fas fa-times"></i></button>
-                <button class="nav-btn prev-btn" id="prevImage"><i class="fas fa-chevron-left"></i></button>
-                <button class="nav-btn next-btn" id="nextImage"><i class="fas fa-chevron-right"></i></button>
+                <button type="button" class="close-btn" id="closeViewer" aria-label="关闭查看器"><i class="fas fa-times"></i></button>
+                <button type="button" class="nav-btn prev-btn" id="prevImage" aria-label="上一张图片"><i class="fas fa-chevron-left"></i></button>
+                <button type="button" class="nav-btn next-btn" id="nextImage" aria-label="下一张图片"><i class="fas fa-chevron-right"></i></button>
                 <div class="zoom-controls">
-                    <button class="zoom-btn zoom-out" id="zoomOut"><i class="fas fa-search-minus"></i></button>
-                    <button class="zoom-btn zoom-reset" id="zoomReset"><i class="fas fa-sync-alt"></i></button>
-                    <button class="zoom-btn zoom-in" id="zoomIn"><i class="fas fa-search-plus"></i></button>
-                    <button class="zoom-btn rotate" id="rotate"><i class="fas fa-redo"></i></button>
+                    <button type="button" class="zoom-btn zoom-out" id="zoomOut" aria-label="缩小"><i class="fas fa-search-minus"></i></button>
+                    <button type="button" class="zoom-btn zoom-reset" id="zoomReset" aria-label="重置缩放"><i class="fas fa-sync-alt"></i></button>
+                    <button type="button" class="zoom-btn zoom-in" id="zoomIn" aria-label="放大"><i class="fas fa-search-plus"></i></button>
+                    <button type="button" class="zoom-btn rotate" id="rotate" aria-label="旋转图片"><i class="fas fa-redo"></i></button>
                 </div>
-                <img src="" alt="查看图片" class="viewer-image" id="viewerImage">
+                <img alt="查看图片" class="viewer-image" id="viewerImage" loading="lazy">
                 <div class="image-info" id="viewerImageInfo"></div>
             </div>
         </div>
@@ -150,14 +150,14 @@
                 
                 imageItem.innerHTML = `
                     <div class="image-container">
-                        <img src="${getImagePath(image)}" alt="${image}" class="image-thumbnail" loading="lazy">
+                        <img src="${getImagePath(image)}" alt="${image}" class="image-thumbnail" loading="lazy" onload="this.classList.add('loaded')">
                         <div class="image-overlay">
                             <div class="image-name">${image}</div>
                             <div class="image-actions">
-                                <button class="action-btn view-btn" onclick="viewImage(${index})">
+                                <button class="action-btn view-btn" onclick="viewImage(${index})" aria-label="查看图片 ${image}">
                                     <i class="fas fa-eye"></i> 查看
                                 </button>
-                                <button class="action-btn download-btn" onclick="downloadImage('${getImagePath(image)}', '${image}')">
+                                <button class="action-btn download-btn" onclick="downloadImage('${getImagePath(image)}', '${image}')" aria-label="下载图片 ${image}">
                                     <i class="fas fa-download"></i> 下载
                                 </button>
                             </div>
