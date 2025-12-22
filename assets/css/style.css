@@ -5,28 +5,35 @@
     /* 主色调 */
     --primary-color: #58a6ff;
     --primary-hover: #79c0ff;
+    --primary-light: rgba(88, 166, 255, 0.1);
+    --primary-dark: #1f6feb;
     
     /* 背景色 */
     --bg-dark: #0d1117;
     --bg-darker: #0a0d13;
     --bg-light: #161b22;
-    --bg-card: #0d1117;
+    --bg-card: rgba(13, 17, 23, 0.9);
     --bg-overlay: rgba(0, 0, 0, 0.3);
+    --bg-gradient: linear-gradient(135deg, #0d1117 0%, #161b22 50%, #0a0d13 100%);
     
     /* 边框色 */
     --border-color: #30363d;
     --border-hover: #58a6ff;
+    --border-light: #484f58;
     
     /* 文字色 */
     --text-primary: #f0f6fc;
     --text-secondary: #8b949e;
     --text-muted: #6e7681;
+    --text-light: #c9d1d9;
     
     /* 状态色 */
     --success-color: #3fb950;
     --success-bg: rgba(35, 134, 54, 0.2);
     --danger-color: #f85149;
     --danger-bg: rgba(248, 81, 73, 0.2);
+    --warning-color: #d29922;
+    --warning-bg: rgba(210, 153, 34, 0.2);
     
     /* 间距 */
     --spacing-xs: 0.5rem;
@@ -46,6 +53,11 @@
     --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.1);
     --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.3);
     --shadow-lg: 0 8px 32px rgba(88, 166, 255, 0.15);
+    --shadow-glow: 0 0 20px rgba(88, 166, 255, 0.3);
+    
+    /* 渐变 */
+    --gradient-primary: linear-gradient(135deg, #58a6ff 0%, #1f6feb 100%);
+    --gradient-card: linear-gradient(135deg, rgba(13, 17, 23, 0.9) 0%, rgba(22, 27, 34, 0.9) 100%);
 }
 
 * {
@@ -211,7 +223,7 @@ body::before {
 .github-header {
     background: var(--bg-dark);
     border-bottom: 1px solid var(--border-color);
-    padding: var(--spacing-xl) var(--spacing-lg) var(--spacing-lg);
+    padding: clamp(1.5rem, 4vw, 3rem) clamp(1rem, 3vw, 2rem) clamp(1rem, 3vw, 1.5rem);
 }
 
 .header-content {
@@ -219,18 +231,19 @@ body::before {
     margin: 0 auto;
     display: flex;
     flex-direction: column;
-    gap: 2rem;
+    gap: clamp(1rem, 3vw, 2rem);
 }
 
 .profile-section {
     display: flex;
     align-items: center;
-    gap: 1.5rem;
+    gap: clamp(1rem, 3vw, 1.5rem);
+    flex-wrap: wrap;
 }
 
 .profile-avatar {
-    width: 120px;
-    height: 120px;
+    width: clamp(80px, 20vw, 120px);
+    height: clamp(80px, 20vw, 120px);
     border-radius: var(--radius-full);
     border: 3px solid var(--border-color);
     transition: transform 0.3s ease;
@@ -241,36 +254,39 @@ body::before {
 }
 
 .profile-info h1 {
-    font-size: 2.5rem;
+    font-size: clamp(1.8rem, 5vw, 2.5rem);
     font-weight: 600;
     color: var(--text-primary);
     margin-bottom: var(--spacing-xs);
 }
 
 .profile-bio {
-    font-size: 1.2rem;
+    font-size: clamp(1rem, 3vw, 1.2rem);
     color: var(--text-secondary);
     margin: 0;
 }
 
 .stats-section {
     display: flex;
-    gap: 2rem;
+    gap: clamp(1rem, 3vw, 2rem);
     flex-wrap: wrap;
+    justify-content: center;
 }
 
 .stat {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: var(--spacing-sm);
+    padding: clamp(0.75rem, 2vw, 1rem);
     background: var(--bg-card);
     border-radius: var(--radius-md);
     border: 1px solid var(--border-color);
     transition: all 0.3s ease;
-    min-width: 120px;
+    min-width: clamp(100px, 20vw, 120px);
     opacity: 0;
     animation: fadeInUp 0.5s ease forwards;
+    flex: 1;
+    max-width: 150px;
 }
 
 .stat:nth-child(1) { animation-delay: 0.1s; }
@@ -302,13 +318,21 @@ body::before {
 .github-main {
     max-width: 1280px;
     margin: 0 auto;
-    padding: 3rem 2rem;
+    padding: 3rem clamp(1rem, 4vw, 2rem);
 }
 
 .repo-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
     gap: 2rem;
+    align-items: start;
+}
+
+@media (max-width: 768px) {
+    .repo-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
 }
 
 .github-repos {
@@ -319,27 +343,42 @@ body::before {
 
 .repo-card {
     display: block;
-    background: var(--bg-card);
+    background: var(--gradient-card);
     border: 1px solid var(--border-color);
     border-radius: var(--radius-md);
     padding: var(--spacing-md);
     text-decoration: none;
     color: inherit;
-    transition: all 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     overflow: hidden;
     opacity: 0;
     animation: fadeInUp 0.5s ease forwards;
+    backdrop-filter: blur(10px);
+    box-shadow: var(--shadow-md);
 }
 
-.repo-card:nth-child(1) { animation-delay: 0.1s; }
-.repo-card:nth-child(2) { animation-delay: 0.2s; }
-.repo-card:nth-child(3) { animation-delay: 0.3s; }
+.repo-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: var(--gradient-primary);
+    opacity: 0.1;
+    transition: left 0.6s ease;
+    z-index: 0;
+}
+
+.repo-card:hover::before {
+    left: 0;
+}
 
 .repo-card:hover {
-    transform: translateY(-4px);
+    transform: translateY(-6px) scale(1.02);
     border-color: var(--border-hover);
-    box-shadow: var(--shadow-lg);
+    box-shadow: var(--shadow-lg), var(--shadow-glow);
 }
 
 .repo-header {
@@ -347,6 +386,8 @@ body::before {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 1rem;
+    position: relative;
+    z-index: 1;
 }
 
 .repo-title {
@@ -354,6 +395,10 @@ body::before {
     font-weight: 600;
     color: var(--text-primary);
     margin: 0;
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
 .repo-badge {
@@ -364,39 +409,315 @@ body::before {
     font-size: 0.8rem;
     font-weight: 500;
     border: 1px solid rgba(35, 134, 54, 0.3);
+    transition: all 0.3s ease;
+}
+
+.repo-badge:hover {
+    transform: scale(1.05);
+    box-shadow: 0 2px 8px rgba(63, 185, 80, 0.3);
 }
 
 .repo-description {
-    color: var(--text-secondary);
+    color: var(--text-light);
     margin-bottom: var(--spacing-sm);
-    line-height: 1.5;
+    line-height: 1.6;
+    position: relative;
+    z-index: 1;
 }
 
 .repo-meta {
     display: flex;
     gap: var(--spacing-sm);
     align-items: center;
+    position: relative;
+    z-index: 1;
 }
 
 .repo-language {
-    background: rgba(88, 166, 255, 0.1);
+    background: var(--primary-light);
     color: var(--primary-color);
     padding: 0.25rem 0.75rem;
     border-radius: var(--radius-pill);
     font-size: 0.8rem;
     font-weight: 500;
+    border: 1px solid rgba(88, 166, 255, 0.2);
+    transition: all 0.3s ease;
+}
+
+.repo-language:hover {
+    background: rgba(88, 166, 255, 0.2);
+    transform: scale(1.05);
 }
 
 .repo-stats {
     color: var(--text-secondary);
     font-size: 0.8rem;
+    transition: color 0.3s ease;
 }
 
-/* GitHub仓库模块样式 */
-.github-repos {
-    background: var(--bg-card);
+.repo-card:hover .repo-stats {
+    color: var(--text-light);
+}
+/* 增强的动画效果 */
+@keyframes slideInFromBottom {
+    from {
+        opacity: 0;
+        transform: translateY(50px) scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: -200% 0;
+    }
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+/* 增强的滚动指示器动画 */
+.scroll-indicator {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    animation: float 3s ease-in-out infinite;
+}
+
+.scroll-arrow {
+    font-size: 1.5rem;
+    color: var(--primary-color);
+    animation: bounce 2s infinite;
+}
+
+.scroll-hint {
+    font-size: 0.9rem;
+    color: var(--text-light);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    opacity: 0.8;
+}
+
+/* 增强的统计卡片动画 */
+.stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: clamp(0.75rem, 2vw, 1rem);
+    background: var(--gradient-card);
+    border-radius: var(--radius-md);
     border: 1px solid var(--border-color);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    min-width: clamp(100px, 20vw, 120px);
+    opacity: 0;
+    animation: fadeInUp 0.5s ease forwards;
+    flex: 1;
+    max-width: 150px;
+    backdrop-filter: blur(10px);
+    box-shadow: var(--shadow-sm);
+}
+
+.stat:hover {
+    background: var(--bg-light);
+    border-color: var(--border-hover);
+    transform: translateY(-4px) scale(1.05);
+    box-shadow: var(--shadow-lg), var(--shadow-glow);
+}
+
+.stat-number {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 0.25rem;
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    transition: all 0.3s ease;
+}
+
+.stat:hover .stat-number {
+    animation: pulse 0.5s ease;
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: color 0.3s ease;
+}
+
+.stat:hover .stat-label {
+    color: var(--text-light);
+}
+
+/* 加载动画优化 */
+.loading-text {
+    color: var(--primary-color);
+    font-size: 1.2em;
+    font-weight: 500;
     position: relative;
+}
+
+.loading-text::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    background: var(--gradient-primary);
+    bottom: -5px;
+    left: 0;
+    animation: shimmer 2s infinite;
+    background-size: 200% 100%;
+}
+
+/* 头像悬停效果增强 */
+.profile-avatar {
+    width: clamp(80px, 20vw, 120px);
+    height: clamp(80px, 20vw, 120px);
+    border-radius: var(--radius-full);
+    border: 3px solid var(--border-color);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.profile-avatar::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--gradient-primary);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    border-radius: var(--radius-full);
+}
+
+.profile-avatar:hover {
+    transform: scale(1.1) rotate(5deg);
+    border-color: var(--primary-color);
+    box-shadow: var(--shadow-glow);
+}
+
+.profile-avatar:hover::before {
+    opacity: 0.1;
+}
+
+/* 滚动到顶部按钮 */
+.scroll-to-top {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    width: 50px;
+    height: 50px;
+    background: var(--gradient-primary);
+    border: none;
+    border-radius: var(--radius-full);
+    color: white;
+    font-size: 1.2rem;
+    cursor: pointer;
+    opacity: 0;
+    transform: translateY(100px);
+    transition: all 0.3s ease;
+    z-index: 1000;
+    box-shadow: var(--shadow-lg);
+}
+
+.scroll-to-top.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.scroll-to-top:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-glow);
+}
+
+/* 页面加载动画 */
+.page-load-animation {
+    animation: slideInFromBottom 0.8s ease-out;
+}
+
+/* 平滑滚动 */
+html {
+    scroll-behavior: smooth;
+}
+
+/* 移动端优化 */
+@media (max-width: 768px) {
+    .scroll-to-top {
+        bottom: 1rem;
+        right: 1rem;
+        width: 45px;
+        height: 45px;
+        font-size: 1rem;
+    }
+    
+    .profile-section {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+    }
+    
+    .stats-section {
+        gap: 0.75rem;
+    }
+    
+    .stat {
+        min-width: 80px;
+        padding: 0.5rem;
+    }
+    
+    .stat-number {
+        font-size: 1.4rem;
+    }
+    
+    .repo-card {
+        padding: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .github-main {
+        padding: 2rem 1rem;
+    }
+    
+    .repo-grid {
+        gap: 1rem;
+    }
+    
+    .repo-title {
+        font-size: 1.1rem;
+    }
+    
+    .repo-description {
+        font-size: 0.9rem;
+    }
 }
 
 .github-repos::before {

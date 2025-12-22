@@ -15,6 +15,12 @@
     transition: opacity 0.5s ease;
 }
 
+/* 隐藏播放模式按钮和音量控制 */
+.play-mode-btn,
+.volume-control {
+    display: none !important;
+}
+
 /* 背景模糊和迷雾蒙版效果 */
 body::before {
     content: '';
@@ -105,11 +111,18 @@ body {
     flex: 1;
 }
 
-/* 主内容区域 */
+/* 主内容区域 - 应用主页优化 */
 .github-main {
-    max-width: 1200px;
+    max-width: 1280px;
     margin: 0 auto;
-    padding: 2rem;
+    padding: 3rem clamp(1rem, 4vw, 2rem);
+    background: rgba(13, 17, 23, 0.7);
+    backdrop-filter: blur(10px);
+    border-radius: 12px;
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(48, 54, 61, 0.3);
 }
 
 /* 播放器容器 */
@@ -210,7 +223,7 @@ body {
 /* 控制区域 */
 .control-section {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
     flex-wrap: wrap;
     gap: 1.5rem;
@@ -473,6 +486,44 @@ body {
     opacity: 1;
 }
 
+/* 音乐操作按钮 */
+.music-actions {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.action-btn {
+    background: #21262d;
+    border: 1px solid #30363d;
+    border-radius: 4px;
+    color: #8b949e;
+    font-size: 0.7rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+}
+
+.action-btn:hover,
+.action-btn:focus {
+    background: #30363d;
+    border-color: #58a6ff;
+    color: #c9d1d9;
+    outline: 2px solid #58a6ff;
+    outline-offset: 2px;
+}
+
+.download-btn:hover {
+    background: #2ea043;
+    border-color: #2ea043;
+    color: #f0f6fc;
+}
+
 .loading {
     text-align: center;
     color: #8b949e;
@@ -556,5 +607,63 @@ body {
     
     .music-name {
         font-size: 0.9rem;
+    }
+    
+    .action-btn {
+        width: 24px;
+        height: 24px;
+        font-size: 0.6rem;
+    }
+}
+
+/* 下载提示样式 */
+.download-toast {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: #0d1117;
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    padding: 1rem 1.5rem;
+    color: #c9d1d9;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    z-index: 10000;
+    transform: translateX(100%);
+    opacity: 0;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    max-width: 300px;
+}
+
+.download-toast.show {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+.download-toast.success {
+    border-color: #2ea043;
+    background: rgba(46, 160, 67, 0.1);
+}
+
+.download-toast.success i {
+    color: #2ea043;
+}
+
+.download-toast i {
+    font-size: 1.1rem;
+    color: #58a6ff;
+}
+
+/* 移动端下载提示优化 */
+@media (max-width: 768px) {
+    .download-toast {
+        top: 10px;
+        right: 10px;
+        left: 10px;
+        max-width: none;
+        padding: 0.75rem 1rem;
     }
 }

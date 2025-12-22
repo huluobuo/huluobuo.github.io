@@ -134,6 +134,57 @@
             return `./musics/${musicName}.mp3`;
         }
 
+        // 下载音乐
+        function downloadMusic(musicUrl, musicName) {
+            // 显示下载提示
+            showDownloadToast('开始下载: ' + musicName);
+            
+            // 创建下载链接
+            const a = document.createElement('a');
+            a.href = musicUrl;
+            a.download = musicName + '.mp3';
+            
+            // 添加下载完成事件
+            a.addEventListener('click', function() {
+                setTimeout(() => {
+                    showDownloadToast('下载完成: ' + musicName, 'success');
+                }, 1000);
+            });
+            
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+        
+        // 显示下载提示
+        function showDownloadToast(message, type = 'info') {
+            // 创建提示元素
+            const toast = document.createElement('div');
+            toast.className = `download-toast ${type}`;
+            toast.innerHTML = `
+                <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-info-circle'}"></i>
+                <span>${message}</span>
+            `;
+            
+            // 添加到页面
+            document.body.appendChild(toast);
+            
+            // 显示动画
+            setTimeout(() => {
+                toast.classList.add('show');
+            }, 10);
+            
+            // 3秒后自动移除
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => {
+                    if (toast.parentNode) {
+                        document.body.removeChild(toast);
+                    }
+                }, 300);
+            }, 3000);
+        }
+
         function playMusic(index) {
             if (index < 0 || index >= filteredList.length) return;
             
@@ -206,6 +257,11 @@
                     <div class="music-info">
                         <div class="music-name">${music}</div>
                         <div class="play-indicator">正在播放...</div>
+                    </div>
+                    <div class="music-actions">
+                        <button class="action-btn download-btn" onclick="downloadMusic('${getMusicPath(music)}', '${music}')" aria-label="下载歌曲 ${music}">
+                            <i class="fas fa-download"></i>
+                        </button>
                     </div>
                 `;
                 

@@ -38,6 +38,8 @@ huluobuo.github.io/
 │   └── get_musiclist.py  # 生成音乐列表的Python脚本
 ├── .gitignore            # Git忽略文件
 ├── README.md             # 项目说明文档
+├── LICENSE               # 开源许可证文件
+├── CHANGELOG.md          # 更新日志
 ├── index.html            # 首页
 ├── music.html            # 音乐库页面
 ├── file.html             # 文件库页面
@@ -70,16 +72,27 @@ huluobuo.github.io/
 ## 未来计划
 
 - 支持歌词显示
-- 添加搜索功能
-- 优化图片浏览体验
-- 增加更多文件类型支持
+- 减少体积
 
 ### PS
 
 - 所有文件、音频均为个人分享，不用于任何商业用途。
 - 如果有其他文件或音乐需要分享，请联系我。
 - 如果你有其他建议的话，也欢迎联系我。
-- 联系方式： 邮箱：[hu_luo_buo@outlook.com](mailto:hu_luo_buo@outlook.com)
+- 联系方式： 邮箱：[hu_luo_buo@outlook.com](mailto:hu_luo_buo@outlook.com) （但是我很少看邮件）
+
+## Q&A
+
+```
+  Q: 音乐库中的音乐是否可以用于商业用途或者个人使用？
+  A: 如果不是用于盈利，个人或社区等可以免费使用。
+
+  Q：可以随便使用 ** api ** 吗并使用吗？
+  A：可以，这些文件全部公开，随意使用。（如果是非盈利性的）。
+
+  Q：可以借鉴、更改或使用这个网页吗？
+  A：可以。
+```
 
 ## License
 

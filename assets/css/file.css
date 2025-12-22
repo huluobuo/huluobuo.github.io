@@ -105,11 +105,18 @@ body {
     flex: 1;
 }
 
-/* 主内容区域 */
+/* 主内容区域 - 应用主页优化 */
 .github-main {
-    max-width: 1200px;
+    max-width: 1280px;
     margin: 0 auto;
-    padding: 2rem;
+    padding: 3rem clamp(1rem, 4vw, 2rem);
+    background: rgba(13, 17, 23, 0.7);
+    backdrop-filter: blur(10px);
+    border-radius: 12px;
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(48, 54, 61, 0.3);
 }
 
 /* 搜索框 */

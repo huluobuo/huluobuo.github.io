@@ -543,3 +543,55 @@ button:focus-visible {
         right: 0.5rem;
     }
 }
+
+/* 下载提示样式 */
+.download-toast {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: var(--bg-dark);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 1rem 1.5rem;
+    color: var(--text-primary);
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    z-index: 10000;
+    transform: translateX(100%);
+    opacity: 0;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    max-width: 300px;
+}
+
+.download-toast.show {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+.download-toast.success {
+    border-color: var(--success-color);
+    background: rgba(46, 160, 67, 0.1);
+}
+
+.download-toast.success i {
+    color: var(--success-color);
+}
+
+.download-toast i {
+    font-size: 1.1rem;
+    color: var(--primary-color);
+}
+
+/* 移动端下载提示优化 */
+@media (max-width: 768px) {
+    .download-toast {
+        top: 10px;
+        right: 10px;
+        left: 10px;
+        max-width: none;
+        padding: 0.75rem 1rem;
+    }
+}
