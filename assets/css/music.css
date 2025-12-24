@@ -1,114 +1,14 @@
+@import url('./style.css');
+@import url('./common.css');
+
 /* GitHub风格音乐播放器样式 */
 
-/* 背景图片加载器 */
-.background-loader {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: #0d1117;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-    transition: opacity 0.5s ease;
-}
+/* 引入基础样式 */
 
 /* 隐藏播放模式按钮和音量控制 */
 .play-mode-btn,
 .volume-control {
     display: none !important;
-}
-
-/* 背景模糊和迷雾蒙版效果 */
-body::before {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: url('../img/背景.png') center/cover no-repeat;
-    filter: blur(8px) brightness(0.7);
-    transform: scale(1.1);
-    z-index: -2;
-}
-
-/* 迷雾蒙版效果 */
-body::after {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.3);
-    z-index: -1;
-}
-
-.background-loader.hidden {
-    opacity: 0;
-    pointer-events: none;
-}
-
-.loading-text {
-    color: #58a6ff;
-    font-size: 1.2em;
-    font-weight: 500;
-}
-
-/* 全局样式 */
-body {
-    margin: 0;
-    padding: 0;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-    background: #0d1117;
-    color: #c9d1d9;
-    min-height: 100vh;
-    line-height: 1.5;
-}
-
-/* GitHub风格头部 */
-.github-header {
-    background: #161b22;
-    border-bottom: 1px solid #30363d;
-    padding: 2rem 2rem 1.5rem;
-    position: relative;
-}
-
-.header-content {
-    max-width: 1200px;
-    margin: 0 auto;
-    display: flex;
-    align-items: center;
-    gap: 2rem;
-}
-
-.back-link {
-    color: #58a6ff;
-    text-decoration: none;
-    font-size: 0.9rem;
-    font-weight: 500;
-    padding: 0.5rem 1rem;
-    border: 1px solid #30363d;
-    border-radius: 6px;
-    transition: all 0.2s;
-    background: #0d1117;
-}
-
-.back-link:hover {
-    background: #1c2128;
-    border-color: #58a6ff;
-    color: #79c0ff;
-}
-
-.header-content h1 {
-    margin: 0;
-    font-size: 2rem;
-    font-weight: 600;
-    color: #f0f6fc;
-    flex: 1;
 }
 
 /* 主内容区域 - 应用主页优化 */
@@ -118,25 +18,25 @@ body {
     padding: 3rem clamp(1rem, 4vw, 2rem);
     background: rgba(13, 17, 23, 0.7);
     backdrop-filter: blur(10px);
-    border-radius: 12px;
+    border-radius: var(--radius-md);
     margin-top: 1rem;
     margin-bottom: 2rem;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    box-shadow: var(--shadow-md);
     border: 1px solid rgba(48, 54, 61, 0.3);
 }
 
 /* 播放器容器 */
 .player-section {
-    background: #0d1117;
-    border: 1px solid #30363d;
-    border-radius: 6px;
+    background: var(--bg-dark);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
     padding: 2rem;
     margin-bottom: 2rem;
 }
 
 .now-playing {
     font-size: 0.9rem;
-    color: #8b949e;
+    color: var(--text-secondary);
     margin-bottom: 0.5rem;
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -145,7 +45,7 @@ body {
 .current-song {
     font-size: 1.5rem;
     font-weight: 600;
-    color: #f0f6fc;
+    color: var(--text-primary);
     margin-bottom: 1.5rem;
     min-height: 2rem;
 }
@@ -158,8 +58,8 @@ body {
 .progress-bar {
     width: 100%;
     height: 8px;
-    background: #21262d;
-    border-radius: 4px;
+    background: var(--bg-light);
+    border-radius: var(--radius-sm);
     cursor: pointer;
     position: relative;
     overflow: hidden;
@@ -167,17 +67,17 @@ body {
 }
 
 .progress-bar:hover {
-    background: #30363d;
+    background: var(--border-color);
 }
 
 .progress-bar.dragging {
-    background: #40464d;
+    background: var(--border-light);
 }
 
 .progress {
     height: 100%;
-    background: #2ea043;
-    border-radius: 4px;
+    background: var(--success-color);
+    border-radius: var(--radius-sm);
     width: 0%;
     transition: width 0.1s;
     position: relative;
@@ -185,7 +85,8 @@ body {
 }
 
 .progress.dragging {
-    background: #3d914e;
+    background: var(--success-color);
+    opacity: 0.8;
 }
 
 .progress::after {
@@ -195,8 +96,8 @@ body {
     right: 0;
     width: 12px;
     height: 12px;
-    background: #2ea043;
-    border-radius: 50%;
+    background: var(--success-color);
+    border-radius: var(--radius-full);
     transform: translate(50%, -25%);
     opacity: 0;
     transition: opacity 0.2s;
@@ -208,7 +109,7 @@ body {
 }
 
 .progress-bar.dragging .progress::after {
-    background: #3d914e;
+    background: var(--success-color);
     transform: translate(50%, -25%) scale(1.2);
 }
 
@@ -217,7 +118,7 @@ body {
     justify-content: space-between;
     margin-top: 0.5rem;
     font-size: 0.8rem;
-    color: #8b949e;
+    color: var(--text-secondary);
 }
 
 /* 控制区域 */
@@ -235,12 +136,12 @@ body {
 }
 
 .control-btn {
-    background: #21262d;
-    border: 1px solid #30363d;
-    border-radius: 6px;
+    background: var(--bg-light);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
     width: 44px;
     height: 44px;
-    color: #c9d1d9;
+    color: var(--text-light);
     font-size: 1.1rem;
     cursor: pointer;
     transition: all 0.2s;
@@ -250,116 +151,27 @@ body {
 }
 
 .control-btn:hover {
-    background: #30363d;
-    border-color: #8b949e;
-    color: #f0f6fc;
+    background: var(--border-color);
+    border-color: var(--text-secondary);
+    color: var(--text-primary);
 }
 
 .play-pause {
     width: 50px;
     height: 50px;
     font-size: 1.3rem;
-    background: #238636;
-    border-color: #2ea043;
-    color: white;
+    background: var(--success-bg);
+    border-color: var(--success-color);
+    color: var(--text-primary);
 }
 
 .play-pause:hover {
-    background: #2ea043;
-    border-color: #3fb950;
+    background: var(--success-color);
+    border-color: var(--success-color);
+    color: var(--text-primary);
 }
 
-/* 音量控制 */
-.volume-control {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-}
 
-.volume-icon {
-    font-size: 1.1rem;
-    cursor: pointer;
-    transition: color 0.2s;
-    color: #8b949e;
-}
-
-.volume-icon:hover {
-    color: #58a6ff;
-}
-
-.volume-slider {
-    width: 80px;
-    height: 6px;
-    background: #21262d;
-    border-radius: 3px;
-    cursor: pointer;
-    position: relative;
-    transition: background-color 0.2s;
-}
-
-.volume-slider:hover {
-    background: #30363d;
-}
-
-.volume-slider.dragging {
-    background: #40464d;
-}
-
-.volume-progress {
-    height: 100%;
-    background: #58a6ff;
-    border-radius: 3px;
-    width: 70%;
-    box-shadow: 0 0 4px rgba(88, 166, 255, 0.3);
-    position: relative;
-}
-
-.volume-progress.dragging {
-    background: #4a9cff;
-}
-
-.volume-progress::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 10px;
-    height: 10px;
-    background: #58a6ff;
-    border-radius: 50%;
-    transform: translate(50%, -33%);
-    opacity: 0;
-    transition: opacity 0.2s;
-}
-
-.volume-slider:hover .volume-progress::after,
-.volume-slider.dragging .volume-progress::after {
-    opacity: 1;
-}
-
-.volume-slider.dragging .volume-progress::after {
-    background: #4a9cff;
-    transform: translate(50%, -33%) scale(1.2);
-}
-
-/* 播放模式 */
-.play-mode-btn {
-    background: #21262d;
-    border: 1px solid #30363d;
-    border-radius: 6px;
-    padding: 0.5rem 1rem;
-    color: #8b949e;
-    cursor: pointer;
-    transition: all 0.2s;
-    font-size: 0.8rem;
-    font-weight: 500;
-}
-
-.play-mode-btn:hover {
-    background: #30363d;
-    color: #c9d1d9;
-    border-color: #58a6ff;
-}
 
 /* 搜索框 */
 .search-section {
@@ -374,22 +186,22 @@ body {
 .search-input {
     width: 100%;
     padding: 0.75rem 3rem 0.75rem 1rem;
-    background: #0d1117;
-    border: 1px solid #30363d;
-    border-radius: 6px;
+    background: var(--bg-dark);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
     font-size: 0.9rem;
-    color: #c9d1d9;
+    color: var(--text-light);
     transition: all 0.2s;
 }
 
 .search-input:focus {
     outline: none;
-    border-color: #58a6ff;
-    box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.1);
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px var(--primary-light);
 }
 
 .search-input::placeholder {
-    color: #6e7681;
+    color: var(--text-muted);
 }
 
 .search-icon {
@@ -397,13 +209,13 @@ body {
     right: 1rem;
     top: 50%;
     transform: translateY(-50%);
-    color: #6e7681;
+    color: var(--text-muted);
     font-size: 1rem;
 }
 
 /* 统计信息 */
 .stats {
-    color: #8b949e;
+    color: var(--text-secondary);
     margin-bottom: 1rem;
     font-size: 0.8rem;
     font-weight: 500;
@@ -411,20 +223,20 @@ body {
 
 /* 音乐列表 */
 .music-section {
-    background: #0d1117;
-    border: 1px solid #30363d;
-    border-radius: 6px;
+    background: var(--bg-dark);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
     overflow: hidden;
 }
 
 .music-list {
     display: grid;
     gap: 1px;
-    background: #30363d;
+    background: var(--border-color);
 }
 
 .music-item {
-    background: #0d1117;
+    background: var(--bg-dark);
     padding: 1rem;
     display: flex;
     align-items: center;
@@ -435,23 +247,23 @@ body {
 }
 
 .music-item:hover {
-    background: #161b22;
+    background: var(--bg-light);
 }
 
 .music-item.selected {
-    background: #2ea043;
-    color: #f0f6fc;
+    background: var(--success-color);
+    color: var(--text-primary);
 }
 
 .music-number {
     font-weight: 600;
-    color: #58a6ff;
+    color: var(--primary-color);
     min-width: 30px;
     font-size: 0.9rem;
 }
 
 .music-item.playing .music-number {
-    color: #f0f6fc;
+    color: var(--text-primary);
 }
 
 .music-icon {
@@ -467,19 +279,19 @@ body {
 .music-name {
     font-weight: 600;
     margin-bottom: 0.25rem;
-    color: #f0f6fc;
+    color: var(--text-primary);
     font-size: 0.95rem;
 }
 
 .music-item.playing .music-name {
-    color: #f0f6fc;
+    color: var(--text-primary);
 }
 
 .play-indicator {
     font-size: 0.7rem;
     opacity: 0;
     transition: opacity 0.2s;
-    color: #3fb950;
+    color: var(--success-color);
 }
 
 .music-item.playing .play-indicator {
@@ -494,10 +306,10 @@ body {
 }
 
 .action-btn {
-    background: #21262d;
-    border: 1px solid #30363d;
-    border-radius: 4px;
-    color: #8b949e;
+    background: var(--bg-light);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    color: var(--text-secondary);
     font-size: 0.7rem;
     cursor: pointer;
     transition: all 0.2s;
@@ -511,38 +323,28 @@ body {
 
 .action-btn:hover,
 .action-btn:focus {
-    background: #30363d;
-    border-color: #58a6ff;
-    color: #c9d1d9;
-    outline: 2px solid #58a6ff;
+    background: var(--border-color);
+    border-color: var(--primary-color);
+    color: var(--text-light);
+    outline: 2px solid var(--primary-color);
     outline-offset: 2px;
 }
 
 .download-btn:hover {
-    background: #2ea043;
-    border-color: #2ea043;
-    color: #f0f6fc;
+    background: var(--success-color);
+    border-color: var(--success-color);
+    color: var(--text-primary);
 }
 
 .loading {
     text-align: center;
-    color: #8b949e;
+    color: var(--text-secondary);
     font-size: 0.9rem;
     padding: 3rem;
-    background: #0d1117;
+    background: var(--bg-dark);
 }
 
-/* 动画效果 */
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
+/* 动画效果 - 复用主页动画 */
 
 /* 响应式设计 */
 @media (max-width: 768px) {
@@ -575,10 +377,6 @@ body {
     }
     
     .control-buttons {
-        justify-content: center;
-    }
-    
-    .volume-control {
         justify-content: center;
     }
     
@@ -621,11 +419,11 @@ body {
     position: fixed;
     top: 20px;
     right: 20px;
-    background: #0d1117;
-    border: 1px solid #30363d;
-    border-radius: 6px;
+    background: var(--bg-dark);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
     padding: 1rem 1.5rem;
-    color: #c9d1d9;
+    color: var(--text-light);
     font-size: 0.9rem;
     display: flex;
     align-items: center;
@@ -634,7 +432,7 @@ body {
     transform: translateX(100%);
     opacity: 0;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    box-shadow: var(--shadow-md);
     max-width: 300px;
 }
 
@@ -644,17 +442,17 @@ body {
 }
 
 .download-toast.success {
-    border-color: #2ea043;
-    background: rgba(46, 160, 67, 0.1);
+    border-color: var(--success-color);
+    background: var(--success-bg);
 }
 
 .download-toast.success i {
-    color: #2ea043;
+    color: var(--success-color);
 }
 
 .download-toast i {
     font-size: 1.1rem;
-    color: #58a6ff;
+    color: var(--primary-color);
 }
 
 /* 移动端下载提示优化 */

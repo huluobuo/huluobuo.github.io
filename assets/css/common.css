@@ -1,0 +1,155 @@
+/* 通用样式 - 所有页面共享 */
+
+/* 背景图片加载器 */
+.background-loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--bg-dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    transition: opacity 0.5s ease;
+}
+
+.background-loader.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.loading-text {
+    color: var(--primary-color);
+    font-size: 1.2em;
+    font-weight: 500;
+}
+
+/* 全局样式 */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft YaHei', sans-serif;
+    background: var(--bg-dark);
+    color: var(--text-light);
+    min-height: 100vh;
+    line-height: 1.5;
+    overflow-x: hidden;
+}
+
+/* GitHub风格头部 */
+.github-header {
+    background: var(--bg-light);
+    border-bottom: 1px solid var(--border-color);
+    padding: clamp(1.5rem, 4vw, 3rem) clamp(1rem, 3vw, 2rem) clamp(1rem, 3vw, 1.5rem);
+    position: relative;
+}
+
+.header-content {
+    max-width: 1280px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.back-link {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    transition: all 0.2s;
+    background: var(--bg-dark);
+}
+
+.back-link:hover {
+    background: var(--bg-light);
+    border-color: var(--primary-color);
+    color: var(--primary-hover);
+}
+
+.header-content h1 {
+    margin: 0;
+    font-size: 2rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    flex: 1;
+}
+
+/* GitHub风格主内容 */
+.github-main {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 3rem clamp(1rem, 4vw, 2rem);
+    background: rgba(13, 17, 23, 0.7);
+    backdrop-filter: blur(10px);
+    border-radius: var(--radius-md);
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+    box-shadow: var(--shadow-md);
+    border: 1px solid rgba(48, 54, 61, 0.3);
+}
+
+/* 搜索框 */
+.search-section {
+    margin-bottom: 1.5rem;
+    display: flex;
+    justify-content: center;
+}
+
+.search-box {
+    position: relative;
+    max-width: 400px;
+    width: 100%;
+}
+
+.search-input {
+    width: 100%;
+    padding: 0.75rem 3rem 0.75rem 1rem;
+    background: var(--bg-dark);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    font-size: 0.9rem;
+    color: var(--text-light);
+    transition: all 0.2s;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px var(--primary-light);
+}
+
+.search-input::placeholder {
+    color: var(--text-muted);
+}
+
+.search-icon {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    font-size: 1rem;
+}
+
+/* 统计信息 */
+.stats {
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+/* 加载状态 */
+.loading {
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    padding: 3rem;
+    background: var(--bg-dark);
+}

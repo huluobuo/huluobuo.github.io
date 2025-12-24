@@ -1,19 +1,9 @@
+@import url('./style.css');
+@import url('./common.css');
+
 /* GitHub风格文件库样式 */
 
-/* 背景图片加载器 */
-.background-loader {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: #0d1117;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-    transition: opacity 0.5s ease;
-}
+/* 引入基础样式 */
 
 /* 背景模糊和迷雾蒙版效果 */
 body::before {
@@ -37,131 +27,13 @@ body::after {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.3);
+    background: var(--bg-overlay);
     z-index: -1;
-}
-
-.background-loader.hidden {
-    opacity: 0;
-    pointer-events: none;
-}
-
-.loading-text {
-    color: #58a6ff;
-    font-size: 1.2em;
-    font-weight: 500;
-}
-
-/* 全局样式 */
-body {
-    margin: 0;
-    padding: 0;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-    background: #0d1117;
-    color: #c9d1d9;
-    min-height: 100vh;
-    line-height: 1.5;
-}
-
-/* GitHub风格头部 */
-.github-header {
-    background: #161b22;
-    border-bottom: 1px solid #30363d;
-    padding: 2rem 2rem 1.5rem;
-    position: relative;
-}
-
-.header-content {
-    max-width: 1200px;
-    margin: 0 auto;
-    display: flex;
-    align-items: center;
-    gap: 2rem;
-}
-
-.back-link {
-    color: #58a6ff;
-    text-decoration: none;
-    font-size: 0.9rem;
-    font-weight: 500;
-    padding: 0.5rem 1rem;
-    border: 1px solid #30363d;
-    border-radius: 6px;
-    transition: all 0.2s;
-    background: #0d1117;
-}
-
-.back-link:hover {
-    background: #1c2128;
-    border-color: #58a6ff;
-    color: #79c0ff;
-}
-
-.header-content h1 {
-    margin: 0;
-    font-size: 2rem;
-    font-weight: 600;
-    color: #f0f6fc;
-    flex: 1;
-}
-
-/* 主内容区域 - 应用主页优化 */
-.github-main {
-    max-width: 1280px;
-    margin: 0 auto;
-    padding: 3rem clamp(1rem, 4vw, 2rem);
-    background: rgba(13, 17, 23, 0.7);
-    backdrop-filter: blur(10px);
-    border-radius: 12px;
-    margin-top: 1rem;
-    margin-bottom: 2rem;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-    border: 1px solid rgba(48, 54, 61, 0.3);
-}
-
-/* 搜索框 */
-.search-section {
-    margin-bottom: 1.5rem;
-}
-
-.search-box {
-    position: relative;
-    max-width: 400px;
-}
-
-.search-input {
-    width: 100%;
-    padding: 0.75rem 3rem 0.75rem 1rem;
-    background: #0d1117;
-    border: 1px solid #30363d;
-    border-radius: 6px;
-    font-size: 0.9rem;
-    color: #c9d1d9;
-    transition: all 0.2s;
-}
-
-.search-input:focus {
-    outline: none;
-    border-color: #58a6ff;
-    box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.1);
-}
-
-.search-input::placeholder {
-    color: #6e7681;
-}
-
-.search-icon {
-    position: absolute;
-    right: 1rem;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #6e7681;
-    font-size: 1rem;
 }
 
 /* 统计信息 */
 .stats {
-    color: #8b949e;
+    color: var(--text-secondary);
     margin-bottom: 1rem;
     font-size: 0.8rem;
     font-weight: 500;
@@ -169,9 +41,9 @@ body {
 
 /* 文件列表容器 */
 .file-section {
-    background: #0d1117;
-    border: 1px solid #30363d;
-    border-radius: 6px;
+    background: var(--bg-dark);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
     overflow: hidden;
     position: relative;
 }
@@ -185,9 +57,9 @@ body {
     right: -2px;
     bottom: -2px;
     background: linear-gradient(45deg, 
-        #58a6ff, #2ea043, #58a6ff, #2ea043);
+        var(--primary-color), var(--success-color), var(--primary-color), var(--success-color));
     background-size: 400% 400%;
-    border-radius: 8px;
+    border-radius: calc(var(--radius-sm) + 2px);
     z-index: -1;
     animation: gradientBorder 3s ease infinite;
     opacity: 0;
@@ -210,16 +82,16 @@ body {
 .file-list {
     display: grid;
     gap: 1px;
-    background: #30363d;
+    background: var(--border-color);
 }
 
 /* 文件项样式 */
 .file-item {
-    background: #0d1117;
+    background: var(--bg-dark);
     display: flex;
     align-items: center;
     padding: 16px 20px;
-    border-bottom: 1px solid #21262d;
+    border-bottom: 1px solid var(--bg-light);
     transition: all 0.3s ease;
     cursor: pointer;
     animation: fadeInUp 0.3s ease-out;
@@ -233,23 +105,23 @@ body {
 .file-item:hover {
     background-color: rgba(22, 27, 34, 0.8);
     transform: translateX(4px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    box-shadow: var(--shadow-md);
 }
 
 .file-item.selected {
-    background: #2ea043;
-    color: #f0f6fc;
+    background: var(--success-color);
+    color: var(--text-primary);
 }
 
 .file-icon {
     font-size: 1.3rem;
     width: 24px;
     text-align: center;
-    color: #58a6ff;
+    color: var(--primary-color);
 }
 
 .file-item.selected .file-icon {
-    color: #f0f6fc;
+    color: var(--text-primary);
 }
 
 .file-info {
@@ -260,20 +132,20 @@ body {
 .file-name {
     font-weight: 600;
     margin-bottom: 0.25rem;
-    color: #f0f6fc;
+    color: var(--text-primary);
     font-size: 0.95rem;
     word-break: break-word;
 }
 
 .file-item.selected .file-name {
-    color: #f0f6fc;
+    color: var(--text-primary);
 }
 
 .file-meta {
     display: flex;
     gap: 1rem;
     font-size: 0.8rem;
-    color: #8b949e;
+    color: var(--text-secondary);
 }
 
 .file-size {
@@ -281,7 +153,7 @@ body {
 }
 
 .file-date {
-    color: #6e7681;
+    color: var(--text-muted);
 }
 
 .file-actions {
@@ -297,26 +169,26 @@ body {
 }
 
 .file-actions a {
-    color: #58a6ff;
+    color: var(--primary-color);
     text-decoration: none;
     padding: 8px 16px;
-    border: 1px solid #30363d;
-    border-radius: 6px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
     transition: all 0.3s ease;
     font-weight: 500;
     font-size: 14px;
     position: relative;
     overflow: hidden;
-    background: rgba(88, 166, 255, 0.1);
+    background: var(--primary-light);
     backdrop-filter: blur(10px);
 }
 
 .file-actions a:hover {
-    background-color: #58a6ff;
+    background-color: var(--primary-color);
     color: white;
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(88, 166, 255, 0.3);
-    border-color: #58a6ff;
+    box-shadow: 0 4px 12px var(--shadow-lg);
+    border-color: var(--primary-color);
 }
 
 .file-actions a:active {
@@ -324,24 +196,24 @@ body {
 }
 
 /* 文件类型图标颜色 */
-.file-icon.pdf { color: #f85149; }
-.file-icon.doc { color: #58a6ff; }
-.file-icon.xls { color: #3fb950; }
-.file-icon.ppt { color: #d29922; }
-.file-icon.txt { color: #8b949e; }
-.file-icon.zip { color: #a371f7; }
+.file-icon.pdf { color: var(--danger-color); }
+.file-icon.doc { color: var(--primary-color); }
+.file-icon.xls { color: var(--success-color); }
+.file-icon.ppt { color: var(--warning-color); }
+.file-icon.txt { color: var(--text-secondary); }
+.file-icon.zip { color: var(--primary-color); }
 .file-icon.img { color: #db61a2; }
 .file-icon.video { color: #ff7b72; }
-.file-icon.audio { color: #79c0ff; }
-.file-icon.code { color: #7ee787; }
+.file-icon.audio { color: var(--primary-hover); }
+.file-icon.code { color: var(--success-color); }
 
 /* 空状态 */
 .empty-state {
     text-align: center;
-    color: #8b949e;
+    color: var(--text-secondary);
     font-size: 0.9rem;
     padding: 3rem;
-    background: #0d1117;
+    background: var(--bg-dark);
 }
 
 .empty-state i {
@@ -353,21 +225,21 @@ body {
 .empty-state h3 {
     margin: 0 0 0.5rem 0;
     font-size: 1.1rem;
-    color: #c9d1d9;
+    color: var(--text-light);
 }
 
 .empty-state p {
     margin: 0;
-    color: #8b949e;
+    color: var(--text-secondary);
 }
 
 /* 加载状态 */
 .loading {
     text-align: center;
-    color: #8b949e;
+    color: var(--text-secondary);
     font-size: 0.9rem;
     padding: 3rem;
-    background: #0d1117;
+    background: var(--bg-dark);
 }
 
 /* 动画效果 */
