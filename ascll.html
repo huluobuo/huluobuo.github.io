@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>盲文艺术字生成器</title>
+    <style>
+        :root {
+            --bg: #0b0c10;
+            --panel: #15161a;
+            --panel-elevated: #1c1d22;
+            --border: #2a2b30;
+            --text: #f0f1f5;
+            --sub: #8b8d97;
+            --accent: #4f86ff;
+            --accent-hover: #6a9aff;
+            --radius: 16px;
+            --radius-sm: 10px;
+        }
+
+        * { box-sizing: border-box; }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            background:
+                radial-gradient(circle at 12% 0%, #1a1d26 0%, transparent 42%),
+                radial-gradient(circle at 88% 100%, #1f1b2e 0%, transparent 42%),
+                var(--bg);
+            color: var(--text);
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+            overflow: hidden;
+        }
+
+        .app {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 16px;
+            gap: 16px;
+        }
+
+        header {
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 20px;
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+        }
+        header h1 { margin: 0; font-size: 20px; font-weight: 700; letter-spacing: 0.5px; }
+        #status { font-size: 12px; color: var(--sub); }
+
+        .layout {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 380px 1fr;
+            gap: 16px;
+            min-height: 0;
+        }
+
+        .panel {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.35);
+        }
+        .panel-title {
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 14px;
+            flex-shrink: 0;
+        }
+
+        .input-group {
+            margin-bottom: 16px;
+        }
+        .input-group:last-child { margin-bottom: 0; }
+        .input-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--sub);
+            margin-bottom: 8px;
+        }
+        .input {
+            width: 100%;
+            padding: 10px 14px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            background: #0e0f12;
+            color: var(--text);
+            font-size: 14px;
+            outline: none;
+            transition: border-color .2s, box-shadow .2s;
+        }
+        .input::placeholder { color: var(--sub); }
+        .input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(79,134,255,0.15); }
+        select.input {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%238b8d97' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            padding-right: 36px;
+        }
+
+        .input-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        .font-preview {
+            margin-top: 8px;
+            font-size: 20px;
+            color: var(--accent);
+            height: 30px;
+            line-height: 30px;
+            overflow: hidden;
+        }
+        .font-upload {
+            margin-top: 10px;
+        }
+        .font-upload input[type="file"] { display: none; }
+        .font-upload label {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 14px;
+            background: var(--panel-elevated);
+            border: 1px dashed var(--accent);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-size: 13px;
+            color: var(--accent);
+            transition: background .2s;
+        }
+        .font-upload label:hover { background: #25262b; }
+        .font-status {
+            margin-top: 6px;
+            font-size: 12px;
+            color: var(--sub);
+        }
+        .font-status.loaded { color: #4ade80; }
+
+        .btn-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 8px;
+        }
+        .btn {
+            padding: 9px 18px;
+            border-radius: var(--radius-sm);
+            border: none;
+            background: var(--accent);
+            color: #fff;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform .1s, background .2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn:hover { background: var(--accent-hover); }
+        .btn:active { transform: scale(0.97); }
+        .btn-secondary { background: var(--panel-elevated); color: var(--text); border: 1px solid var(--border); }
+        .btn-secondary:hover { background: #25262b; }
+        .btn.loading {
+            pointer-events: none;
+            opacity: 0.85;
+        }
+        .btn.loading::after {
+            content: '';
+            width: 14px; height: 14px;
+            margin-left: 6px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .output-section { flex: 1; min-height: 0; }
+        .output-box {
+            flex: 1;
+            min-height: 0;
+            background: #0e0f12;
+            color: #e2e8f0;
+            padding: 18px;
+            border-radius: var(--radius-sm);
+            font-family: "Cascadia Code", "Fira Code", "Microsoft YaHei", monospace;
+            font-size: 15px;
+            line-height: 1.05;
+            overflow: auto;
+            white-space: pre;
+            border: 1px solid var(--border);
+            box-shadow: inset 0 2px 24px rgba(0,0,0,0.5);
+        }
+        .output-box:empty::before {
+            content: "生成的盲文艺术字将显示在这里...";
+            color: var(--sub);
+        }
+        .output-box .line {
+            display: block;
+            opacity: 0;
+            transform: translateX(-12px);
+            animation: line-in 0.35s ease-out forwards;
+        }
+        @keyframes line-in {
+            to { opacity: 1; transform: translateX(0); }
+        }
+        .output-meta {
+            display: flex;
+            gap: 24px;
+            margin-top: 14px;
+            color: var(--sub);
+            font-size: 12px;
+        }
+        .output-meta span {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        #toast {
+            position: fixed;
+            left: 50%;
+            bottom: 18px;
+            transform: translateX(-50%);
+            padding: 8px 16px;
+            background: #222;
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            font-size: 12px;
+            color: var(--text);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity .2s;
+            z-index: 1000;
+        }
+        #toast.show { opacity: 1; }
+
+        .output-box::-webkit-scrollbar { width: 6px; }
+        .output-box::-webkit-scrollbar-track { background: #111; border-radius: 999px; }
+        .output-box::-webkit-scrollbar-thumb { background: #444; border-radius: 999px; }
+        .output-box { scrollbar-width: thin; scrollbar-color: #444 #111; }
+
+        @media (max-width: 1000px) {
+            .layout { grid-template-columns: 320px 1fr; }
+        }
+        @media (max-width: 760px) {
+            .app { padding: 12px; gap: 12px; }
+            .layout {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto 1fr;
+                overflow-y: auto;
+            }
+            body { overflow: auto; }
+            .panel { min-height: 260px; }
+            .input-row { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <header>
+            <h1>盲文艺术字生成器</h1>
+            <div id="status">就绪</div>
+        </header>
+
+        <main class="layout">
+            <section class="panel">
+                <div class="panel-title">生成设置</div>
+
+                <div class="input-group">
+                    <label>输入文字</label>
+                    <input type="text" id="textInput" class="input" placeholder="请输入要转换的文字，例如：点赞" value="点赞" maxlength="20">
+                </div>
+
+                <div class="input-row">
+                    <div class="input-group">
+                        <label>字体大小</label>
+                        <select id="fontSize" class="input">
+                            <option value="40">40px (小)</option>
+                            <option value="60">60px (中)</option>
+                            <option value="80" selected>80px (大)</option>
+                            <option value="100">100px (特大)</option>
+                            <option value="120">120px (超大)</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label>字体选择</label>
+                        <select id="fontFamily" class="input">
+                            <option value="KaiTi, 楷体, STKaiti, 'Microsoft YaHei'">楷体 (系统)</option>
+                            <option value="SimSun, 宋体, STSong, 'Microsoft YaHei'">宋体 (系统)</option>
+                            <option value="SimHei, 黑体, STHeiti, 'Microsoft YaHei'">黑体 (系统)</option>
+                            <option value="custom">自定义字体文件...</option>
+                        </select>
+                        <div class="font-preview" id="fontPreview">点赞</div>
+                        <div class="font-upload" id="fontUpload" style="display:none;">
+                            <label for="fontFile">
+                                <span>选择字体文件 (.ttf/.otf)</span>
+                            </label>
+                            <input type="file" id="fontFile" accept=".ttf,.otf,.woff,.woff2">
+                            <div class="font-status" id="fontStatus"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn" id="generateBtn" onclick="generate()">
+                        <span>✨</span> 生成盲文艺术字
+                    </button>
+                    <button class="btn btn-secondary" onclick="copyOutput()">
+                        <span>📋</span> 复制结果
+                    </button>
+                    <button class="btn btn-secondary" onclick="downloadOutput()">
+                        <span>⬇️</span> 下载为文本
+                    </button>
+                </div>
+            </section>
+
+            <section class="panel output-section">
+                <div class="panel-title">输出结果</div>
+                <div class="output-box" id="output"></div>
+                <div class="output-meta">
+                    <span>📝 <span id="charCount">0</span> 字符</span>
+                    <span>📏 <span id="rowCount">0</span> 行 × <span id="colCount">0</span> 列</span>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <div id="toast"></div>
+    <canvas id="canvas" style="display:none;"></canvas>
+
+    <script>
+        const BRAILLE_BASE = 0x2800;
+        const PIXEL_TO_DOT = {
+            '0,0': 0, '1,0': 1, '2,0': 2, '3,0': 6,
+            '0,1': 3, '1,1': 4, '2,1': 5, '3,1': 7,
+        };
+        const FONT_NAMES = {
+            'KaiTi, 楷体, STKaiti, \'Microsoft YaHei\'': '楷体',
+            'SimSun, 宋体, STSong, \'Microsoft YaHei\'': '宋体',
+            'SimHei, 黑体, STHeiti, \'Microsoft YaHei\'': '黑体',
+        };
+
+        let customFontLoaded = false;
+        let customFontName = 'CustomFont';
+        let debounceTimer = null;
+
+        function $(id){ return document.getElementById(id); }
+
+        document.getElementById('fontFamily').addEventListener('change', e => {
+            document.getElementById('fontUpload').style.display = e.target.value === 'custom' ? 'block' : 'none';
+            updateFontPreview();
+            scheduleGenerate();
+        });
+
+        document.getElementById('fontSize').addEventListener('change', () => {
+            updateFontPreview();
+            scheduleGenerate();
+        });
+
+        document.getElementById('fontFile').addEventListener('change', e => {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = event => {
+                const fontFace = new FontFace(customFontName, event.target.result);
+                fontFace.load().then(loadedFont => {
+                    document.fonts.add(loadedFont);
+                    customFontLoaded = true;
+                    document.getElementById('fontStatus').textContent = `✓ 已加载: ${file.name}`;
+                    document.getElementById('fontStatus').className = 'font-status loaded';
+                    updateFontPreview();
+                    scheduleGenerate();
+                }).catch(err => {
+                    document.getElementById('fontStatus').textContent = `✗ 加载失败: ${err.message}`;
+                    document.getElementById('fontStatus').className = 'font-status';
+                });
+            };
+            reader.readAsArrayBuffer(file);
+        });
+
+        document.getElementById('textInput').addEventListener('input', () => {
+            scheduleGenerate();
+        });
+
+        function scheduleGenerate() {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(generate, 400);
+        }
+
+        function getFontFamily() {
+            const select = document.getElementById('fontFamily');
+            return select.value === 'custom' && customFontLoaded ? customFontName : select.value;
+        }
+
+        function updateFontPreview() {
+            const preview = document.getElementById('fontPreview');
+            const family = getFontFamily();
+            const size = Math.min(24, parseInt(document.getElementById('fontSize').value) * 0.3);
+            preview.style.fontFamily = family;
+            preview.style.fontSize = size + 'px';
+        }
+
+        async function generate() {
+            const text = document.getElementById('textInput').value.trim();
+            const btn = document.getElementById('generateBtn');
+            if (!text) {
+                showToast('请输入文字');
+                return;
+            }
+
+            btn.classList.add('loading');
+            document.getElementById('status').textContent = '生成中…';
+            await new Promise(r => setTimeout(r, 50));
+
+            const fontSize = parseInt(document.getElementById('fontSize').value);
+            const fontFamily = getFontFamily();
+            const canvas = document.getElementById('canvas');
+            const ctx = canvas.getContext('2d');
+
+            ctx.font = `${fontSize}px ${fontFamily}`;
+            const metrics = ctx.measureText(text);
+            const textWidth = Math.ceil(metrics.width);
+            const textHeight = Math.ceil(fontSize * 1.2);
+
+            canvas.width = textWidth + 12;
+            canvas.height = textHeight + 12;
+
+            ctx.font = `${fontSize}px ${fontFamily}`;
+            ctx.textBaseline = 'top';
+
+            ctx.fillStyle = 'white';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = 'black';
+            ctx.fillText(text, 6, 6);
+
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const pixels = imageData.data;
+            const w = canvas.width, h = canvas.height;
+            const brailleCols = Math.ceil(w / 2);
+            const brailleRows = Math.ceil(h / 4);
+
+            const lines = [];
+            for (let br = 0; br < brailleRows; br++) {
+                let line = '';
+                for (let bc = 0; bc < brailleCols; bc++) {
+                    let code = 0;
+                    for (const [key, dot] of Object.entries(PIXEL_TO_DOT)) {
+                        const [pr, pc] = key.split(',').map(Number);
+                        const py = br * 4 + pr;
+                        const px = bc * 2 + pc;
+                        if (py < h && px < w) {
+                            const idx = (py * w + px) * 4;
+                            if (pixels[idx] < 128) code |= (1 << dot);
+                        }
+                    }
+                    line += String.fromCharCode(BRAILLE_BASE + code);
+                }
+                lines.push(line);
+            }
+
+            renderOutput(lines);
+
+            const lineHeight = 1.0 + fontSize * 0.0015;
+            document.getElementById('output').style.lineHeight = lineHeight.toFixed(3);
+
+            document.getElementById('charCount').textContent = lines.join('\n').length.toLocaleString();
+            document.getElementById('rowCount').textContent = brailleRows;
+            document.getElementById('colCount').textContent = brailleCols;
+
+            btn.classList.remove('loading');
+            document.getElementById('status').textContent = '生成完成';
+            showToast('生成成功！');
+        }
+
+        function renderOutput(lines) {
+            const output = document.getElementById('output');
+            output.innerHTML = '';
+            lines.forEach((line, i) => {
+                const span = document.createElement('span');
+                span.className = 'line';
+                span.textContent = line;
+                span.style.animationDelay = (i * 0.04) + 's';
+                output.appendChild(span);
+            });
+        }
+
+        function copyOutput() {
+            const output = document.getElementById('output').innerText;
+            if (!output.trim()) return showToast('没有可复制的内容');
+            navigator.clipboard.writeText(output).then(() => showToast('已复制到剪贴板'))
+                .catch(() => {
+                    const textarea = document.createElement('textarea');
+                    textarea.value = output;
+                    document.body.appendChild(textarea);
+                    textarea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textarea);
+                    showToast('已复制到剪贴板');
+                });
+        }
+
+        function downloadOutput() {
+            const output = document.getElementById('output').innerText;
+            if (!output.trim()) return showToast('没有可下载的内容');
+            const blob = new Blob([output], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'braille_art.txt';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            showToast('已下载');
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2000);
+        }
+
+        window.addEventListener('load', () => {
+            updateFontPreview();
+            setTimeout(generate, 600);
+        });
+    </script>
+</body>
+</html>
