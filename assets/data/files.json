@@ -18,5 +18,10 @@
         "url": "download/週末京都現実逃避.mp3",
         "type": "audio/mpeg",
         "description": "一首好听的歌，让人听起来.....emm，很难说，你自己听一下就知道了。"
+    },
+    "BoximApp": {
+        "url": "download/boxim.exe",
+        "type": "application/octet-stream",
+        "description": "我制作的盒子IM客户端，并承诺不会收集任何用户信息，并且开源。"
     }
 }
