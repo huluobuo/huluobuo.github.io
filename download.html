@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#f7f7f9">
+    <title>文件下载 · 胡萝啵啵的小寨</title>
+    <link rel="icon" type="image/png" href="./assets/images/logo.png">
+    <link rel="stylesheet" href="./assets/css/main.css">
+</head>
+<body class="page-boxim">
+    <!-- 视频背景（与首页同款线稿风） -->
+    <div class="bg-stage">
+        <video src="./assets/media/video/【哲风壁纸】Kuroha作品-动漫线稿.mp4" autoplay muted loop playsinline></video>
+        <div class="bg-veil"></div>
+    </div>
+
+    <main class="bx">
+        <div class="bx-top">
+            <a class="back-chip" href="./index.html">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                返回小寨
+            </a>
+        </div>
+
+        <!-- 首屏 -->
+        <section class="bx-hero">
+            <span class="bx-badge-lg">
+                <svg viewBox="0 0 24 24" width="42" height="42" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>
+            </span>
+            <h1 class="bx-title">文件下载</h1>
+            <p class="bx-sub">这里放了一些我喜欢的壁纸和音乐，还有做的小东西，全部免费分享～</p>
+        </section>
+
+        <!-- 文件列表 -->
+        <h2 class="bx-sec-tt">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M13 2v7h7"/></svg>
+            文件列表
+        </h2>
+        <div class="bx-list" id="file-list">
+            <div class="bx-empty">正在加载文件列表…</div>
+        </div>
+
+        <footer class="bx-foot">2026 (c) 胡萝啵啵 Ciallo～(∠・ω&lt; )⌒★</footer>
+    </main>
+
+    <script>
+    (function () {
+        'use strict';
+        var el = document.getElementById('file-list');
+        var esc = function (s) {
+            return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+                return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+            });
+        };
+        var ICON_DL = '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>';
+        var TYPES = {
+            'video/mp4': {
+                label: '视频', badge: 'scope',
+                icon: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M10 8l6 4-6 4z"/></svg>'
+            },
+            'audio/mpeg': {
+                label: '音频', badge: 'release',
+                icon: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>'
+            }
+        };
+        function typeInfo(t) {
+            return TYPES[t] || {
+                label: '文件', badge: 'dev',
+                icon: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M13 2v7h7"/></svg>'
+            };
+        }
+
+        fetch('./assets/data/files.json')
+            .then(function (r) { return r.json(); })
+            .then(function (data) {
+                var entries = Object.keys(data || {}).map(function (k) { return [k, data[k]]; });
+                if (!entries.length) {
+                    el.innerHTML = '<div class="bx-empty">暂无可下载的文件～</div>';
+                    return;
+                }
+                el.innerHTML = entries.map(function (it) {
+                    var name = it[0], info = it[1] || {};
+                    var t = typeInfo(info.type);
+                    return '<div class="bx-item">' +
+                        '<span class="bx-ic">' + t.icon + '</span>' +
+                        '<span class="bx-meta">' +
+                            '<span class="bx-name">' + esc(name) + '<span class="badge ' + t.badge + '">' + t.label + '</span></span>' +
+                            '<span class="bx-desc">' + esc(info.description || '') + '</span>' +
+                        '</span>' +
+                        '<a class="dl-btn" href="' + esc(info.url || '#') + '" download>下载' + ICON_DL + '</a>' +
+                        '</div>';
+                }).join('');
+            })
+            .catch(function () {
+                el.innerHTML = '<div class="bx-empty">文件列表加载失败，请稍后再试</div>';
+            });
+    })();
+    </script>
+</body>
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#f7f7f9">
+    <title>更多的动画 · BoximAppJs</title>
+    <link rel="icon" type="image/png" href="../../assets/images/logo.png">
+    <link rel="stylesheet" href="../../assets/css/main.css">
+</head>
+<body class="page-boxim">
+    <!-- 视频背景（与首页同款线稿风） -->
+    <div class="bg-stage">
+        <video src="../../assets/media/video/【哲风壁纸】Kuroha作品-动漫线稿.mp4" autoplay muted loop playsinline></video>
+        <div class="bg-veil"></div>
+    </div>
+
+    <main class="bx">
+        <div class="bx-top">
+            <a class="back-chip" href="../../boximappjs.html">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                返回脚本中心
+            </a>
+        </div>
+
+        <!-- 首屏 -->
+        <section class="bx-hero">
+            <img class="bx-logo" src="./mainImage.png" alt="更多的动画 图标">
+            <h1 class="bx-title">更多的动画</h1>
+            <p class="bx-sub">为你的盒子IM app添加更多的动画，以提升你的体验。</p>
+            <div class="bx-tags">
+                <span class="badge scope">仅盒子IM</span>
+                <span class="badge dev">UserScript 用户脚本</span>
+                <span class="badge dev">作者 胡萝啵啵</span>
+            </div>
+        </section>
+
+        <!-- 版本历史 -->
+        <h2 class="bx-sec-tt">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+            版本历史
+        </h2>
+        <div class="bx-list" id="ver-list">
+            <div class="bx-empty">正在加载版本信息…</div>
+        </div>
+
+        <footer class="bx-foot">2026 (c) 胡萝啵啵 Ciallo～(∠・ω&lt; )⌒★</footer>
+    </main>
+
+    <script>
+    (function () {
+        'use strict';
+        var el = document.getElementById('ver-list');
+        var esc = function (s) {
+            return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+                return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+            });
+        };
+        var STAGE_TEXT = { release: '正式版', beta: '公测版', alpha: '内测版' };
+
+        // versions.json 中的 download 路径相对站点根，这里转换为相对当前页面的路径
+        var curDir = decodeURIComponent(
+            location.pathname.replace(/\/[^\/]*\.html?$/i, '').split('/').pop() || ''
+        );
+        function toLocalHref(p) {
+            if (!p) return '#';
+            var parts = String(p).split('/');
+            var i = curDir ? parts.indexOf(curDir) : -1;
+            if (i >= 0 && parts.slice(i + 1).join('')) return parts.slice(i + 1).join('/');
+            return '../../' + String(p);
+        }
+        function cmpVer(a, b) {
+            var pa = a.split('.'), pb = b.split('.');
+            for (var i = 0; i < 3; i++) {
+                var d = (parseInt(pb[i], 10) || 0) - (parseInt(pa[i], 10) || 0);
+                if (d) return d;
+            }
+            return 0;
+        }
+
+        fetch('./versions.json')
+            .then(function (r) { return r.json(); })
+            .then(function (data) {
+                var map = (data && data.version) || {};
+                var entries = Object.keys(map).sort(cmpVer).map(function (v) { return [v, map[v]]; });
+                if (!entries.length) {
+                    el.innerHTML = '<div class="bx-empty">暂无版本</div>';
+                    return;
+                }
+                el.innerHTML = entries.map(function (it) {
+                    var ver = it[0], info = it[1] || {};
+                    var stage = info.stage || 'dev';
+                    var badge = '<span class="badge ' + esc(stage) + '">' + esc(STAGE_TEXT[stage] || stage) + '</span>';
+                    var meta = [info.description, info.date].filter(function (x) { return x; })
+                        .map(esc).join(' · ');
+                    return '<div class="bx-item">' +
+                        '<span class="bx-ic"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg></span>' +
+                        '<span class="bx-meta">' +
+                            '<span class="bx-name">v' + esc(ver) + badge + '</span>' +
+                            '<span class="bx-desc">' + meta + '</span>' +
+                        '</span>' +
+                        '<a class="dl-btn" href="' + esc(toLocalHref(info.download)) + '" download>下载' +
+                            '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>' +
+                        '</a>' +
+                        '</div>';
+                }).join('');
+            })
+            .catch(function () {
+                el.innerHTML = '<div class="bx-empty">版本信息加载失败，请稍后再试</div>';
+            });
+    })();
+    </script>
+</body>
+</html>

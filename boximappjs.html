@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#f7f7f9">
+    <title>BoximAppJs 脚本中心 · 胡萝啵啵的小寨</title>
+    <link rel="icon" type="image/png" href="./assets/images/logo.png">
+    <link rel="stylesheet" href="./assets/css/main.css">
+</head>
+<body class="page-boxim">
+    <!-- 视频背景（与首页同款线稿风） -->
+    <div class="bg-stage">
+        <video src="./assets/media/video/【哲风壁纸】Kuroha作品-动漫线稿.mp4" autoplay muted loop playsinline></video>
+        <div class="bg-veil"></div>
+    </div>
+
+    <main class="bx">
+        <div class="bx-top">
+            <a class="back-chip" href="./index.html">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                返回小寨
+            </a>
+        </div>
+
+        <!-- 首屏 -->
+        <section class="bx-hero">
+            <img class="bx-logo" src="./assets/images/logo.png" alt="BoximAppJs 脚本中心">
+            <h1 class="bx-title">BoximAppJs 脚本中心</h1>
+            <p class="bx-sub">为盒子IM准备的辅助脚本合集，小巧、透明、开箱即用。</p>
+        </section>
+
+        <!-- 安全声明 -->
+        <section class="notice">
+            <div class="notice-hd">
+                <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+                安全认证
+            </div>
+            <p>此为由<b>胡萝啵啵本人 / 其他创作者</b>制作的盒子IM辅助脚本，均已经过<b>安全认证</b>。</p>
+        </section>
+
+        <!-- 提交指引 -->
+        <h2 class="bx-sec-tt">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>
+            如何提交你的 boximjs
+        </h2>
+        <section class="notice blue">
+            <div class="steps">
+                <div class="step">
+                    <span class="step-n">1</span>
+                    <div class="step-body">
+                        <div class="step-tt">注册账户 / 登录盒子IM</div>
+                        <div class="step-desc">前往 <a href="https://www.boximchat.com" target="_blank" rel="noopener">www.boximchat.com</a>，用户注册每天 <b>8:00 - 8:30</b> 开放。</div>
+                    </div>
+                </div>
+                <div class="step">
+                    <span class="step-n">2</span>
+                    <div class="step-body">
+                        <div class="step-tt">搜索用户并添加好友</div>
+                        <div class="step-desc">用户名 <b>huluobuo</b>，用户名称 <b>胡萝啵啵</b>，头像是一个<b>线条小狗</b>。</div>
+                    </div>
+                </div>
+                <div class="step">
+                    <span class="step-n">3</span>
+                    <div class="step-body">
+                        <div class="step-tt">发送好友申请</div>
+                        <div class="step-desc">最好注明 <b>“我要提交boximappjs”</b>，收到后我会尽快处理你的脚本～</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 脚本列表 -->
+        <h2 class="bx-sec-tt">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+            脚本列表
+        </h2>
+        <div class="bx-list" id="script-list">
+            <div class="bx-empty">正在加载脚本列表…</div>
+        </div>
+
+        <footer class="bx-foot">2026 (c) 胡萝啵啵 Ciallo～(∠・ω&lt; )⌒★</footer>
+    </main>
+
+    <script>
+    (function () {
+        'use strict';
+        var el = document.getElementById('script-list');
+        var esc = function (s) {
+            return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+                return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+            });
+        };
+        var SCOPE_TEXT = { OnlyBoxim: '仅盒子IM' };
+        fetch('./BoximAppJs/api/list.json')
+            .then(function (r) { return r.json(); })
+            .then(function (data) {
+                var entries = Object.keys(data || {}).map(function (k) { return [k, data[k]]; });
+                if (!entries.length) {
+                    el.innerHTML = '<div class="bx-empty">暂无脚本，期待你的提交～</div>';
+                    return;
+                }
+                el.innerHTML = entries.map(function (it) {
+                    var name = it[0], info = it[1] || {};
+                    var href = esc(info.home || info.url || '#');
+                    var badge = info.scope
+                        ? '<span class="badge scope">' + esc(SCOPE_TEXT[info.scope] || info.scope) + '</span>'
+                        : '';
+                    var icon = info.image
+                        ? '<img src="' + esc(info.image) + '" alt="' + esc(name) + ' 图标">'
+                        : '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg>';
+                    return '<a class="bx-item" href="' + href + '">' +
+                        '<span class="bx-ic">' + icon + '</span>' +
+                        '<span class="bx-meta">' +
+                            '<span class="bx-name">' + esc(name) + badge + '</span>' +
+                            '<span class="bx-desc">' + esc(info.description || '') + '</span>' +
+                        '</span>' +
+                        '<span class="bx-go"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg></span>' +
+                        '</a>';
+                }).join('');
+            })
+            .catch(function () {
+                el.innerHTML = '<div class="bx-empty">脚本列表加载失败，请稍后再试</div>';
+            });
+    })();
+    </script>
+</body>
+</html>

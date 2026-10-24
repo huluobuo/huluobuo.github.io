@@ -1,0 +1,10 @@
+{
+    "version": {
+        "1.0.0": {
+            "stage": "release",
+            "download": "BoximAppJs/moreAnimation/download/1.0.0.js",
+            "description": "初始版本",
+            "date": "2026-10-24"
+        }
+    }
+}

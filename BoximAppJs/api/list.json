@@ -1,0 +1,9 @@
+{
+    "更多的动画": {
+        "url": "BoximAppJs/moreAnimation",
+        "home": "BoximAppJs/moreAnimation/index.html",
+        "description": "为你的盒子IM app添加更多的动画，以提升你的体验",
+        "scope": "OnlyBoxim",
+        "image": "BoximAppJs/moreAnimation/mainImage.png"
+    }
+}
